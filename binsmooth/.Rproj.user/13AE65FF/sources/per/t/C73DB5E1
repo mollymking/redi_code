@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1557961591793.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3057519268",
+    "id" : "C73DB5E1",
+    "lastKnownWriteTime" : 1558491843,
+    "last_content_update" : 1558491843772,
+    "path" : "~/Documents/SocResearch/Dissertation/stata/ki11_bidee/binsmooth/cdf_interpolation.R",
+    "project_path" : "cdf_interpolation.R",
+    "properties" : {
+        "cursorPosition" : "126,116",
+        "scrollLine" : "110",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

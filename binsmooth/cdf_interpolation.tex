@@ -1,0 +1,551 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={cdf\_interpolation.R},
+            pdfauthor={mmking},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{cdf\_interpolation.R}
+\author{mmking}
+\date{2019-12-13}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(binsmooth)}
+\KeywordTok{library}\NormalTok{(pracma)}
+\KeywordTok{library}\NormalTok{(GoFKernel) }\CommentTok{# The package to take the inverse of the CDF for median}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: KernSmooth
+\end{verbatim}
+
+\begin{verbatim}
+## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#library(haven)}
+\CommentTok{#year2016data <- read_dta("~/Documents/SocResearch/Dissertation/data/data_derv/ki11_bidee05_ACS_alt_2016.dta")}
+\CommentTok{#year2017data <- read_dta("~/Documents/SocResearch/Dissertation/data/data_derv/ki11_bidee05_ACS_alt_2017.dta")}
+
+
+\CommentTok{#bEdges - A vector e1, e2, . . . , en giving the right endpoints of each bin. The value in en is ignored and assumed to be Inf or NA, indicating that the top bin is unbounded. The edges determine n bins on the intervals ei−1 ≤ x ≤ ei, where e0 is assumed to be 0.}
+\CommentTok{#bCounts - A vector c1, c2, . . . , cn giving the counts for each bin (i.e., the number of data elements in each bin). Assumed to be nonnegative.}
+\CommentTok{#m - An estimate for the mean of the distribution. If no value is supplied, the mean will be estimated by (temporarily) setting en equal to 2en−1.}
+\CommentTok{#eps1 - Parameter controlling how far the edges of the subdivided bins are shifted. Must be between 0 and 0.5.}
+\CommentTok{#eps2 - Parameter controlling how wide the middle subdivsion of each bin should be. Must be between 0 and 1.}
+\CommentTok{#depth - Number of times to subdivide the bins.}
+\CommentTok{#tailShape - Must be one of "onebin", "pareto", or "exponential".}
+\CommentTok{#nTail - The number of bins to use to form the initial tail, before recursive subdivision. Ignored if tailShape equals "onebin".}
+\CommentTok{#numIterations - The number of iterations to optimize the tail to fit the mean. Ignored if tailShape equals "onebin".}
+\CommentTok{#pIndex - The Pareto index for the shape of the tail. Defaults to ln(5)/ ln(4). Ignored unless tailShape equals "pareto".}
+\CommentTok{#tbRatio - The decay ratio for the tail bins. Ignored unless tailShape equals "exponential". Details}
+
+
+\CommentTok{############}
+\CommentTok{####2016####}
+
+\NormalTok{bEdges <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{15323}\NormalTok{, }\DecValTok{25538}\NormalTok{, }\DecValTok{35753}\NormalTok{, }\DecValTok{51075}\NormalTok{, }\DecValTok{76613}\NormalTok{, }\DecValTok{102151}\NormalTok{, }\DecValTok{153226}\NormalTok{, }\DecValTok{204301}\NormalTok{, }\DecValTok{1021504}\NormalTok{, }\OtherTok{Inf}\NormalTok{) }\CommentTok{# upper bound $ value, inflated to 2017 dollars}
+\NormalTok{bCounts <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{233027}\NormalTok{, }\DecValTok{223238}\NormalTok{, }\DecValTok{241735}\NormalTok{, }\DecValTok{368384}\NormalTok{, }\DecValTok{536467}\NormalTok{, }\DecValTok{427167}\NormalTok{, }\DecValTok{500917}\NormalTok{, }\DecValTok{219987}\NormalTok{, }\DecValTok{257484}\NormalTok{) }\CommentTok{# count within each bracket}
+\NormalTok{m <-}\StringTok{ }\DecValTok{93825} \CommentTok{# m is ACS mean}
+
+\CommentTok{## Recursive subdivision PDF and CDF fitted to binned data ##}
+\CommentTok{#rsubbins(bEdges, bCounts, m=85995, eps1 = 0.25, eps2 = 0.75, depth = 3, tailShape = c("onebin"))}
+\CommentTok{#rsubbins(bEdges, bCounts, m=85995, eps1 = 0.25, eps2 = 0.75, depth = 3, tailShape = c("pareto"), nTail=16, numIterations=20, pIndex=1.160964)}
+\CommentTok{#rsubbins(bEdges, bCounts, m=85995, eps1 = 0.25, eps2 = 0.75, depth = 3, tailShape = c("exponential"), nTail=16, numIterations=20, tbRatio=0.8)}
+
+\CommentTok{## Optimized spline PDF and CDF fitted to binned data (smooth spline) ##}
+\NormalTok{splb <-}\StringTok{ }\KeywordTok{splinebins}\NormalTok{(bEdges, bCounts, m, }\DataTypeTok{numIterations =} \DecValTok{16}\NormalTok{, }\DataTypeTok{monoMethod =} \KeywordTok{c}\NormalTok{(}\StringTok{"hyman"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in splinebins(bEdges, bCounts, m, numIterations = 16, monoMethod = c("hyman")): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(splb}\OperatorTok{$}\NormalTok{splinePDF, }\DecValTok{0}\NormalTok{, }\DecValTok{300000}\NormalTok{, }\DataTypeTok{n=}\DecValTok{500}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{}\DecValTok{1}\OperatorTok{-}\NormalTok{splb}\OperatorTok{$}\KeywordTok{splineCDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, splb}\OperatorTok{$}\NormalTok{E) }\CommentTok{# closer to given mean}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 93824.93
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Gini coefficient (spline)}
+\NormalTok{fCDF <-}\StringTok{ }\NormalTok{splb}\OperatorTok{$}\NormalTok{splineCDF}
+\NormalTok{cdf_mean <-}\StringTok{ }\NormalTok{splb}\OperatorTok{$}\NormalTok{est_mean}
+\NormalTok{gini <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{(}\DecValTok{1}\OperatorTok{-}\KeywordTok{fCDF}\NormalTok{(x))}\OperatorTok{^}\DecValTok{2}\NormalTok{\}, }\DecValTok{0}\NormalTok{, splb}\OperatorTok{$}\NormalTok{E)}\OperatorTok{/}\NormalTok{cdf_mean}
+\KeywordTok{print}\NormalTok{(gini)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4400931
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Median}
+\NormalTok{invCDF <-}\StringTok{ }\KeywordTok{inverse}\NormalTok{(fCDF, }\DecValTok{0}\NormalTok{, splb}\OperatorTok{$}\NormalTok{E)  }\CommentTok{#https://www.rdocumentation.org/packages/GoFKernel/versions/2.1-1/topics/inverse}
+\NormalTok{median <-}\StringTok{ }\KeywordTok{invCDF}\NormalTok{(.}\DecValTok{5}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(median)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 71502.92
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{##Step function PDF and CDF fitted to binned data (polygonal) ##}
+\NormalTok{sb <-}\StringTok{ }\KeywordTok{stepbins}\NormalTok{(bEdges, bCounts, m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in stepbins(bEdges, bCounts, m): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepPDF)}
+\KeywordTok{plot}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepPDF, }\DataTypeTok{do.points=}\OtherTok{FALSE}\NormalTok{, }\DataTypeTok{col=}\StringTok{"gray"}\NormalTok{, }\DataTypeTok{add=}\OtherTok{TRUE}\NormalTok{) }\CommentTok{# notice that the curve preserves bin area}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepCDF, }\DecValTok{0}\NormalTok{, sb}\OperatorTok{$}\NormalTok{E}\OperatorTok{+}\DecValTok{100000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{integral}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepPDF, }\DecValTok{0}\NormalTok{, sb}\OperatorTok{$}\NormalTok{E)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9999719
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sbpt <-}\StringTok{ }\KeywordTok{stepbins}\NormalTok{(bEdges, bCounts, m, }\DataTypeTok{tailShape=}\StringTok{"pareto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in stepbins(bEdges, bCounts, m, tailShape = "pareto"): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sbpt}\OperatorTok{$}\NormalTok{stepPDF, }\DataTypeTok{do.points=}\OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sbpt}\OperatorTok{$}\NormalTok{stepCDF, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E}\OperatorTok{+}\DecValTok{100000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{}\DecValTok{1}\OperatorTok{-}\NormalTok{sbpt}\OperatorTok{$}\KeywordTok{stepCDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 93824.99
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Gini coefficient (polygonal)}
+\NormalTok{fCDF <-}\StringTok{ }\NormalTok{sbpt}\OperatorTok{$}\NormalTok{stepCDF}
+\NormalTok{cdf_mean <-}\StringTok{ }\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{}\DecValTok{1}\OperatorTok{-}\NormalTok{sbpt}\OperatorTok{$}\KeywordTok{stepCDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}
+\KeywordTok{print}\NormalTok{(cdf_mean)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 93824.99
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gini <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{(}\DecValTok{1}\OperatorTok{-}\KeywordTok{fCDF}\NormalTok{(x))}\OperatorTok{^}\DecValTok{2}\NormalTok{\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}\OperatorTok{/}\NormalTok{cdf_mean}
+\KeywordTok{print}\NormalTok{(gini)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4379905
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Median}
+\NormalTok{invCDF <-}\StringTok{ }\KeywordTok{inverse}\NormalTok{(fCDF, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)  }\CommentTok{#https://www.rdocumentation.org/packages/GoFKernel/versions/2.1-1/topics/inverse}
+\NormalTok{median <-}\StringTok{ }\KeywordTok{invCDF}\NormalTok{(.}\DecValTok{5}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(median)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 71916.96
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{############}
+\CommentTok{####2017####}
+
+\NormalTok{bEdges <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{15000}\NormalTok{, }\DecValTok{25000}\NormalTok{, }\DecValTok{35000}\NormalTok{, }\DecValTok{50000}\NormalTok{, }\DecValTok{75000}\NormalTok{, }\DecValTok{100000}\NormalTok{, }\DecValTok{150000}\NormalTok{, }\DecValTok{200000}\NormalTok{, }\DecValTok{999999}\NormalTok{, }\OtherTok{Inf}\NormalTok{)}
+\NormalTok{bCounts <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{222379}\NormalTok{, }\DecValTok{214506}\NormalTok{, }\DecValTok{232186}\NormalTok{, }\DecValTok{361132}\NormalTok{, }\DecValTok{434733}\NormalTok{, }\DecValTok{522665}\NormalTok{, }\DecValTok{237220}\NormalTok{, }\DecValTok{279997}\NormalTok{)}
+\NormalTok{m <-}\StringTok{ }\DecValTok{95442} \CommentTok{# m is ACS mean}
+
+\CommentTok{#rsubbins(bEdges, bCounts, m=89294, eps1 = 0.25, eps2 = 0.75, depth = 3, tailShape = c("onebin"))}
+\CommentTok{#rsubbins(bEdges, bCounts, m=89294, eps1 = 0.25, eps2 = 0.75, depth = 3, tailShape = c("pareto"), nTail=16, numIterations=20, pIndex=1.160964)}
+\CommentTok{#rsubbins(bEdges, bCounts, m=89294, eps1 = 0.25, eps2 = 0.75, depth = 3, tailShape = c("exponential"), nTail=16, numIterations=20, tbRatio=0.8)}
+
+\CommentTok{## Optimized spline PDF and CDF fitted to binned data (SMOOTH SPLINE) ##}
+\KeywordTok{splinebins}\NormalTok{(bEdges, bCounts, m, }\DataTypeTok{numIterations =} \DecValTok{16}\NormalTok{, }\DataTypeTok{monoMethod =} \KeywordTok{c}\NormalTok{(}\StringTok{"hyman"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in splinebins(bEdges, bCounts, m, numIterations = 16, monoMethod = c("hyman")): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{verbatim}
+## $splinePDF
+## function (x) 
+## {
+##     ifelse(x < 0 | x > tailEnd, 0, f(x, deriv = 1))
+## }
+## <bytecode: 0x7fbb3679d298>
+## <environment: 0x7fbb508ca8c8>
+## 
+## $splineCDF
+## function (x) 
+## {
+##     ifelse(x < 0, 0, ifelse(x > tailEnd, 1, f(x)))
+## }
+## <bytecode: 0x7fbb3679da78>
+## <environment: 0x7fbb508ca8c8>
+## 
+## $E
+## [1] 645567.2
+## 
+## $est_mean
+## [1] 95441.42
+## 
+## $shrinkFactor
+## [1] 1
+## 
+## $splineInvCDF
+## function (x) 
+## {
+##     ifelse(x < 0, 0, ifelse(x > 1, tailEnd, finv(x)))
+## }
+## <bytecode: 0x7fbb3679cb60>
+## <environment: 0x7fbb508ca8c8>
+## 
+## $fitWarn
+## [1] FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{splb <-}\StringTok{ }\KeywordTok{splinebins}\NormalTok{(bEdges, bCounts, m, }\DataTypeTok{numIterations =} \DecValTok{16}\NormalTok{, }\DataTypeTok{monoMethod =} \KeywordTok{c}\NormalTok{(}\StringTok{"hyman"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in splinebins(bEdges, bCounts, m, numIterations = 16, monoMethod = c("hyman")): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(splb}\OperatorTok{$}\NormalTok{splinePDF, }\DecValTok{0}\NormalTok{, }\DecValTok{300000}\NormalTok{, }\DataTypeTok{n=}\DecValTok{500}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{}\DecValTok{1}\OperatorTok{-}\NormalTok{splb}\OperatorTok{$}\KeywordTok{splineCDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, splb}\OperatorTok{$}\NormalTok{E) }\CommentTok{# closer to given mean}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 95441.42
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Gini coefficient (spline)}
+\NormalTok{fCDF <-}\StringTok{ }\NormalTok{splb}\OperatorTok{$}\NormalTok{splineCDF}
+\NormalTok{cdf_mean <-}\StringTok{ }\NormalTok{splb}\OperatorTok{$}\NormalTok{est_mean}
+\NormalTok{gini <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{(}\DecValTok{1}\OperatorTok{-}\KeywordTok{fCDF}\NormalTok{(x))}\OperatorTok{^}\DecValTok{2}\NormalTok{\}, }\DecValTok{0}\NormalTok{, splb}\OperatorTok{$}\NormalTok{E)}\OperatorTok{/}\NormalTok{cdf_mean}
+\KeywordTok{print}\NormalTok{(gini)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.5171849
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Median}
+\NormalTok{invCDF <-}\StringTok{ }\KeywordTok{inverse}\NormalTok{(fCDF, }\DecValTok{0}\NormalTok{, splb}\OperatorTok{$}\NormalTok{E)  }\CommentTok{#https://www.rdocumentation.org/packages/GoFKernel/versions/2.1-1/topics/inverse}
+\NormalTok{median <-}\StringTok{ }\KeywordTok{invCDF}\NormalTok{(.}\DecValTok{5}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(median)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 62415.23
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Step function PDF and CDF fitted to binned data (POLYGONAL) ##}
+\NormalTok{sb <-}\StringTok{ }\KeywordTok{stepbins}\NormalTok{(bEdges, bCounts, m)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in stepbins(bEdges, bCounts, m): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepPDF)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-7.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepCDF, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E}\OperatorTok{+}\DecValTok{100000}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepPDF, }\DataTypeTok{do.points=}\OtherTok{FALSE}\NormalTok{, }\DataTypeTok{col=}\StringTok{"gray"}\NormalTok{, }\DataTypeTok{add=}\OtherTok{TRUE}\NormalTok{) }\CommentTok{# notice that the curve preserves bin area}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-8.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{integral}\NormalTok{(sb}\OperatorTok{$}\NormalTok{stepPDF, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9999691
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sbpt <-}\StringTok{ }\KeywordTok{stepbins}\NormalTok{(bEdges, bCounts, m, }\DataTypeTok{tailShape=}\StringTok{"pareto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in stepbins(bEdges, bCounts, m, tailShape = "pareto"): Top bin is bounded. Expect inaccurate results.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sbpt}\OperatorTok{$}\NormalTok{stepPDF, }\DataTypeTok{do.points=}\OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{cdf_interpolation_files/figure-latex/unnamed-chunk-1-9.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{}\DecValTok{1}\OperatorTok{-}\NormalTok{sbpt}\OperatorTok{$}\KeywordTok{stepCDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 95441.97
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Gini coefficient (polygonal)}
+\NormalTok{fCDF <-}\StringTok{ }\NormalTok{sbpt}\OperatorTok{$}\NormalTok{stepCDF}
+
+\NormalTok{cdf_mean <-}\StringTok{ }\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{}\DecValTok{1}\OperatorTok{-}\NormalTok{sbpt}\OperatorTok{$}\KeywordTok{stepCDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}
+\NormalTok{pdf_mean <-}\StringTok{ }\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{x}\OperatorTok{*}\NormalTok{sbpt}\OperatorTok{$}\KeywordTok{stepPDF}\NormalTok{(x)\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}
+\NormalTok{gini <-}\StringTok{ }\DecValTok{1}\OperatorTok{-}\KeywordTok{integral}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(x)\{(}\DecValTok{1}\OperatorTok{-}\KeywordTok{fCDF}\NormalTok{(x))}\OperatorTok{^}\DecValTok{2}\NormalTok{\}, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)}\OperatorTok{/}\NormalTok{cdf_mean}
+\KeywordTok{print}\NormalTok{(gini)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.5254183
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Median}
+\NormalTok{invCDF <-}\StringTok{ }\KeywordTok{inverse}\NormalTok{(fCDF, }\DecValTok{0}\NormalTok{, sbpt}\OperatorTok{$}\NormalTok{E)  }\CommentTok{#https://www.rdocumentation.org/packages/GoFKernel/versions/2.1-1/topics/inverse}
+\NormalTok{median <-}\StringTok{ }\KeywordTok{invCDF}\NormalTok{(.}\DecValTok{5}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(median)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 62778.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#can use this same function to get quantiles, etc.}
+
+\CommentTok{#can use fCDF function to find proportion of distribution withincome below that amount}
+\KeywordTok{fCDF}\NormalTok{(}\DecValTok{62416}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4974848
+\end{verbatim}
+
+\end{document}
