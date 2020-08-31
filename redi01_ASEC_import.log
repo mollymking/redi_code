@@ -1,0 +1,444 @@
+--------------------------------------------------------------------------------
+      name:  redi01_ASEC_import
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
+> EC_import.log
+  log type:  text
+ opened on:  28 Aug 2020, 22:28:25
+
+. 
+. 
+. //      project:        REDI Methodology Paper
+. 
+. //  task:       Create Income Distribution for Overlay
+. //  data:       CPS ASEC from IPUMS, available: https://cps.ipums.org/
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. 
+. display "$S_DATE  $S_TIME"
+28 Aug 2020  22:28:25
+
+. 
+. ***--------------------------***
+. 
+. // #0 PROGRAM SETUP
+. version 13 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. 
+. ***--------------------------***
+. // EXTRACT DATA
+. ***--------------------------***
+. 
+. // Code to extract is from IPUMS CPS ASEC do file for importing data - 
+. // just have to change working directory to redirect to where store original d
+> ata
+. // and change name of .do file to match below
+. 
+. cd $source/00_CPS_ASEC/
+/Users/mollymking/Documents/SocResearch/Dissertation/data/data_sorc/00_CPS_ASEC
+
+. // this is code provided by IPUMS - ACS to import data:
+. do $redi/cps_00009.do // larger data set includes variables for later regressi
+> on
+
+. * NOTE: You need to set the Stata working directory to the path
+. * where the data file is located.
+. 
+. set more off
+
+. 
+. clear
+
+. quietly infix              ///
+>   int     year      1-4    ///
+>   long    serial    5-9    ///
+>   byte    month     10-11  ///
+>   double  cpsid     12-25  ///
+>   byte    asecflag  26-26  ///
+>   double  asecwth   27-36  ///
+>   double  hhincome  37-44  ///
+>   byte    pernum    45-46  ///
+>   double  cpsidp    47-60  ///
+>   double  asecwt    61-70  ///
+>   byte    sex       71-71  ///
+>   int     race      72-74  ///
+>   int     hispan    75-77  ///
+>   int     educ      78-80  ///
+>   using `"cps_00009.dat"'
+
+. 
+. replace asecwth  = asecwth  / 10000
+(371,401 real changes made)
+
+. replace asecwt   = asecwt   / 10000
+(371,401 real changes made)
+
+. 
+. format cpsid    %14.0f
+
+. format asecwth  %10.4f
+
+. format hhincome %8.0f
+
+. format cpsidp   %14.0f
+
+. format asecwt   %10.4f
+
+. 
+. label var year     `"Survey year"'
+
+. label var serial   `"Household serial number"'
+
+. label var month    `"Month"'
+
+. label var cpsid    `"CPSID, household record"'
+
+. label var asecflag `"Flag for ASEC"'
+
+. label var asecwth  `"Annual Social and Economic Supplement Household weight"'
+
+. label var hhincome `"Total household income"'
+
+. label var pernum   `"Person number in sample unit"'
+
+. label var cpsidp   `"CPSID, person record"'
+
+. label var asecwt   `"Annual Social and Economic Supplement Weight"'
+
+. label var sex      `"Sex"'
+
+. label var race     `"Race"'
+
+. label var hispan   `"Hispanic origin"'
+
+. label var educ     `"Educational attainment recode"'
+
+. 
+. label define month_lbl 01 `"January"'
+
+. label define month_lbl 02 `"February"', add
+
+. label define month_lbl 03 `"March"', add
+
+. label define month_lbl 04 `"April"', add
+
+. label define month_lbl 05 `"May"', add
+
+. label define month_lbl 06 `"June"', add
+
+. label define month_lbl 07 `"July"', add
+
+. label define month_lbl 08 `"August"', add
+
+. label define month_lbl 09 `"September"', add
+
+. label define month_lbl 10 `"October"', add
+
+. label define month_lbl 11 `"November"', add
+
+. label define month_lbl 12 `"December"', add
+
+. label values month month_lbl
+
+. 
+. label define asecflag_lbl 1 `"ASEC"'
+
+. label define asecflag_lbl 2 `"March Basic"', add
+
+. label values asecflag asecflag_lbl
+
+. 
+. label define sex_lbl 1 `"Male"'
+
+. label define sex_lbl 2 `"Female"', add
+
+. label define sex_lbl 9 `"NIU"', add
+
+. label values sex sex_lbl
+
+. 
+. label define race_lbl 100 `"White"'
+
+. label define race_lbl 200 `"Black/Negro"', add
+
+. label define race_lbl 300 `"American Indian/Aleut/Eskimo"', add
+
+. label define race_lbl 650 `"Asian or Pacific Islander"', add
+
+. label define race_lbl 651 `"Asian only"', add
+
+. label define race_lbl 652 `"Hawaiian/Pacific Islander only"', add
+
+. label define race_lbl 700 `"Other (single) race, n.e.c."', add
+
+. label define race_lbl 801 `"White-Black"', add
+
+. label define race_lbl 802 `"White-American Indian"', add
+
+. label define race_lbl 803 `"White-Asian"', add
+
+. label define race_lbl 804 `"White-Hawaiian/Pacific Islander"', add
+
+. label define race_lbl 805 `"Black-American Indian"', add
+
+. label define race_lbl 806 `"Black-Asian"', add
+
+. label define race_lbl 807 `"Black-Hawaiian/Pacific Islander"', add
+
+. label define race_lbl 808 `"American Indian-Asian"', add
+
+. label define race_lbl 809 `"Asian-Hawaiian/Pacific Islander"', add
+
+. label define race_lbl 810 `"White-Black-American Indian"', add
+
+. label define race_lbl 811 `"White-Black-Asian"', add
+
+. label define race_lbl 812 `"White-American Indian-Asian"', add
+
+. label define race_lbl 813 `"White-Asian-Hawaiian/Pacific Islander"', add
+
+. label define race_lbl 814 `"White-Black-American Indian-Asian"', add
+
+. label define race_lbl 815 `"American Indian-Hawaiian/Pacific Islander"', add
+
+. label define race_lbl 816 `"White-Black--Hawaiian/Pacific Islander"', add
+
+. label define race_lbl 817 `"White-American Indian-Hawaiian/Pacific Islander"',
+>  add
+
+. label define race_lbl 818 `"Black-American Indian-Asian"', add
+
+. label define race_lbl 819 `"White-American Indian-Asian-Hawaiian/Pacific Islan
+> der"', add
+
+. label define race_lbl 820 `"Two or three races, unspecified"', add
+
+. label define race_lbl 830 `"Four or five races, unspecified"', add
+
+. label define race_lbl 999 `"Blank"', add
+
+. label values race race_lbl
+
+. 
+. label define hispan_lbl 000 `"Not Hispanic"'
+
+. label define hispan_lbl 100 `"Mexican"', add
+
+. label define hispan_lbl 102 `"Mexican American"', add
+
+. label define hispan_lbl 103 `"Mexicano/Mexicana"', add
+
+. label define hispan_lbl 104 `"Chicano/Chicana"', add
+
+. label define hispan_lbl 108 `"Mexican (Mexicano)"', add
+
+. label define hispan_lbl 109 `"Mexicano/Chicano"', add
+
+. label define hispan_lbl 200 `"Puerto Rican"', add
+
+. label define hispan_lbl 300 `"Cuban"', add
+
+. label define hispan_lbl 400 `"Dominican"', add
+
+. label define hispan_lbl 500 `"Salvadoran"', add
+
+. label define hispan_lbl 600 `"Other Hispanic"', add
+
+. label define hispan_lbl 610 `"Central/South American"', add
+
+. label define hispan_lbl 611 `"Central American, (excluding Salvadoran)"', add
+
+. label define hispan_lbl 612 `"South American"', add
+
+. label define hispan_lbl 901 `"Do not know"', add
+
+. label define hispan_lbl 902 `"N/A (and no response 1985-87)"', add
+
+. label values hispan hispan_lbl
+
+. 
+. label define educ_lbl 000 `"NIU or no schooling"'
+
+. label define educ_lbl 001 `"NIU or blank"', add
+
+. label define educ_lbl 002 `"None or preschool"', add
+
+. label define educ_lbl 010 `"Grades 1, 2, 3, or 4"', add
+
+. label define educ_lbl 011 `"Grade 1"', add
+
+. label define educ_lbl 012 `"Grade 2"', add
+
+. label define educ_lbl 013 `"Grade 3"', add
+
+. label define educ_lbl 014 `"Grade 4"', add
+
+. label define educ_lbl 020 `"Grades 5 or 6"', add
+
+. label define educ_lbl 021 `"Grade 5"', add
+
+. label define educ_lbl 022 `"Grade 6"', add
+
+. label define educ_lbl 030 `"Grades 7 or 8"', add
+
+. label define educ_lbl 031 `"Grade 7"', add
+
+. label define educ_lbl 032 `"Grade 8"', add
+
+. label define educ_lbl 040 `"Grade 9"', add
+
+. label define educ_lbl 050 `"Grade 10"', add
+
+. label define educ_lbl 060 `"Grade 11"', add
+
+. label define educ_lbl 070 `"Grade 12"', add
+
+. label define educ_lbl 071 `"12th grade, no diploma"', add
+
+. label define educ_lbl 072 `"12th grade, diploma unclear"', add
+
+. label define educ_lbl 073 `"High school diploma or equivalent"', add
+
+. label define educ_lbl 080 `"1 year of college"', add
+
+. label define educ_lbl 081 `"Some college but no degree"', add
+
+. label define educ_lbl 090 `"2 years of college"', add
+
+. label define educ_lbl 091 `"Associate's degree, occupational/vocational progra
+> m"', add
+
+. label define educ_lbl 092 `"Associate's degree, academic program"', add
+
+. label define educ_lbl 100 `"3 years of college"', add
+
+. label define educ_lbl 110 `"4 years of college"', add
+
+. label define educ_lbl 111 `"Bachelor's degree"', add
+
+. label define educ_lbl 120 `"5+ years of college"', add
+
+. label define educ_lbl 121 `"5 years of college"', add
+
+. label define educ_lbl 122 `"6+ years of college"', add
+
+. label define educ_lbl 123 `"Master's degree"', add
+
+. label define educ_lbl 124 `"Professional school degree"', add
+
+. label define educ_lbl 125 `"Doctorate degree"', add
+
+. label define educ_lbl 999 `"Missing/Unknown"', add
+
+. label values educ educ_lbl
+
+. 
+. 
+. 
+end of do-file
+
+. 
+. 
+. // CLEAN UP A BIT
+. keep if year == 2016 | year == 2017
+(0 observations deleted)
+
+. 
+. // SAVE
+. label data "Imported original CPS ASEC data from IPUMS"
+
+. notes: redi01b_ASEC-extr.dta \ Extracted CPS ASEC Data from IPUMS \ redi01b_AS
+> EC-extr.do mmk $DATE
+
+. compress
+  variable hhincome was double now long
+  (1,485,604 bytes saved)
+
+. datasignature set, reset
+  371401:14(75876):1335711634:1006543702       (data signature set)
+
+. save $extr/redi01_ASEC-extr.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
+> ved
+
+. 
+. 
+. ***--------------------------***
+. // HOUSEHOLD INCOME
+. ***--------------------------***
+. 
+. // SURVEY WEIGHT INFO
+. // svyset [iweight=hwtsupp] 
+.         // household weight for hhincome
+.         
+. *sum hhincome
+. 
+. *histogram hhincome, frequency kdensity
+. 
+. keep if pernum == 1
+(231,960 observations deleted)
+
+. svyset [pweight=asecwth]
+
+      pweight: asecwth
+          VCE: linearized
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+. 
+. svy: mean hhincome
+(running mean on estimation sample)
+
+Survey: Mean estimation
+
+Number of strata =       1      Number of obs   =      139,441
+Number of PSUs   = 139,441      Population size =  252,586,892
+                                Design df       =      139,440
+
+--------------------------------------------------------------
+             |             Linearized
+             |       Mean   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+    hhincome |   81042.31     288.47      80476.92    81607.71
+--------------------------------------------------------------
+
+. 
+. ***--------------------------***
+. // # SAVE DATA
+. ***--------------------------***
+. 
+. label data "Household Income - CPS ASEC data"
+
+. notes: redi01_ASEC-hhincome.dta \ CPS ASEC Data - Household Income distributio
+> n overlay \ redi01_ASEC.do
+
+. compress
+  (0 bytes saved)
+
+. datasignature set, reset
+  139441:14(75876):893375027:771226480       (data signature reset)
+
+. save $deriv/redi01_ASEC-hhincome.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
+> a saved
+
+. 
+. ***--------------------------***
+. log close redi01_ASEC_import
+      name:  redi01_ASEC_import
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
+> EC_import.log
+  log type:  text
+ closed on:  28 Aug 2020, 22:28:28
+--------------------------------------------------------------------------------
