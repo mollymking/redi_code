@@ -1,0 +1,200 @@
+--------------------------------------------------------------------------------
+      name:  redi05_ASEC_bins
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi05_AS
+> EC_bins.log
+  log type:  text
+ opened on:  28 Aug 2020, 22:59:33
+
+. 
+. //      project:        REDI Methods Paper
+. 
+. //  task:       Creating bins for CPS ASEC
+. //  data:               CPS ASEC
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+28 Aug 2020  22:59:33
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 13 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+.         
+. use $deriv/redi01_ASEC-hhincome.dta, clear
+(Household Income - CPS ASEC data)
+
+. save $deriv/redi05_ASEC_bins-hinc.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc.d
+> ta saved
+
+. 
+. ***--------------------------***
+. // # CREATE SHARP CATEGORY BOUNDS - HOUSEHOLD
+. ***--------------------------***
+. 
+. label define  cat_inc                                   ///
+>         1       "Less than $15000"                              ///
+>         2       "15000 to less than 25000"              ///
+>         3       "25000 to less than 35000"              ///
+>         4       "35000 to less than 50000"              ///
+>         5       "50000 to less than 75000"              ///
+>         6       "75000 to less than 100000"     ///
+>         7       "100000 to less than 150000"    ///
+>         8       "150000 to less than 200000"    ///
+>         9       "200000 or more"                                //
+
+. 
+. 
+. *arbitrary categories invented to demonstrate flexibility of method
+. gen     asec_hinc_shp = .
+(139,441 missing values generated)
+
+. replace asec_hinc_shp = 1 if hhincome   <= 15000
+(16,385 real changes made)
+
+. replace asec_hinc_shp = 2 if hhincome  > 15000  & hhincome <= 25000
+(13,798 real changes made)
+
+. replace asec_hinc_shp = 3 if hhincome  > 25000  & hhincome <= 35000
+(13,242 real changes made)
+
+. replace asec_hinc_shp = 4 if hhincome  > 35000  & hhincome <= 50000     
+(17,636 real changes made)
+
+. replace asec_hinc_shp = 5 if hhincome  > 50000  & hhincome <= 75000     
+(23,224 real changes made)
+
+. replace asec_hinc_shp = 6 if hhincome  > 75000  & hhincome <= 100000
+(17,115 real changes made)
+
+. replace asec_hinc_shp = 7 if hhincome  > 100000         & hhincome <= 150000 
+(20,138 real changes made)
+
+. replace asec_hinc_shp = 8 if hhincome  > 150000         & hhincome <= 200000
+(8,951 real changes made)
+
+. replace asec_hinc_shp = 9 if hhincome  > 200000         & hhincome != 9999999 
+(8,952 real changes made)
+
+. replace asec_hinc_shp = . if hhincome == 9999999 
+(0 real changes made)
+
+. replace asec_hinc_shp = . if hhincome == .
+(0 real changes made)
+
+. 
+. label values asec_hinc_shp cat_inc
+
+. 
+. tab asec_hinc_shp, m
+
+             asec_hinc_shp |      Freq.     Percent        Cum.
+---------------------------+-----------------------------------
+          Less than $15000 |     16,385       11.75       11.75
+  15000 to less than 25000 |     13,798        9.90       21.65
+  25000 to less than 35000 |     13,242        9.50       31.14
+  35000 to less than 50000 |     17,636       12.65       43.79
+  50000 to less than 75000 |     23,224       16.66       60.44
+ 75000 to less than 100000 |     17,115       12.27       72.72
+100000 to less than 150000 |     20,138       14.44       87.16
+150000 to less than 200000 |      8,951        6.42       93.58
+            200000 or more |      8,952        6.42      100.00
+---------------------------+-----------------------------------
+                     Total |    139,441      100.00
+
+. tab asec_hinc_shp, m nolab
+
+asec_hinc_s |
+         hp |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |     16,385       11.75       11.75
+          2 |     13,798        9.90       21.65
+          3 |     13,242        9.50       31.14
+          4 |     17,636       12.65       43.79
+          5 |     23,224       16.66       60.44
+          6 |     17,115       12.27       72.72
+          7 |     20,138       14.44       87.16
+          8 |      8,951        6.42       93.58
+          9 |      8,952        6.42      100.00
+------------+-----------------------------------
+      Total |    139,441      100.00
+
+. 
+. * SAVE SHARP INCOME VARIABLE
+. label var asec_hinc_shp "household Income (ASEC) sharp categories based on hhi
+> ncome"
+
+. notes asec_hinc_shp: ASEC household Income Sharp Categories from hhincome \  m
+> mk $S_DATE
+
+. 
+. save $deriv/redi05_ASEC_bins-hinc.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc.d
+> ta saved
+
+. 
+. ***--------------------------***
+. // # COUNT NUMBER OF CASES IN EACH BIN
+. ***--------------------------***
+. 
+. * COUNT BY SHARP BINS
+. 
+. use $deriv/redi05_ASEC_bins-hinc.dta, clear
+(Household Income - CPS ASEC data)
+
+. 
+. gen id = _n
+
+. egen asec_hinc_shp_n = count(id), by(asec_hinc_shp year)
+
+. label var asec_hinc_shp_n "Count of cases of household Income (ASEC) sharp wit
+> hin year (count of asec_hinc_shp by year)"
+note: label truncated to 80 characters
+
+. 
+. save $deriv/redi05_ASEC_bins-hinc_shp.dta, replace  // for use in redi10_ASEC_
+> regressions
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc_s
+> hp.dta saved
+
+. 
+. duplicates drop year asec_hinc_shp asec_hinc_shp_n, force
+
+Duplicates in terms of year asec_hinc_shp asec_hinc_shp_n
+
+(139,423 observations deleted)
+
+. rename asec_hinc_shp hinc_shp
+
+. 
+. keep year hinc_shp asec_hinc_shp_n 
+
+. 
+. save $deriv/redi05_ASEC_bins-hinc_shp-nodups.dta, replace  // this is for merg
+> e in redi08_ACS_ASEC_distrib_match
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc_s
+> hp-nodups.dta saved
+
+. 
+. ***--------------------------***
+. 
+. log close redi05_ASEC_bins
+      name:  redi05_ASEC_bins
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi05_AS
+> EC_bins.log
+  log type:  text
+ closed on:  28 Aug 2020, 22:59:35
+--------------------------------------------------------------------------------
