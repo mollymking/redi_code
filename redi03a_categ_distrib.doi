@@ -1,0 +1,222 @@
+*! Include file to convert categorical to continuous income values, independent of values of categories
+*! creates numeric variables indicating edges of income categories,
+*! and draws random continuous income from CPS-ASEC from between those edges
+
+*! version 4.0 \ molly king 2020-08-25
+
+***--------------------------***
+
+// #1 SETUP
+	*noisily
+	*set seed 1 // when commented out - selection from CPS-ASEC is random
+	compress
+
+	cd $temp
+	
+	//Create local for levels of income = e.g., levelsof year, local(years)
+	levelsof acs_hinc_shp, local("acs_hinc_shp_levels")
+
+	// sort for later join & create variable recording the original observation order within the identifier
+	*bysort year acs_hinc_shp: gen year_inc_id = _n
+	bysort year acs_hinc_shp: gen id = _n
+
+// #2 create numeric variables indicating edges of income categories //
+	// Note: for more detail on if-command and Stata regular expressions used to create this, see:
+		*http://www.stata.com/statalist/archive/2013-03/msg00654.html
+		*http://www.stata.com/support/faqs/programming/if-command-versus-if-qualifier/
+		*http://stats.idre.ucla.edu/stata/faq/how-can-i-extract-a-portion-of-a-string-variable-using-regular-expressions/
+
+	// List income levels
+	di in red "The income levels are: " "`acs_hinc_shp_levels'"
+
+	* Decode converts labels to string variables for acs_hinc_shp
+	decode acs_hinc_shp, gen(inc_decoded)
+
+	tempfile working_regex
+	save `working_regex', replace
+
+	
+	//Levels of year variable to loop through years in dataset
+	levelsof year, local(years)
+	di in red  "Create local variable years to loop through within that income bracket - values:" `years'
+
+	foreach y of local years { // loop through all years
+
+	
+		// loop through all values of income categories (`inc_level')
+		foreach inc_level of local acs_hinc_shp_levels {
+
+			use `working_regex', clear
+
+			// Keep the data if the income variable is equal to the current income level (of the loop)
+			keep if acs_hinc_shp == `inc_level'  // do this to make sure not replacing things with wrong level later
+			di "The current inc_level is: " `inc_level'
+
+			// text at beginning of the string:
+				if regexm(inc_decoded, "^[a-z/A-Z]+") == 1 {
+					di "The inc_level " `inc_level' " is at the lowest end of the original ACS income range"
+					// for lower-bound values, will match if text at beginning of line
+					destring inc_decoded, ignore("Less than LESS THAN Under,$ ") generate(acs_hinc_shp_ub) // parses out these words
+					gen acs_hinc_shp_lb = -100000
+					di "Lower bound of -100,000 created for inc_level " `inc_level'
+				}
+
+			// text at end of the string:
+				else if regexm(inc_decoded, "[a-z/A-Z]+$") == 1 {
+					di "The inc_level " `inc_level' " is at the highest end of the original ACS income range"
+					// for upper-bound values, will match if text at end of line
+					destring inc_decoded, ignore("and over or over,$ or more OR MORE") generate(acs_hinc_shp_lb) // parses out these words
+					gen acs_hinc_shp_ub = 999999  // my topcode for asec purposes
+					di "Upper bound of 999999 created for inc_level " `inc_level'
+				}
+
+			// if acs_hinc_shp is missing, keep it missing for lower_bound and upper_bound
+				else if regexm(inc_decoded, "[.][a-z]") == 1 {
+					di "The inc_level " `inc_level' " is all missing"
+				 // for missing values (a bit excessive, since already missing, but good to be sure)
+					gen acs_hinc_shp_lb = .
+					gen acs_hinc_shp_ub = .
+					di "Lower and upper bound of . created for inc_level " `inc_level'
+				}
+
+			// for labels with 2 numbers in them
+				else if regexm(inc_decoded, "[0-9]+$") == 1 {
+				// regex "[0-9]+$" will match anything of form $0000 or 0000 at end of line -
+				// since those at lowest and highest ranges have already been matched (using text), this leaves those with ranges
+						di "The inc_level " `inc_level' " has a lower and an upper level"
+						split inc_decoded, ///
+							parse("-" "to" "-" "to under" "to less than" "UP TO" "but less than") ///
+							ignore(" ,$") destring
+						gen acs_hinc_shp_lb = inc_decoded1
+						gen acs_hinc_shp_ub = inc_decoded2
+						di "Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for inc_level " `inc_level' "of the original ACS income range"
+				}
+
+			// error - in case doesn't fit any existing category
+				else {
+					di "The inc_level " `inc_level' " does not fit any of the existing regular expressions designs."
+				}
+
+			// create locals to use later for selecting appropriate ASEC bounds
+				local upper_bound = acs_hinc_shp_ub
+				local lower_bound = acs_hinc_shp_lb
+
+		// drop variables used in creating lower and upper bounds
+			capture drop inc_decoded1 inc_decoded2
+
+		// #3A Now, still within the single-income-level loop in ACS dataset:
+
+			// summarize so can get count of how many individuals in that income level during year
+				quietly summarize if year == `y' & acs_hinc_shp == `inc_level'
+				local sample_size = r(N) // count how many rows there are in survey dataset
+				  // count N_B for each bin (# of observations in ACS income category between L_bn and U_bn)
+				
+				// create count within each ACS income bin
+				gen acs_hinc_shp_n = `sample_size' // contains size of bin in ACS dataset
+				label variable acs_hinc_shp_n "household (ACS) shp count of respondents in each income bin in original (research) dataset"
+
+
+			// create temporary file of just this ACS income level and year can merge ASEC incomes back into later
+				keep if year == `y' & acs_hinc_shp == `inc_level'
+				tempfile premerge_`inc_level'_`y'
+				save `premerge_`inc_level'_`y'', replace
+
+				use $deriv/redi01_ASEC-hhincome.dta, clear // use ASEC household dataset
+				di "Calculating household income using hhincome ASEC variable."
+
+			// #3B) Takes a random draw of number of incomes w/in that income boundary and year from the CPS-ASEC
+			// Keep ASEC data if within income bounds and for given year
+
+				keep if year == `y' & ///
+					hhincome >= `lower_bound' & ///
+					hhincome <= `upper_bound'
+				gen obs_no = _n
+				save "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", replace
+				di "Keep income between $`lower_bound' and $`upper_bound' for `y' year."
+			
+			// #3C) Sample, with replacement, such that ASEC income has an equal probability assigned to each observation in this artificial data set (which will later be matched to ACS data set)
+			// Thanks to Clyde Schechter; https://www.statalist.org/forums/forum/general-stata-discussion/general/1475890-is-there-a-command-that-is-equivalent-to-bsample-more-than-_n
+				quietly des 
+				local N = r(N)
+
+				clear
+				set obs `sample_size'
+				*set seed 1
+
+				gen obs_no = runiformint(1, `N')
+				merge m:1 obs_no using "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", keep(match) nogenerate 
+				// here, artificial data set is matched to ASEC data set for that incomebin for that year 								
+					
+													
+			// #3D) Add new columns for lower_bound and upper_bound of income bin
+				gen acs_hinc_shp_lb = `lower_bound'
+				gen acs_hinc_shp_ub = `upper_bound'
+			// Label new upper and lower income bound variables
+				label variable acs_hinc_shp_lb "acs_hinc_shp Lower Bound"
+				label variable acs_hinc_shp_ub "acs_hinc_shp Upper Bound"
+
+				save "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", replace
+				
+				di "Merged ASEC values with original ACS dataset for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
+
+			// #4) Merge ACS and ASEC data
+			// here, ASEC artificial data set (from step 3C) is matched to ACS for that incomebin for that year 								
+				gen id = _n
+				merge 1:1 id using `premerge_`inc_level'_`y''
+						
+			// #5) create count within each REDI income bin
+				generate 	redi_hinc_shp_n = .
+				replace 	redi_hinc_shp_n = `N' // r(N) from above
+				label var 	redi_hinc_shp_n "household (REDI) shp count of respondents in each income bin in post-merge dataset'"
+
+			// Save these new redi data (with yearly ASEC continuous data) in a tempfile we can use later for merging, etc.
+				tempfile temp_`inc_level'_`y'
+				save `temp_`inc_level'_`y'', replace
+				di "Saved REDI data (with ASEC continuous data) for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y' in file"
+		
+		}  //  close loop through all values of income categories (`inc_level')
+				
+		di  in red "Moved outside loop of year income bracket " `inc_level' " ($`lower_bound'-`upper_bound')."
+		
+		// append all income brackets across all years
+			tokenize `acs_hinc_shp_levels'
+			local first `1'
+			use `temp_`1'_`y'', clear
+			macro shift
+			local rest `*'
+
+		// now loop through and append each temp file created within income bracket loop
+			foreach bracket in `*' {
+				append using `temp_`bracket'_`y''
+			}
+
+		// create new tempfile to save each year's data for all income levels
+			tempfile temp_`y'
+			save `temp_`y'', replace
+			di "Saved new tempfile  for year `y' for all REDI income brackets."
+
+						
+	} //  end of loop through all years
+				
+		// append all years 
+			tokenize `years'
+			local first `1'
+			use `temp_`1'', clear
+			macro shift
+			local rest `*'
+
+		// now loop through and append each yearly temp file created earlier
+			foreach ytemp in `*' {
+				append using `temp_`ytemp''
+			}
+			di "Appended all years "
+
+// CLEAN UP
+
+sort year acs_hinc_shp id
+drop obs_no id inc_decoded
+
+tab _merge
+drop _merge
+
+di in red "End of redi03a_categ_distrib.doi for household and shp variables" 
