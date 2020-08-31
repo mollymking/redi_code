@@ -1,0 +1,359 @@
+--------------------------------------------------------------------------------
+      name:  redi09_REDI_ACS_distrib_match
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi09_RE
+> DI_ACS_distrib_match.log
+  log type:  text
+ opened on:  28 Aug 2020, 23:28:10
+
+. 
+. //      project:        REDI Methods Paper
+. 
+. //  task:       Compare continuous distributions from original ACS & REDI
+. //  data:               ACS, available: https://usa.ipums.org/
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+28 Aug 2020  23:28:10
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. set seed 1
+
+. 
+. *one-time install:
+. *ssc install distplot
+. 
+. local conv_year "2017"
+
+. 
+. ***--------------------------***
+. // # CDF comparing original and created continuous distributions
+. ***--------------------------***
+. 
+. use  $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. save $temp/redi09_REDI_ACS_distrib_match.dta, replace
+(note: file /Users/mollymking/Documents/SocResearch/Dissertation/data/data_temp/
+> redi09_REDI_ACS_distrib_match.dta not found)
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi09_REDI_ACS_distrib
+> _match.dta saved
+
+. 
+. // CREATE NATURAL LOG INCOME VARIABLES
+. 
+. di in red "Create natural log income variables for acs_hinc_shp_`conv_year'"
+Create natural log income variables for acs_hinc_shp_2017
+
+. 
+. gen redi_dV_hinc_shp_`conv_year'_ln = ln(redi_dV_hinc_shp_`conv_year')
+(56,487 missing values generated)
+
+. gen acs_hinc_shp_`conv_year'_ln = ln(acs_hinc_shp_`conv_year')
+(54,406 missing values generated)
+
+. gen redi_dV_hinc_shp_`conv_year'_log = log(redi_dV_hinc_shp_`conv_year')
+(56,487 missing values generated)
+
+. gen acs_hinc_shp_`conv_year'_log = log(acs_hinc_shp_`conv_year')
+(54,406 missing values generated)
+
+. 
+. clonevar redi_inc = acs_hinc_shp_`conv_year'
+
+. replace  redi_inc = 1 if acs_hinc_shp_`conv_year' <= 0
+(54,406 real changes made)
+
+. 
+. save $temp/redi09_REDI_ACS_distrib_match.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi09_REDI_ACS_distrib
+> _match.dta saved
+
+. 
+. *distplot varlist [if] [in] [weight] [, by(varname[, sub_options]) { frequency
+>  | midpoint } reverse[(ge)]
+. *                trscale(transformation_syntax) graph_options ]
+. *log x-scale:  https://www.stata.com/manuals13/g-3axis_scale_options.pdf#g-3ax
+> is_scale_options
+. 
+. *Log plot
+. 
+. distplot acs_hinc_shp_`conv_year' redi_dV_hinc_shp_`conv_year', ///
+> legend( ///
+>                 label(1 "REDI-calculated continuous income (hinc, shp)") ///
+>                 label(2 "Original income (ACS) (hinc, shp)") ///
+>                 size(vsmall) /// size of text
+>                 margin(small) nobox region(fcolor(white) lcolor(white))) ///
+>         ytitle("Cumulative probability included in distribution") /// 
+>         xtitle("shp Income (`conv_year' dollars)") ///
+>         xscale(log) /// 
+>         xlabel(1 100 1000 10000  100000 1000000) //
+
+.         
+. graph export $redi/redi09_REDI_ACS_distrib_match-log.pdf, replace
+(file ~/Documents/SocResearch/Dissertation/redi/redi09_REDI_ACS_distrib_match-lo
+> g.pdf written in PDF format)
+
+. 
+. 
+. *Natural log plot
+. 
+. distplot acs_hinc_shp_`conv_year'_ln redi_dV_hinc_shp_`conv_year'_ln, ///
+> legend( ///
+>                 label(1 "REDI-calculated continuous income (hinc, shp)") ///
+>                 label(2 "Original income (ACS) (hinc, shp)") ///
+>                 size(vsmall) /// size of text
+>                 margin(small) nobox region(fcolor(white) lcolor(white))) ///
+>         ytitle("Cumulative probability included in distribution") /// 
+>         xtitle("REDI-calculated shp Income (ln `conv_year' dollars)") //
+
+.         *xscale(log) ///
+>         *xlabel(0 200000 500000 1000000 2000000 3000000) //
+.         
+. graph export $redi/redi09_REDI_ACS_distrib_match-ln.pdf, replace
+(file ~/Documents/SocResearch/Dissertation/redi/redi09_REDI_ACS_distrib_match-ln
+> .pdf written in PDF format)
+
+. 
+. rm  $temp/redi09_REDI_ACS_distrib_match.dta
+
+. 
+. ***--------------------------***
+. // # MEASURE OF CONFIDENCE - TWO SAMPLE, TWO-SIDED t-TEST REDI vs. ACS
+. ***--------------------------***
+. 
+. use $deriv/redi07_REDI_descriptives-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. save $deriv/redi09_REDI_ACS_distrib_match-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi09_REDI_ACS_distrib
+> _match-hinc_shp.dta saved
+
+. 
+. keep year perwt redi_dV_hinc_shp_`conv_year' acs_hinc_shp_`conv_year'  repwtp*
+>  
+
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+. 
+. // reshape long so can do two sample test with over() variables
+. rename acs_hinc_shp_`conv_year'  var_hinc1
+
+. rename redi_dV_hinc_shp_`conv_year'  var_hinc2
+
+.         generate id = _n
+
+. 
+. reshape long var_hinc, i(id) j(acs_redi)
+(note: j = 1 2)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                  6.0e+06   -> 1.2e+07
+Number of variables                  86   ->      86
+j variable (2 values)                     ->   acs_redi
+xij variables:
+                    var_hinc1 var_hinc2   ->   var_hinc
+-----------------------------------------------------------------------------
+
+. replace acs_redi = 0 if  acs_redi == 2
+(6,047,887 real changes made)
+
+. label define acs_redi 1 "acs" 0 "redi"
+
+. label values acs_redi acs_redi
+
+. 
+. 
+. // now ttest, loop by year
+. levelsof year, local(years)
+2016 2017
+
+. foreach y of local years { // loop through all years
+  2. 
+.         *ttest redi_dV_hinc_shp_`conv_year' == acs_hinc_shp_`conv_year'  [pwei
+> ght=perwt] , unequal unpaired
+.         svy: regress var_hinc acs_redi if year == `y'
+  3.         test acs_redi // Wald test
+  4. 
+. } // end loop through years             
+(running regress on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Linear regression                     Number of obs     =    6,016,812
+                                              Population size   =  630,095,272
+                                              Replications      =           80
+                                              Design df         =           79
+                                              F(   1,     79)   =      4742.73
+                                              Prob > F          =       0.0000
+                                              R-squared         =       0.0004
+
+------------------------------------------------------------------------------
+             |                BRR *
+    var_hinc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    acs_redi |     3698.8   53.70897    68.87   0.000     3591.895    3805.705
+       _cons |   90126.47   109.7984   820.84   0.000     89907.92    90345.02
+------------------------------------------------------------------------------
+
+Adjusted Wald test
+
+ ( 1)  acs_redi = 0
+
+       F(  1,    79) = 4742.73
+            Prob > F =    0.0000
+(running regress on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Linear regression                     Number of obs     =    6,078,962
+                                              Population size   =  635,263,882
+                                              Replications      =           80
+                                              Design df         =           79
+                                              F(   1,     79)   =      3320.04
+                                              Prob > F          =       0.0000
+                                              R-squared         =       0.0004
+
+------------------------------------------------------------------------------
+             |                BRR *
+    var_hinc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    acs_redi |    3610.74   62.66493    57.62   0.000     3486.008    3735.471
+       _cons |   91831.74   101.3306   906.26   0.000     91630.05    92033.44
+------------------------------------------------------------------------------
+
+Adjusted Wald test
+
+ ( 1)  acs_redi = 0
+
+       F(  1,    79) = 3320.04
+            Prob > F =    0.0000
+
+. 
+. ***--------------------------***
+. // # Kolmogorov-Smirnov equality-of-distributions test
+. ***--------------------------***
+. levelsof year, local(years)
+2016 2017
+
+. foreach y of local years { // loop through all years
+  2. 
+.         *A two-sample test tests the equality of the distributions of two samp
+> les.
+.         *  ksmirnov varname [if] [in] , by(groupvar) [exact]
+.         ksmirnov var_hinc if year == `y', by(acs_redi)
+  3. 
+. } // end loop through years
+
+Two-sample Kolmogorov-Smirnov test for equality of distribution functions
+
+ Smaller group       D       P-value  
+ -----------------------------------
+ redi:               0.0119    0.000
+ acs:               -0.0011    0.022
+ Combined K-S:       0.0119    0.000
+
+Note: Ties exist in combined dataset;
+      there are 65086 unique values out of 6016812 observations.
+
+Two-sample Kolmogorov-Smirnov test for equality of distribution functions
+
+ Smaller group       D       P-value  
+ -----------------------------------
+ redi:               0.0109    0.000
+ acs:               -0.0017    0.000
+ Combined K-S:       0.0109    0.000
+
+Note: Ties exist in combined dataset;
+      there are 63090 unique values out of 6078962 observations.
+
+.         
+.         
+. ***--------------------------***
+. // #    Epps-Singleton two-sample empirical characteristic function test
+. ***--------------------------***                
+. *https://www.stata-journal.com/sjpdf.html?articlenum=st0174
+. * escftest varname [if] [in], group(groupvar) [t1(#) t2(#)]
+. levelsof year, local(years)
+2016 2017
+
+. foreach y of local years { // loop through all years
+  2. 
+.         escftest var_hinc if year == `y', group(acs_redi)
+  3.         
+. }
+
+Epps-Singleton Two-Sample Empirical Characteristic Function test
+
+Sample sizes: acs_redi = 0      3008406
+              acs_redi = 1      3008406
+              total             6016812
+t1                                0.400
+t2                                0.800
+
+Critical value for W2 at 10%     7.779
+                          5%     9.488
+                          1%    13.277
+Test statistic W2            11308.604
+
+Ho: distributions are identical
+P-value                         0.00000
+
+Epps-Singleton Two-Sample Empirical Characteristic Function test
+
+Sample sizes: acs_redi = 0      3039481
+              acs_redi = 1      3039481
+              total             6078962
+t1                                0.400
+t2                                0.800
+
+Critical value for W2 at 10%     7.779
+                          5%     9.488
+                          1%    13.277
+Test statistic W2             9081.039
+
+Ho: distributions are identical
+P-value                         0.00000
+
+. 
+. ***--------------------------***
+. 
+. log close redi09_REDI_ACS_distrib_match
+      name:  redi09_REDI_ACS_distrib_match
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi09_RE
+> DI_ACS_distrib_match.log
+  log type:  text
+ closed on:  29 Aug 2020, 00:06:42
+--------------------------------------------------------------------------------
