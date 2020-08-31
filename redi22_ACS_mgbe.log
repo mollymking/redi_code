@@ -1,0 +1,186 @@
+--------------------------------------------------------------------------------
+      name:  redi22_ACS_mgbe
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi22_AC
+> S_mgbe.log
+  log type:  text
+ opened on:  29 Aug 2020, 00:59:13
+
+. 
+. //  project:    REDI Methodology Paper
+. 
+. //  task:       MGBE method of describing ACS
+. //  data:               ACS, available: https://usa.ipums.org/
+. 
+. //  github:             redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+29 Aug 2020  00:59:13
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. 
+. *one-time install:
+. *ssc install mgbe
+. 
+. local conv_year "2017" // year used for inflation
+
+. 
+. use $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. 
+. ***--------------------------***
+. // # MULTIMODEL GENERALIZED BETA ESTIMATOR
+. ***--------------------------***
+. 
+. drop repwt*
+
+. duplicates drop year acs_hinc_shp_n ///
+>         acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, force
+
+Duplicates in terms of year acs_hinc_shp_n acs_hinc_shp_2017lb
+    acs_hinc_shp_2017ub
+
+(6,047,869 observations deleted)
+
+. keep year acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub
+
+. 
+. replace acs_hinc_shp_`conv_year'lb = 0 ///
+>         if acs_hinc_shp_`conv_year'lb < 0 // previously replaced values, switc
+> h back
+(2 real changes made)
+
+. compress
+  (0 bytes saved)
+
+. save $deriv/redi22_ACS_mgbe-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi22_ACS_mgbe-hinc_sh
+> p.dta saved
+
+. 
+. *mgbe command for Stata  (von Hippel et al 2017)
+. *mgbe accepts three arguments, in order:  acs_hinc_shp_n (number of  acs_hinc_
+> shp_n per bin), 
+.         *min (lower limit of bin) and max (upper limit of bin).
+. * mgbe  acs_hinc_shp_n min max {if} [, DISTribution(string) AIC BIC AVERAGE SA
+> Ving(string) BY(id)]
+. 
+. 
+. /*
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(PARETO2) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_pareto2-hinc_shp)
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(LN) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_ln-hinc_shp)
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(LOGLOG) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_loglog-hinc_shp)
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(GB2) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_GB2-hinc_shp)
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(DAGUM) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_DAGUM-hinc_shp)
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear 
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(SM) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_SM-hinc_shp)    
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(BETA2) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_BETA2-hinc_shp) 
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(GG) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_GG-hinc_shp)    
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear 
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(GA) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_GA-hinc_shp)    
+> 
+> use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear 
+> mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, di
+> stribution(WEI) ///
+>         by(year)  saving($deriv/redi22_ACS_mgbe_WEI-hinc_shp)   
+> */
+.         
+. * Estimates will be averaged across distributions, with the average weighted a
+> ccording to the AIC (by default) or BIC.:
+. 
+. use  $deriv/redi22_ACS_mgbe-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. mgbe  acs_hinc_shp_n acs_hinc_shp_`conv_year'lb acs_hinc_shp_`conv_year'ub, //
+> /
+>         by(year) average saving($deriv/redi22_ACS_mgbe_average-hinc_shp)  
+Distributions selected: wei loglog pareto2 gamma ln dagum sm beta2 gg gb2
+weighted model averaging by AIC
+year = 2016
+(ACS data converted to continuous REDI-calculated values)
+year = 2017
+(ACS data converted to continuous REDI-calculated values)
+saving results to ~/Documents/SocResearch/Dissertation/data/data_derv/redi22_ACS
+> _mgbe_average-hinc_shp 
+
+     +------------------------------------------------------------------------+
+  1. | year |     mean |      var |       sd |   median |      rmd |      cov |
+     | 2016 | 92519.14 | 6.70e+09 | 81839.35 |  71196.3 |  .311485 | .8845667 |
+     |------------------------------------------------------------------------|
+     |      sdl  |     gini  |   mehran  |   piesch  |  kakwani  |     theil  |
+     | .9507554  |  .432673  | .5813468  | .3583362  | .1614998  |  .3178388  |
+     |-----------------------------------------------------------+------------|
+     |       mld  |   entropy  |      half  |  all~n  |  non~s   |  count~l   |
+     |  .3725459  |  .8453292  |  .3908376  |      9  |      9   |  3008406   |
+     +------------------------------------------------------------------------+
+
+     +------------------------------------------------------------------------+
+  2. | year |     mean |      var |       sd |   median |      rmd |      cov |
+     | 2017 | 93532.45 | 6.66e+09 | 81604.34 | 72403.21 | .3093593 | .8724709 |
+     |------------------------------------------------------------------------|
+     |      sdl  |     gini  |   mehran  |   piesch  |  kakwani  |     theil  |
+     | .9456879  | .4296774  | .5784693  | .3552814  | .1594988  |  .3125087  |
+     |-----------------------------------------------------------+------------|
+     |       mld  |   entropy  |      half  |  all~n  |  non~s   |  count~l   |
+     |  .3676522  |  .8306182  |  .3802217  |      9  |      9   |  3039481   |
+     +------------------------------------------------------------------------+
+
+. 
+. 
+. ***--------------------------***
+.                 
+. log close redi22_ACS_mgbe
+      name:  redi22_ACS_mgbe
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi22_AC
+> S_mgbe.log
+  log type:  text
+ closed on:  29 Aug 2020, 00:59:58
+--------------------------------------------------------------------------------
