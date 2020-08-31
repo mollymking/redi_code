@@ -1,0 +1,234 @@
+--------------------------------------------------------------------------------
+      name:  redi04_ACS_descriptives
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
+> S_descriptives.log
+  log type:  text
+ opened on:  28 Aug 2020, 22:47:56
+
+. 
+. //      project:        REDI Methodology Paper
+. 
+. //  task:       Descriptive data tables of original continuous ACS Variables (
+> research dataset)
+. //  data:               ACS, available: https://usa.ipums.org/
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+28 Aug 2020  22:47:56
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. set seed 1
+
+. 
+. use $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
+> -hinc_shp.dta saved
+
+. 
+. *inflation done in redi03b_inflate_dollars.doi
+. local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
+
+. 
+. // SURVEY WEIGHTS
+. *need to redo survey-set
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+. save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
+> -hinc_shp.dta saved
+
+.         
+. ***--------------------------***                
+. // GRAND MEAN 
+. ***--------------------------***                
+. 
+. capture drop acs_hinc_shp_`conv_year'_mean
+
+. gen acs_hinc_shp_`conv_year'_mean = .
+(6,047,887 missing values generated)
+
+. label var acs_hinc_shp_`conv_year'_mean "household (ACS) shp grand mean"
+
+. 
+. local y = year
+
+. di in red "Calculate grand mean for hinc shp for year `y'" 
+Calculate grand mean for hinc shp for year 2016
+
+. svy: mean acs_hinc_shp_`conv_year' if year == 2016 // this is original variabl
+> e: hhincome
+(running mean on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Mean estimation              Number of obs   =    3,008,406
+                                     Population size =  315,047,636
+                                     Replications    =           80
+                                     Design df       =           79
+
+-------------------------------------------------------------------
+                  |                BRR *
+                  |       Mean   Std. Err.     [95% Conf. Interval]
+------------------+------------------------------------------------
+acs_hinc_shp_2017 |   93825.27   121.8422      93582.75    94067.79
+-------------------------------------------------------------------
+
+. cap matrix X = r(table) 
+
+.         cap loc mf = X[1,1]
+
+.         di `mf'
+93825.271
+
+. replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2016
+(3,008,406 real changes made)
+
+. 
+. local y = year
+
+. di in red "Calculate grand mean for hinc shp for year `y'"
+Calculate grand mean for hinc shp for year 2016
+
+. svy: mean acs_hinc_shp_`conv_year' if year == 2017 // this is original variabl
+> e: hhincome
+(running mean on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Mean estimation              Number of obs   =    3,039,481
+                                     Population size =  317,631,941
+                                     Replications    =           80
+                                     Design df       =           79
+
+-------------------------------------------------------------------
+                  |                BRR *
+                  |       Mean   Std. Err.     [95% Conf. Interval]
+------------------+------------------------------------------------
+acs_hinc_shp_2017 |   95442.48   122.0628      95199.52    95685.44
+-------------------------------------------------------------------
+
+. cap matrix X = r(table) 
+
+.         cap loc mf = X[1,1]
+
+.         di `mf'
+95442.482
+
+. replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2017
+(3,039,481 real changes made)
+
+. 
+. save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
+> -hinc_shp.dta saved
+
+.         
+. ***--------------------------***                
+. // MEDIAN
+. ***--------------------------***
+. 
+. // Levels of year variable to loop through years
+. 
+. levelsof year, local(years)
+2016 2017
+
+. foreach y of local years { // loop through all years
+  2. 
+.         di in red "Below is the median hinc for `y':"
+  3. 
+.         _pctile  acs_hinc_shp_`conv_year' [pweight=perwt] if year == `y', p(50
+> )
+  4.         return list
+  5. 
+.         
+. } // end loop through years
+Below is the median hinc for 2016:
+
+scalars:
+                 r(r1) =  69687.1015625
+Below is the median hinc for 2017:
+
+scalars:
+                 r(r1) =  71000
+
+. 
+.         
+. ***--------------------------***                
+. // # GINI COEFFICIENT 
+. ***--------------------------***
+. 
+. *use -fastgini- because allows pweights
+. *https://www.stata.com/statalist/archive/2008-10/msg01179.html
+. *fastgini varname [if] [in] [weight] [, bin(#) jk Level(#) nocheck]
+. 
+. foreach y of local years { // loop through all years
+  2. 
+.         use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
+  3.         keep if year == `y'
+  4.         
+.         di in red "Below is the gini hinc for `y':"
+  5.         
+.         fastgini acs_hinc_shp_`conv_year' [pweight=perwt], nocheck
+  6.         local gini  r(gini) 
+  7.         di `gini'
+  8.         
+. } // end loop through years
+(ACS data converted to continuous REDI-calculated values)
+(3,039,481 observations deleted)
+Below is the gini hinc for 2016:
+
+Gini coefficient = 0.4549146
+.45491462
+(ACS data converted to continuous REDI-calculated values)
+(3,008,406 observations deleted)
+Below is the gini hinc for 2017:
+
+Gini coefficient = 0.4536296
+.45362956
+
+.         
+. 
+. ***--------------------------***
+. 
+. log close redi04_ACS_descriptives
+      name:  redi04_ACS_descriptives
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
+> S_descriptives.log
+  log type:  text
+ closed on:  28 Aug 2020, 22:59:33
+--------------------------------------------------------------------------------
