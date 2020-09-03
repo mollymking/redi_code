@@ -53,12 +53,13 @@ save $temp/redi09_REDI_ACS_distrib_match.dta, replace
 *                trscale(transformation_syntax) graph_options ]
 *log x-scale:  https://www.stata.com/manuals13/g-3axis_scale_options.pdf#g-3axis_scale_options
 
-*Log plot
 
+*Log plot
+/*
 distplot acs_hinc_shp_`conv_year' redi_dV_hinc_shp_`conv_year', ///
 legend( ///
-		label(1 "REDI-calculated continuous income (hinc, shp)") ///
-		label(2 "Original income (ACS) (hinc, shp)") ///
+		label(1 "REDI-calculated continuous income") ///
+		label(2 "Original household income (ACS)") ///
 		size(vsmall) /// size of text
 		margin(small) nobox region(fcolor(white) lcolor(white))) ///
 	ytitle("Cumulative probability included in distribution") /// 
@@ -67,22 +68,23 @@ legend( ///
 	xlabel(1 100 1000 10000  100000 1000000) //
 	
 graph export $redi/redi09_REDI_ACS_distrib_match-log.pdf, replace
-
+*/
 
 *Natural log plot
 
 distplot acs_hinc_shp_`conv_year'_ln redi_dV_hinc_shp_`conv_year'_ln, ///
 legend( ///
-		label(1 "REDI-calculated continuous income (hinc, shp)") ///
-		label(2 "Original income (ACS) (hinc, shp)") ///
+		label(1 "REDI-calculated continuous household income") ///
+		label(2 "Original household income (ACS)") ///
 		size(vsmall) /// size of text
 		margin(small) nobox region(fcolor(white) lcolor(white))) ///
 	ytitle("Cumulative probability included in distribution") /// 
-	xtitle("REDI-calculated shp Income (ln `conv_year' dollars)") //
+	xtitle("REDI-calculated Income (`conv_year' dollars)") //
 	*xscale(log) ///
 	*xlabel(0 200000 500000 1000000 2000000 3000000) //
 	
-graph export $redi/redi09_REDI_ACS_distrib_match-ln.pdf, replace
+graph export $redi/redi09_REDI_ACS_distrib_match-ln.jpg, ///
+	replace quality(60) // quality between 0-100 allows for compression
 
 rm  $temp/redi09_REDI_ACS_distrib_match.dta
 
