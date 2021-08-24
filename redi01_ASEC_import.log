@@ -1,9 +1,8 @@
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------
       name:  redi01_ASEC_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
-> EC_import.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_ASEC_import.log
   log type:  text
- opened on:  28 Aug 2020, 22:28:25
+ opened on:  24 Aug 2021, 09:41:07
 
 . 
 . 
@@ -19,7 +18,7 @@
 . 
 . 
 . display "$S_DATE  $S_TIME"
-28 Aug 2020  22:28:25
+24 Aug 2021  09:41:07
 
 . 
 . ***--------------------------***
@@ -47,7 +46,7 @@
 /Users/mollymking/Documents/SocResearch/Dissertation/data/data_sorc/00_CPS_ASEC
 
 . // this is code provided by IPUMS - ACS to import data:
-. do $redi/cps_00009.do // larger data set includes variables for later regressi
+. do $redi/cps_00012.do // larger data set includes variables for later regressi
 > on
 
 . * NOTE: You need to set the Stata working directory to the path
@@ -65,15 +64,20 @@
 >   double  cpsid     12-25  ///
 >   byte    asecflag  26-26  ///
 >   double  asecwth   27-36  ///
->   double  hhincome  37-44  ///
->   byte    pernum    45-46  ///
->   double  cpsidp    47-60  ///
->   double  asecwt    61-70  ///
->   byte    sex       71-71  ///
->   int     race      72-74  ///
->   int     hispan    75-77  ///
->   int     educ      78-80  ///
->   using `"cps_00009.dat"'
+>   byte    ownershp  37-38  ///
+>   double  hhincome  39-46  ///
+>   byte    pernum    47-48  ///
+>   double  cpsidp    49-62  ///
+>   double  asecwt    63-72  ///
+>   byte    age       73-74  ///
+>   byte    sex       75-75  ///
+>   int     race      76-78  ///
+>   byte    marst     79-79  ///
+>   int     hispan    80-82  ///
+>   byte    labforce  83-83  ///
+>   int     educ      84-86  ///
+>   byte    diffmob   87-87  ///
+>   using `"cps_00012.dat"'
 
 . 
 . replace asecwth  = asecwth  / 10000
@@ -106,6 +110,8 @@
 
 . label var asecwth  `"Annual Social and Economic Supplement Household weight"'
 
+. label var ownershp `"Ownership of dwelling"'
+
 . label var hhincome `"Total household income"'
 
 . label var pernum   `"Person number in sample unit"'
@@ -114,13 +120,21 @@
 
 . label var asecwt   `"Annual Social and Economic Supplement Weight"'
 
+. label var age      `"Age"'
+
 . label var sex      `"Sex"'
 
 . label var race     `"Race"'
 
+. label var marst    `"Marital status"'
+
 . label var hispan   `"Hispanic origin"'
 
+. label var labforce `"Labor force status"'
+
 . label var educ     `"Educational attainment recode"'
+
+. label var diffmob  `"Disability limiting mobility"'
 
 . 
 . label define month_lbl 01 `"January"'
@@ -155,6 +169,220 @@
 . label define asecflag_lbl 2 `"March Basic"', add
 
 . label values asecflag asecflag_lbl
+
+. 
+. label define ownershp_lbl 00 `"NIU"'
+
+. label define ownershp_lbl 10 `"Owned or being bought"', add
+
+. label define ownershp_lbl 21 `"No cash rent"', add
+
+. label define ownershp_lbl 22 `"With cash rent"', add
+
+. label values ownershp ownershp_lbl
+
+. 
+. label define age_lbl 00 `"Under 1 year"'
+
+. label define age_lbl 01 `"1"', add
+
+. label define age_lbl 02 `"2"', add
+
+. label define age_lbl 03 `"3"', add
+
+. label define age_lbl 04 `"4"', add
+
+. label define age_lbl 05 `"5"', add
+
+. label define age_lbl 06 `"6"', add
+
+. label define age_lbl 07 `"7"', add
+
+. label define age_lbl 08 `"8"', add
+
+. label define age_lbl 09 `"9"', add
+
+. label define age_lbl 10 `"10"', add
+
+. label define age_lbl 11 `"11"', add
+
+. label define age_lbl 12 `"12"', add
+
+. label define age_lbl 13 `"13"', add
+
+. label define age_lbl 14 `"14"', add
+
+. label define age_lbl 15 `"15"', add
+
+. label define age_lbl 16 `"16"', add
+
+. label define age_lbl 17 `"17"', add
+
+. label define age_lbl 18 `"18"', add
+
+. label define age_lbl 19 `"19"', add
+
+. label define age_lbl 20 `"20"', add
+
+. label define age_lbl 21 `"21"', add
+
+. label define age_lbl 22 `"22"', add
+
+. label define age_lbl 23 `"23"', add
+
+. label define age_lbl 24 `"24"', add
+
+. label define age_lbl 25 `"25"', add
+
+. label define age_lbl 26 `"26"', add
+
+. label define age_lbl 27 `"27"', add
+
+. label define age_lbl 28 `"28"', add
+
+. label define age_lbl 29 `"29"', add
+
+. label define age_lbl 30 `"30"', add
+
+. label define age_lbl 31 `"31"', add
+
+. label define age_lbl 32 `"32"', add
+
+. label define age_lbl 33 `"33"', add
+
+. label define age_lbl 34 `"34"', add
+
+. label define age_lbl 35 `"35"', add
+
+. label define age_lbl 36 `"36"', add
+
+. label define age_lbl 37 `"37"', add
+
+. label define age_lbl 38 `"38"', add
+
+. label define age_lbl 39 `"39"', add
+
+. label define age_lbl 40 `"40"', add
+
+. label define age_lbl 41 `"41"', add
+
+. label define age_lbl 42 `"42"', add
+
+. label define age_lbl 43 `"43"', add
+
+. label define age_lbl 44 `"44"', add
+
+. label define age_lbl 45 `"45"', add
+
+. label define age_lbl 46 `"46"', add
+
+. label define age_lbl 47 `"47"', add
+
+. label define age_lbl 48 `"48"', add
+
+. label define age_lbl 49 `"49"', add
+
+. label define age_lbl 50 `"50"', add
+
+. label define age_lbl 51 `"51"', add
+
+. label define age_lbl 52 `"52"', add
+
+. label define age_lbl 53 `"53"', add
+
+. label define age_lbl 54 `"54"', add
+
+. label define age_lbl 55 `"55"', add
+
+. label define age_lbl 56 `"56"', add
+
+. label define age_lbl 57 `"57"', add
+
+. label define age_lbl 58 `"58"', add
+
+. label define age_lbl 59 `"59"', add
+
+. label define age_lbl 60 `"60"', add
+
+. label define age_lbl 61 `"61"', add
+
+. label define age_lbl 62 `"62"', add
+
+. label define age_lbl 63 `"63"', add
+
+. label define age_lbl 64 `"64"', add
+
+. label define age_lbl 65 `"65"', add
+
+. label define age_lbl 66 `"66"', add
+
+. label define age_lbl 67 `"67"', add
+
+. label define age_lbl 68 `"68"', add
+
+. label define age_lbl 69 `"69"', add
+
+. label define age_lbl 70 `"70"', add
+
+. label define age_lbl 71 `"71"', add
+
+. label define age_lbl 72 `"72"', add
+
+. label define age_lbl 73 `"73"', add
+
+. label define age_lbl 74 `"74"', add
+
+. label define age_lbl 75 `"75"', add
+
+. label define age_lbl 76 `"76"', add
+
+. label define age_lbl 77 `"77"', add
+
+. label define age_lbl 78 `"78"', add
+
+. label define age_lbl 79 `"79"', add
+
+. label define age_lbl 80 `"80"', add
+
+. label define age_lbl 81 `"81"', add
+
+. label define age_lbl 82 `"82"', add
+
+. label define age_lbl 83 `"83"', add
+
+. label define age_lbl 84 `"84"', add
+
+. label define age_lbl 85 `"85"', add
+
+. label define age_lbl 86 `"86"', add
+
+. label define age_lbl 87 `"87"', add
+
+. label define age_lbl 88 `"88"', add
+
+. label define age_lbl 89 `"89"', add
+
+. label define age_lbl 90 `"90 (90+, 1988-2002)"', add
+
+. label define age_lbl 91 `"91"', add
+
+. label define age_lbl 92 `"92"', add
+
+. label define age_lbl 93 `"93"', add
+
+. label define age_lbl 94 `"94"', add
+
+. label define age_lbl 95 `"95"', add
+
+. label define age_lbl 96 `"96"', add
+
+. label define age_lbl 97 `"97"', add
+
+. label define age_lbl 98 `"98"', add
+
+. label define age_lbl 99 `"99+"', add
+
+. label values age age_lbl
 
 . 
 . label define sex_lbl 1 `"Male"'
@@ -229,6 +457,25 @@
 . label values race race_lbl
 
 . 
+. label define marst_lbl 1 `"Married, spouse present"'
+
+. label define marst_lbl 2 `"Married, spouse absent"', add
+
+. label define marst_lbl 3 `"Separated"', add
+
+. label define marst_lbl 4 `"Divorced"', add
+
+. label define marst_lbl 5 `"Widowed"', add
+
+. label define marst_lbl 6 `"Never married/single"', add
+
+. label define marst_lbl 7 `"Widowed or Divorced"', add
+
+. label define marst_lbl 9 `"NIU"', add
+
+. label values marst marst_lbl
+
+. 
 . label define hispan_lbl 000 `"Not Hispanic"'
 
 . label define hispan_lbl 100 `"Mexican"', add
@@ -264,6 +511,15 @@
 . label define hispan_lbl 902 `"N/A (and no response 1985-87)"', add
 
 . label values hispan hispan_lbl
+
+. 
+. label define labforce_lbl 0 `"NIU"'
+
+. label define labforce_lbl 1 `"No, not in the labor force"', add
+
+. label define labforce_lbl 2 `"Yes, in the labor force"', add
+
+. label values labforce labforce_lbl
 
 . 
 . label define educ_lbl 000 `"NIU or no schooling"'
@@ -342,6 +598,15 @@
 . label values educ educ_lbl
 
 . 
+. label define diffmob_lbl 0 `"NIU"'
+
+. label define diffmob_lbl 1 `"No mobility limitation"', add
+
+. label define diffmob_lbl 2 `"Has mobility limitation"', add
+
+. label values diffmob diffmob_lbl
+
+. 
 . 
 . 
 end of do-file
@@ -364,7 +629,7 @@ end of do-file
   (1,485,604 bytes saved)
 
 . datasignature set, reset
-  371401:14(75876):1335711634:1006543702       (data signature set)
+  371401:19(83160):3656212263:1316194508       (data signature set)
 
 . save $extr/redi01_ASEC-extr.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
@@ -427,7 +692,7 @@ Number of PSUs   = 139,441      Population size =  252,586,892
   (0 bytes saved)
 
 . datasignature set, reset
-  139441:14(75876):893375027:771226480       (data signature reset)
+  139441:19(83160):966963857:1008318800       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
@@ -440,5 +705,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
 > EC_import.log
   log type:  text
- closed on:  28 Aug 2020, 22:28:28
+ closed on:  24 Aug 2021, 09:42:01
 --------------------------------------------------------------------------------
