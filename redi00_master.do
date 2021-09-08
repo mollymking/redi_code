@@ -35,7 +35,7 @@ global temp		"~/Documents/SocResearch/Dissertation/data/data_temp"	// temporary 
 global deriv	"~/Documents/SocResearch/Dissertation/data/data_derv"  	// derived datasets - a file to store final data
 
 * remove comment to run all files, or comment-out one at a time
-
+/*
 ***--------------------------***
 // 01 IMPORT, EXTRACTION, CLEAN 
 ***--------------------------***
@@ -73,7 +73,7 @@ do $redi/redi10_REDI_summary_stats.do 		// Summary Statistics of continuous REDI
 ***--------------------------***
 
 do $redi/redi11_ASEC_regressions.do 		// Regression of original continuous CPS ASEC variables
-do $redi/redi12_ACS_REDI_regressions.do 	// Regressions of original ACS and new continuous REDI-created Variables
+do $redi/redi12_REDI_regressions.do 		// Regressions of original ASEC variables and new continuous REDI-created income
 
 ***--------------------------***
 // 20-22 ALTERNATIVE METHODS

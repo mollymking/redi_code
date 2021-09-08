@@ -1,10 +1,10 @@
-capture log close redi12_ACS_REDI_regressions
-log using $redi/redi12_ACS_REDI_regressions.log, name(redi12_ACS_REDI_regressions) replace text
+capture log close redi12_REDI_regressions
+log using $redi/redi12_REDI_regressions.log, name(redi12_REDI_regressions) replace text
 
 // 	project:	REDI Methods Paper
 
-//  task:		Regressions of original ACS and new continuous REDI-created Variables
-//  data: 		ACS original available: https://usa.ipums.org/
+//  task:		Regressions of original CPS ASEC Variables and new continuous REDI-created income
+//  data: 		CPS ASEC original available: https://cps.ipums.org/
 //				& newly created REDI income variable
 
 //  github:   	redi
@@ -25,7 +25,7 @@ set more off
 set seed 1
 
 use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
-save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
+save $deriv/redi12_REDI_regressions-hinc_shp.dta, replace	
 
 local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
 local y = year
@@ -85,6 +85,8 @@ local amerInd_race_value  = 300
 
 include $redi/redi11b_racethnicity.doi
 
+fvset base 1 dG_race		// ref: white_race_value
+
 ***--------------------------***	
 
 // #3 EDUCATION
@@ -103,10 +105,11 @@ local sCol_condition	`"`edu_var' == 81 | `edu_var' == 91 | `edu_var' == 92"'
 local col_condition		`"`edu_var' == 111"'
 local grad_condition	`"`edu_var' >= 123"'
 
-
 include $redi/redi11c_education.doi
 
-save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
+fvset base 1 dG_edu  		// ref: less than HS
+
+
 ***--------------------------***
 
 // # LABOR FORCE
@@ -146,7 +149,6 @@ tab diffmob disability, m
 
 
 ***--------------------------***
-// REGRESSIONS
 
 // # MARITAL STATUS
 
@@ -183,6 +185,8 @@ tab ownershp ownhouse, m
 
 
 ***--------------------------***
+
+save $deriv/redi12_REDI_regressions-hinc_shp.dta, replace
 
 ***--------------------------***
 // REGRESSION: ACS Income as DV (Original - not included in results)
@@ -272,5 +276,5 @@ table educ, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
 // CLEAN UP
 ***--------------------------***
 
-capture log close redi12_ACS_REDI_regressions
+capture log close redi12_REDI_regressions
 exit
