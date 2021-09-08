@@ -107,10 +107,81 @@ local grad_condition	`"`edu_var' >= 123"'
 include $redi/redi11c_education.doi
 
 save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
+***--------------------------***
+
+// # LABOR FORCE
+
+/*LABFORCE is a dichotomous variable indicating whether a person participated 
+in the labor force. See EMPSTAT for a non-dichotomous variable that indicates 
+whether the respondent was part of the labor force -- working or seeking work 
+-- and, if so, whether the person was currently unemployed.*/
+
+tab labforce
+tab labforce, nolab m
+
+generate labor = .
+replace labor = 1 if labforce == 2  // yes in labor force
+replace labor = 0 if labforce == 1  // not in labor force
+
+tab labforce labor, m
+
+
+***--------------------------***
+
+// # INDEPENDENT LIVING DIFFICULTY
+
+/*DIFFMOB indicates whether the respondent has any physical, mental, or 
+emotional condition lasting six months or more that makes it difficult or 
+impossible to perform basic activities outside the home alone. 
+This does not include temporary health problems, such as broken bones.*/
+
+tab diffmob 
+tab diffmob, nolab
+
+generate disability = .
+replace disability = 1 if diffmob == 2 	// has mobility limitation
+replace disability = 0 if diffmob == 1  // no mobility limitation
+
+tab diffmob disability, m
 
 
 ***--------------------------***
 // REGRESSIONS
+
+// # MARITAL STATUS
+
+/*MARST gives each person's current marital status,
+ including whether the spouse was currently living in the same household.*/
+
+tab marst
+tab marst, nolab
+
+generate married = .
+replace married = 1 if marst == 1 | marst == 2
+replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
+
+tab marst married, m
+
+***--------------------------***
+
+// # OWNERSHIP OF HOUSING
+
+/*OWNERSHP indicates whether the household rented or owned its housing unit. 
+Households that acquired their unit with a mortgage or other lending arrangement
+ were understood to "own" their unit even if they had not yet completed repayment.
+Two types of renters were identified: those who paid cash rent and those who 
+paid no cash rent. The latter category included occupants who paid only for their utilities.*/
+
+tab ownershp
+tab ownershp, nolab
+
+generate ownhouse = .
+replace ownhouse = 1 if ownershp == 10
+replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+
+tab ownershp ownhouse, m
+
+
 ***--------------------------***
 
 di in red "Predict original ACS continuous income as a function of education, race/ethnicity, gender of householder"		

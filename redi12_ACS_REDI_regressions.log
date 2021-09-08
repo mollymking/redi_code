@@ -1202,12 +1202,73 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_ACS_REDI_regress
 . 
 . ***--------------------------***
 . // REGRESSIONS
+. 
+. // # LABOR FORCE
+. 
+. /*LABFORCE is a dichotomous variable indicating whether a person participated 
+> in the labor force. See EMPSTAT for a non-dichotomous variable that indicates 
+> whether the respondent was part of the labor force -- working or seeking work 
+> -- and, if so, whether the person was currently unemployed.*/
+. 
+. tab labforce
+
+        Labor force status |      Freq.     Percent        Cum.
+---------------------------+-----------------------------------
+                       NIU |     32,143        0.53        0.53
+No, not in the labor force |  1,829,915       30.26       30.79
+   Yes, in the labor force |  4,185,829       69.21      100.00
+---------------------------+-----------------------------------
+                     Total |  6,047,887      100.00
+
+. tab labforce, nolab m
+
+Labor force |
+     status |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     32,143        0.53        0.53
+          1 |  1,829,915       30.26       30.79
+          2 |  4,185,829       69.21      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate labor = .
+(6,047,887 missing values generated)
+
+. replace labor = 1 if labforce == 2  // yes in labor force
+(4,185,829 real changes made)
+
+. replace labor = 0 if labforce == 1  // not in labor force
+(1,829,915 real changes made)
+
+. 
+. tab labforce labor, m
+
+                      |              labor
+   Labor force status |         0          1          . |     Total
+----------------------+---------------------------------+----------
+                  NIU |         0          0     32,143 |    32,143 
+No, not in the labor  | 1,829,915          0          0 | 1,829,915 
+Yes, in the labor for |         0  4,185,829          0 | 4,185,829 
+----------------------+---------------------------------+----------
+                Total | 1,829,915  4,185,829     32,143 | 6,047,887 
+
+. 
+. 
 . ***--------------------------***
 . 
 . di in red "Predict original ACS continuous income as a function of education, 
 > race/ethnicity, gender of householder"            
 Predict original ACS continuous income as a function of education, race/ethnicit
 > y, gender of householder
+. // # INDEPENDENT LIVING DIFFICULTY
+. 
+. /*DIFFMOB indicates whether the respondent has any physical, mental, or 
+> emotional condition lasting six months or more that makes it difficult or 
+> impossible to perform basic activities outside the home alone. 
+> This does not include temporary health problems, such as broken bones.*/
+. 
+. tab diffmob 
 
 . svy: reg acs_hinc_shp_2017 /// 
 >         dB_fem /// men comparison
@@ -1215,6 +1276,14 @@ Predict original ACS continuous income as a function of education, race/ethnicit
 >         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
 > gory
 (running regress on estimation sample)
+    Disability limiting |
+               mobility |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+                    NIU |     32,143        0.53        0.53
+ No mobility limitation |  5,789,448       95.73       96.26
+Has mobility limitation |    226,296        3.74      100.00
+------------------------+-----------------------------------
+                  Total |  6,047,887      100.00
 
 BRR replications (80)
 ----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
@@ -1258,11 +1327,23 @@ Predict REDI-created income as a function of education, race/ethnicity, gender o
 >         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
 > gory
 (running regress on estimation sample)
+ Disability |
+   limiting |
+   mobility |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     32,143        0.53        0.53
+          1 |  5,789,448       95.73       96.26
+          2 |    226,296        3.74      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
 
 BRR replications (80)
 ----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
 ..................................................    50
 ..............................
+. 
+. generate disability = .
+(6,047,887 missing values generated)
 
 Survey: Linear regression                     Number of obs     =    6,047,887
                                               Population size   =  632,679,577
@@ -1287,6 +1368,23 @@ redi_dV~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
  dB_edu_grad |   98233.67   213.5269   460.05   0.000     97808.66    98658.69
        _cons |   61904.37   99.86983   619.85   0.000     61705.58    62103.15
 ------------------------------------------------------------------------------
+. replace disability = 1 if diffmob == 2  // has mobility limitation
+(226,296 real changes made)
+
+. replace disability = 0 if diffmob == 1  // no mobility limitation
+(5,789,448 real changes made)
+
+. 
+. tab diffmob disability, m
+
+  Disability limiting |            disability
+             mobility |         0          1          . |     Total
+----------------------+---------------------------------+----------
+                  NIU |         0          0     32,143 |    32,143 
+No mobility limitatio | 5,789,448          0          0 | 5,789,448 
+Has mobility limitati |         0    226,296          0 |   226,296 
+----------------------+---------------------------------+----------
+                Total | 5,789,448    226,296     32,143 | 6,047,887 
 
 .  
 . 
@@ -1294,8 +1392,15 @@ redi_dV~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 . ***-----
 . // Check if systematically different values between REDI and Research Dataset
 . *use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
+. ***--------------------------***
 . 
 . table sex, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
+. // # MARITAL STATUS
+. 
+. /*MARST gives each person's current marital status,
+>  including whether the spouse was currently living in the same household.*/
+. 
+. tab marst
 
 ----------------------------------------------------------
       Sex | mean(red~2017)  mean(hhincome)  mean(hhinco~s)
@@ -1303,8 +1408,19 @@ redi_dV~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
      Male |         102404          101347     106317.2956
    Female |         84,042           83163     86656.53495
 ----------------------------------------------------------
+         Marital status |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+Married, spouse present |  3,310,321       54.74       54.74
+ Married, spouse absent |     98,842        1.63       56.37
+              Separated |    152,797        2.53       58.90
+               Divorced |    838,510       13.86       72.76
+                Widowed |    445,891        7.37       80.13
+   Never married/single |  1,201,526       19.87      100.00
+------------------------+-----------------------------------
+                  Total |  6,047,887      100.00
 
 . table race, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
+. tab marst, nolab
 
 -------------------------------------------------------------------------------
                           Race | mean(red~2017)  mean(hhincome)  mean(hhinco~s)
@@ -1316,8 +1432,22 @@ redi_dV~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 Hawaiian/Pacific Islander only |         90,473           89517     95684.36419
                            800 |         83,961           83122     86631.74685
 -------------------------------------------------------------------------------
+    Marital |
+     status |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |  3,310,321       54.74       54.74
+          2 |     98,842        1.63       56.37
+          3 |    152,797        2.53       58.90
+          4 |    838,510       13.86       72.76
+          5 |    445,891        7.37       80.13
+          6 |  1,201,526       19.87      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
 
 . table hispan, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
+. 
+. generate married = .
+(6,047,887 missing values generated)
 
 --------------------------------------------------------------------------------
                          Hispanic origin |    __000002     __000003     __000004
@@ -1332,8 +1462,12 @@ Hawaiian/Pacific Islander only |         90,473           89517     95684.36419
 Central American, (excluding Salvadoran) |      72,734        72002  74328.01603
                           South American |      90,142        89228  93945.11423
 --------------------------------------------------------------------------------
+. replace married = 1 if marst == 1 | marst == 2
+(3,409,163 real changes made)
 
 . table educ, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
+. replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
+(2,638,724 real changes made)
 
 --------------------------------------------------------------------------------
            Educational attainment recode |    __000002     __000003     __000004
@@ -1355,12 +1489,83 @@ Associate's degree, occupational/vocatio |      84,032        83177  86524.71668
               Professional school degree |      204089       201846  193229.7732
                         Doctorate degree |      175932       174137  179883.7717
 --------------------------------------------------------------------------------
+. 
+. tab marst married, m
+
+                      |        married
+       Marital status |         0          1 |     Total
+----------------------+----------------------+----------
+Married, spouse prese |         0  3,310,321 | 3,310,321 
+Married, spouse absen |         0     98,842 |    98,842 
+            Separated |   152,797          0 |   152,797 
+             Divorced |   838,510          0 |   838,510 
+              Widowed |   445,891          0 |   445,891 
+ Never married/single | 1,201,526          0 | 1,201,526 
+----------------------+----------------------+----------
+                Total | 2,638,724  3,409,163 | 6,047,887 
 
 .                  
 . 
 .  
 . ***--------------------------***
 . // CLEAN UP
+. 
+. // # OWNERSHIP OF HOUSING
+. 
+. /*OWNERSHP indicates whether the household rented or owned its housing unit. 
+> Households that acquired their unit with a mortgage or other lending arrangeme
+> nt
+>  were understood to "own" their unit even if they had not yet completed repaym
+> ent.
+> Two types of renters were identified: those who paid cash rent and those who 
+> paid no cash rent. The latter category included occupants who paid only for th
+> eir utilities.*/
+. 
+. tab ownershp
+
+Ownership of dwelling |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+Owned or being bought |  4,040,515       66.81       66.81
+         No cash rent |     74,506        1.23       68.04
+       With cash rent |  1,932,866       31.96      100.00
+----------------------+-----------------------------------
+                Total |  6,047,887      100.00
+
+. tab ownershp, nolab
+
+  Ownership |
+of dwelling |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         10 |  4,040,515       66.81       66.81
+         21 |     74,506        1.23       68.04
+         22 |  1,932,866       31.96      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate ownhouse = .
+(6,047,887 missing values generated)
+
+. replace ownhouse = 1 if ownershp == 10
+(4,040,515 real changes made)
+
+. replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+(2,007,372 real changes made)
+
+. 
+. tab ownershp ownhouse, m
+
+                      |       ownhouse
+Ownership of dwelling |         0          1 |     Total
+----------------------+----------------------+----------
+Owned or being bought |         0  4,040,515 | 4,040,515 
+         No cash rent |    74,506          0 |    74,506 
+       With cash rent | 1,932,866          0 | 1,932,866 
+----------------------+----------------------+----------
+                Total | 2,007,372  4,040,515 | 6,047,887 
+
+. 
+. 
 . ***--------------------------***
 . 
 . capture log close redi12_ACS_REDI_regressions
