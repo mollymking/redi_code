@@ -30,6 +30,14 @@ save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
 local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
 local y = year
 
+
+***--------------------------***
+// # CREATE NATURAL LOG INCOME VARIABLES
+***--------------------------***
+
+gen acs_lnhinc_shp_`conv_year' = ln(acs_hinc_shp_`conv_year')
+label var acs_hinc_shp_`conv_year' "Inflation-adjusted natural log household income (ACS), from shp categories, `conv_year' dollars"
+
 ***--------------------------***
 // DEMOGRAPHICS
 ***--------------------------***	

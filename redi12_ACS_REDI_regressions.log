@@ -50,6 +50,19 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_ACS_REDI_regress
 . local y = year
 
 . 
+. 
+. ***--------------------------***
+. // # CREATE NATURAL LOG INCOME VARIABLES
+. ***--------------------------***
+. 
+. gen acs_lnhinc_shp_`conv_year' = ln(acs_hinc_shp_`conv_year')
+(54,406 missing values generated)
+
+. label var acs_hinc_shp_`conv_year' "Inflation-adjusted natural log household i
+> ncome (ACS), from shp categories, `conv_year' dollars"
+note: label truncated to 80 characters
+
+. 
 . ***--------------------------***
 . // DEMOGRAPHICS
 . ***--------------------------***        
