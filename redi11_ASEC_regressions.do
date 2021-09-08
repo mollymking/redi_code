@@ -3,7 +3,7 @@ log using $redi/redi11_ASEC_regressions.log, name(redi11_ASEC_regressions) repla
 
 // 	project:	REDI Methods Paper
 
-//  task:     	Regression of original continuous CPS ASEC variables - before conversion to REDI
+//  task:     	Regression of original continuous CPS ASEC variables
 //  data:     	CPS ASEC from IPUMS, available: https://cps.ipums.org/
 
 //  github:   	redi
@@ -43,6 +43,17 @@ svyset [iweight=asecwth]
 gen asec_hinc_shp_`conv_year' = hhincome / conv_factor
 format asec_hinc_shp_`conv_year' %6.0fc
 label var asec_hinc_shp_`conv_year' "Inflation-adjusted household income (ASEC), from shp categories, `conv_year' dollars"
+
+***--------------------------***	
+// # CREATE NATURAL LOG INCOME VARIABLES
+***--------------------------***	
+
+gen asec_lnhinc_shp_`conv_year' = ln(asec_hinc_shp_`conv_year')
+
+label var asec_hinc_shp_`conv_year' "Inflation-adjusted natural log household income (ASEC), from shp categories, `conv_year' dollars"
+
+
+***--------------------------***	
 		
 save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
 
@@ -93,6 +104,8 @@ local amerInd_race_value  = 300
 
 include $redi/redi11b_racethnicity.doi
 
+fvset base 1 dG_race		// ref: white
+
 ***--------------------------***
 
 // #3 EDUCATION
@@ -111,24 +124,159 @@ local sCol_condition	`"`edu_var' == 81 | `edu_var' == 91 | `edu_var' == 92"'
 local col_condition		`"`edu_var' == 111"'
 local grad_condition	`"`edu_var' >= 123"'
 
-
 include $redi/redi11c_education.doi
 
-save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
+fvset base 1 dG_edu  		// ref: less than HS
+
+***--------------------------***
+
+// # LABOR FORCE
+
+/*LABFORCE is a dichotomous variable indicating whether a person participated 
+in the labor force. See EMPSTAT for a non-dichotomous variable that indicates 
+whether the respondent was part of the labor force -- working or seeking work 
+-- and, if so, whether the person was currently unemployed.*/
+
+tab labforce
+tab labforce, nolab m
+
+generate labor = .
+replace labor = 1 if labforce == 2
+replace labor = 0 if labforce == 1
+
+tab labforce labor, m
 
 
 ***--------------------------***
-// REGRESSION
+
+// # INDEPENDENT LIVING DIFFICULTY
+
+/*DIFFMOB indicates whether the respondent has any physical, mental, or 
+emotional condition lasting six months or more that makes it difficult or 
+impossible to perform basic activities outside the home alone. 
+This does not include temporary health problems, such as broken bones.*/
+
+tab diffmob 
+tab diffmob, nolab
+
+generate disability = .
+replace disability = 1 if diffmob == 2
+replace disability = 0 if diffmob == 1
+
+tab diffmob disability, m
+
+
+***--------------------------***
+
+// # MARITAL STATUS
+
+tab marst
+tab marst, nolab
+
+generate married = .
+replace married = 1 if marst == 1 | marst == 2
+replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
+
+tab marst married, m
+
+***--------------------------***
+
+// # OWNERSHIP OF HOUSING
+
+/*OWNERSHP indicates whether the housing unit was rented or owned by its inhabitants. 
+Housing units acquired with a mortgage or other lending arrangement(s) are 
+classified as "owned," even if repayment was not yet completed.*/
+
+tab ownershp
+tab ownershp, nolab
+
+generate ownhouse = .
+replace ownhouse = 1 if ownershp == 10
+replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+
+tab ownershp ownhouse, m
+
+
+***--------------------------***
+
+save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
+use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
+
+***--------------------------***
+// REGRESSION: CPS ASEC Income as DV
 ***--------------------------***	
 
-* Predict income as a function of education, race/ethnicity, gender of householder
+di in red "Predict ASEC income as function of race/ethnicity, education, gender"
 
 svy: reg asec_hinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
 
+	
 ***--------------------------***
+// REGRESSION: CPS ASEC Income as DV - with 5-6 IVs
+***--------------------------***	
+
+di in red "Predict ASEC income as function of race/ethnicity, education, gender, marital status, disability, labor force"
+
+svy: reg asec_hinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married disability labor
+
+
+***--------------------------***
+// REGRESSION: CPS ASEC Income as IV: Predict Home Ownership
+***--------------------------***	
+di in red "Predict home ownership as function of ASEC ln(income)"
+svy: logistic ownhouse ///
+	asec_lnhinc_shp_2017 //
+
+di in red "Predict home ownership as function of ASEC ln(income), race/ethnicity, education, gender"
+svy: logistic ownhouse ///
+	asec_lnhinc_shp_2017 ///	
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	, gradient trace difficult
+	
+/*
+di in red "Predict home ownership as function of ASEC income, race/ethnicity, education, gender"
+svy: logistic ownhouse ///
+	asec_hinc_shp_2017 /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	, gradient trace difficult
+
+*vif, uncentered - find the version that works with svy
+*log income
+*z-score - see if sensitive to unit - if it is not, then there must be something wrong
+*build up model slowly - start with just income - 
+
+*- then transform variable
+*having children
+*health behavior
+*moved to a new place - residential stability - less 
+
+*/		
+***--------------------------***
+// REGRESSION: REDI Income as IV: Predict Home Ownership - 5-6 IVs
+***--------------------------***	
+
+di in red "Predict home ownership as function of ASEC ln(income), race/ethnicity, education, gender, marital status, disability, labor force"
+svy: logistic ownhouse ///
+	asec_lnhinc_shp_2017 /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married disability labor ///
+	, gradient trace difficult
+
+***--------------------------***
+
 
 capture log close redi11_ASEC_regressions
 exit
