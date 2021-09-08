@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi12_AC
 > S_REDI_regressions.log
   log type:  text
- opened on:  29 Aug 2020, 00:43:49
+ opened on:   8 Sep 2021, 10:19:19
 
 . 
 . //      project:        REDI Methods Paper
@@ -19,7 +19,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-29 Aug 2020  00:43:49
+ 8 Sep 2021  10:19:19
 
 . 
 . ***--------------------------***
@@ -40,7 +40,7 @@
 . use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
 (ACS data converted to continuous REDI-calculated values)
 
-. save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
+. save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace   
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_ACS_REDI_regress
 > ions-hinc_shp.dta saved
 
@@ -691,6 +691,9 @@ Other/mixed |   181,496          0 |   181,496
 
 . 
 . 
+. fvset base 1 dG_race            // ref: white_race_value
+
+. 
 . ***--------------------------***        
 . 
 . // #3 EDUCATION
@@ -762,7 +765,6 @@ Educational |
 
 . local grad_condition    `"`edu_var' >= 123"'
 
-. 
 . 
 . include $redi/redi11c_education.doi
 
@@ -1194,14 +1196,11 @@ Professional school d |   102,841 |   102,841
 .         
 . 
 . 
-. save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
-file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_ACS_REDI_regress
-> ions-hinc_shp.dta saved
+. fvset base 1 dG_edu             // ref: less than HS
 
 . 
 . 
 . ***--------------------------***
-. // REGRESSIONS
 . 
 . // # LABOR FORCE
 . 
@@ -1257,10 +1256,6 @@ Yes, in the labor for |         0  4,185,829          0 | 4,185,829
 . 
 . ***--------------------------***
 . 
-. di in red "Predict original ACS continuous income as a function of education, 
-> race/ethnicity, gender of householder"            
-Predict original ACS continuous income as a function of education, race/ethnicit
-> y, gender of householder
 . // # INDEPENDENT LIVING DIFFICULTY
 . 
 . /*DIFFMOB indicates whether the respondent has any physical, mental, or 
@@ -1270,12 +1265,6 @@ Predict original ACS continuous income as a function of education, race/ethnicit
 . 
 . tab diffmob 
 
-. svy: reg acs_hinc_shp_2017 /// 
->         dB_fem /// men comparison
->         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
->         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
-> gory
-(running regress on estimation sample)
     Disability limiting |
                mobility |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
@@ -1285,48 +1274,8 @@ Has mobility limitation |    226,296        3.74      100.00
 ------------------------+-----------------------------------
                   Total |  6,047,887      100.00
 
-BRR replications (80)
-----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
-..................................................    50
-..............................
+. tab diffmob, nolab
 
-Survey: Linear regression                     Number of obs     =    6,047,887
-                                              Population size   =  632,679,577
-                                              Replications      =           80
-                                              Design df         =           79
-                                              F(   9,     71)   =     31376.80
-                                              Prob > F          =       0.0000
-                                              R-squared         =       0.1429
-
-------------------------------------------------------------------------------
-             |                BRR *
-acs_hin~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-      dB_fem |  -16846.56   81.40177  -206.96   0.000    -17008.58   -16684.53
-   dB_rblack |  -26223.83   110.6284  -237.04   0.000    -26444.03   -26003.63
-   dB_rasian |   6230.603   224.0767    27.81   0.000     5784.589    6676.616
-    dB_rhisp |  -10199.22   108.4074   -94.08   0.000       -10415   -9983.441
-   dB_rother |  -12983.18   233.0996   -55.70   0.000    -13447.15    -12519.2
-   dB_edu_HS |   17282.74   95.01652   181.89   0.000     17093.61    17471.86
- dB_edu_sCol |   32465.55   100.5039   323.03   0.000      32265.5     32665.6
-  dB_edu_col |   72119.92   166.6181   432.85   0.000     71788.28    72451.57
- dB_edu_grad |     100983   232.4645   434.40   0.000     100520.3    101445.7
-       _cons |   64121.12   109.5096   585.53   0.000     63903.15     64339.1
-------------------------------------------------------------------------------
-
-. 
-. 
-. di in red "Predict REDI-created income as a function of education, race/ethnic
-> ity, gender of householder"       
-Predict REDI-created income as a function of education, race/ethnicity, gender o
-> f householder
-
-. svy: reg redi_dV_hinc_shp_`conv_year' /// 
->         dB_fem /// men comparison
->         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
->         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
-> gory
-(running regress on estimation sample)
  Disability |
    limiting |
    mobility |      Freq.     Percent        Cum.
@@ -1337,37 +1286,10 @@ Predict REDI-created income as a function of education, race/ethnicity, gender o
 ------------+-----------------------------------
       Total |  6,047,887      100.00
 
-BRR replications (80)
-----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
-..................................................    50
-..............................
 . 
 . generate disability = .
 (6,047,887 missing values generated)
 
-Survey: Linear regression                     Number of obs     =    6,047,887
-                                              Population size   =  632,679,577
-                                              Replications      =           80
-                                              Design df         =           79
-                                              F(   9,     71)   =     39245.59
-                                              Prob > F          =       0.0000
-                                              R-squared         =       0.1650
-
-------------------------------------------------------------------------------
-             |                BRR *
-redi_dV~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-      dB_fem |  -15730.02   78.33879  -200.79   0.000    -15885.95   -15574.09
-   dB_rblack |   -25036.3   87.61178  -285.76   0.000    -25210.68   -24861.91
-   dB_rasian |   4290.773   196.7178    21.81   0.000     3899.216     4682.33
-    dB_rhisp |  -9349.167    93.4965   -99.99   0.000    -9535.267   -9163.067
-   dB_rother |   -12064.2   200.4001   -60.20   0.000    -12463.08   -11665.31
-   dB_edu_HS |   16399.85   90.79356   180.63   0.000     16219.13    16580.57
- dB_edu_sCol |   30671.71   91.30821   335.91   0.000     30489.96    30853.45
-  dB_edu_col |   67292.34   149.6494   449.67   0.000     66994.47    67590.21
- dB_edu_grad |   98233.67   213.5269   460.05   0.000     97808.66    98658.69
-       _cons |   61904.37   99.86983   619.85   0.000     61705.58    62103.15
-------------------------------------------------------------------------------
 . replace disability = 1 if diffmob == 2  // has mobility limitation
 (226,296 real changes made)
 
@@ -1386,15 +1308,10 @@ Has mobility limitati |         0    226,296          0 |   226,296
 ----------------------+---------------------------------+----------
                 Total | 5,789,448    226,296     32,143 | 6,047,887 
 
-.  
 . 
 . 
-. ***-----
-. // Check if systematically different values between REDI and Research Dataset
-. *use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
 . ***--------------------------***
 . 
-. table sex, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
 . // # MARITAL STATUS
 . 
 . /*MARST gives each person's current marital status,
@@ -1402,12 +1319,6 @@ Has mobility limitati |         0    226,296          0 |   226,296
 . 
 . tab marst
 
-----------------------------------------------------------
-      Sex | mean(red~2017)  mean(hhincome)  mean(hhinco~s)
-----------+-----------------------------------------------
-     Male |         102404          101347     106317.2956
-   Female |         84,042           83163     86656.53495
-----------------------------------------------------------
          Marital status |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
 Married, spouse present |  3,310,321       54.74       54.74
@@ -1419,19 +1330,8 @@ Married, spouse present |  3,310,321       54.74       54.74
 ------------------------+-----------------------------------
                   Total |  6,047,887      100.00
 
-. table race, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
 . tab marst, nolab
 
--------------------------------------------------------------------------------
-                          Race | mean(red~2017)  mean(hhincome)  mean(hhinco~s)
--------------------------------+-----------------------------------------------
-                         White |         97,084           96076     100424.6182
-                   Black/Negro |         64,746           64065     66611.82838
-  American Indian/Aleut/Eskimo |         68,302           67577     69773.73769
-                    Asian only |         119090          117870     125293.8234
-Hawaiian/Pacific Islander only |         90,473           89517     95684.36419
-                           800 |         83,961           83122     86631.74685
--------------------------------------------------------------------------------
     Marital |
      status |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1444,51 +1344,16 @@ Hawaiian/Pacific Islander only |         90,473           89517     95684.36419
 ------------+-----------------------------------
       Total |  6,047,887      100.00
 
-. table hispan, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
 . 
 . generate married = .
 (6,047,887 missing values generated)
 
---------------------------------------------------------------------------------
-                         Hispanic origin |    __000002     __000003     __000004
------------------------------------------+--------------------------------------
-                            Not Hispanic |      97,151        96140  100698.4045
-                                 Mexican |      70,845        70113   72359.8559
-                            Puerto Rican |      72,107        71377  75377.43621
-                                   Cuban |      85,182        84280  87054.50106
-                               Dominican |      69,550        68862  70379.86543
-                              Salvadoran |      67,360        66688  69017.88367
-                          Other Hispanic |      85,681        84774  87573.75584
-Central American, (excluding Salvadoran) |      72,734        72002  74328.01603
-                          South American |      90,142        89228  93945.11423
---------------------------------------------------------------------------------
 . replace married = 1 if marst == 1 | marst == 2
 (3,409,163 real changes made)
 
-. table educ, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
 . replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
 (2,638,724 real changes made)
 
---------------------------------------------------------------------------------
-           Educational attainment recode |    __000002     __000003     __000004
------------------------------------------+--------------------------------------
-                       None or preschool |      40,864        40468  42641.89799
-                    Grades 1, 2, 3, or 4 |      48,437        47874  49279.91716
-                           Grades 5 or 6 |      49,021        48477  50073.80305
-                           Grades 7 or 8 |      46,026        45517  46676.17329
-                                 Grade 9 |      45,774        45306  46583.64637
-                                Grade 10 |      44,991        44532  45564.71729
-                                Grade 11 |      44,073        43630  44698.39236
-                  12th grade, no diploma |      56,587        55977  57647.84065
-       High school diploma or equivalent |      66,859        66156  68697.52198
-              Some college but no degree |      78,026        77212  80623.52919
-Associate's degree, occupational/vocatio |      84,032        83177  86524.71668
-    Associate's degree, academic program |      89,127        88209  92146.04275
-                       Bachelor's degree |      121533       120278  127761.9782
-                         Master's degree |      140561       139125  147341.5337
-              Professional school degree |      204089       201846  193229.7732
-                        Doctorate degree |      175932       174137  179883.7717
---------------------------------------------------------------------------------
 . 
 . tab marst married, m
 
@@ -1504,11 +1369,8 @@ Married, spouse absen |         0     98,842 |    98,842
 ----------------------+----------------------+----------
                 Total | 2,638,724  3,409,163 | 6,047,887 
 
-.                  
 . 
-.  
 . ***--------------------------***
-. // CLEAN UP
 . 
 . // # OWNERSHIP OF HOUSING
 . 
@@ -1568,4 +1430,28 @@ Owned or being bought |         0  4,040,515 | 4,040,515
 . 
 . ***--------------------------***
 . 
-. capture log close redi12_ACS_REDI_regressions
+. save $deriv/redi12_ACS_REDI_regressions-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_ACS_REDI_regress
+> ions-hinc_shp.dta saved
+
+. 
+. ***--------------------------***
+. // REGRESSION: ACS Income as DV (Original - not included in results)
+. ***--------------------------***        
+. 
+. di in red "Predict original ACS continuous income as a function of education, 
+> race/ethnicity, gender of householder"            
+Predict original ACS continuous income as a function of education, race/ethnicit
+> y, gender of householder
+
+. svy: reg acs_hinc_shp_`conv_year' /// 
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
+> gory
+(running regress on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................

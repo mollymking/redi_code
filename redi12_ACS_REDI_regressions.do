@@ -184,12 +184,20 @@ tab ownershp ownhouse, m
 
 ***--------------------------***
 
+***--------------------------***
+// REGRESSION: ACS Income as DV (Original - not included in results)
+***--------------------------***	
+
 di in red "Predict original ACS continuous income as a function of education, race/ethnicity, gender of householder"		
-svy: reg acs_hinc_shp_2017 /// 
+svy: reg acs_hinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
 
+
+***--------------------------***
+// REGRESSION: REDI Income as DV
+***--------------------------***	
 
 di in red "Predict REDI-created income as a function of education, race/ethnicity, gender of householder"	
 svy: reg redi_dV_hinc_shp_`conv_year' /// 
@@ -197,8 +205,59 @@ svy: reg redi_dV_hinc_shp_`conv_year' ///
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
  
+***--------------------------***
+// REGRESSION: REDI Income as DV - with 5-6 IVs
+***--------------------------***	
 
+di in red "Predict REDI-created income as a function of education, race/ethnicity, gender of householder, marital status, disability, and labor force"	
+svy: reg redi_dV_hinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married disability labor
 
+***--------------------------***
+// REGRESSION: REDI Income as IV: Predict Home Ownership
+***--------------------------***	
+
+di in red "Predict home ownership as function of ln(REDI-created income), race/ethnicity, education, gender"
+svy: logistic ownhouse ///
+	redi_dV_lnhinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
+
+*est store `v'_modB
+	
+*svylogitgof
+	
+
+***--------------------------***
+// REGRESSION: REDI Income as IV: Predict Home Ownership - 5-6 IVs
+***--------------------------***	
+
+di in red "Predict home ownership as function of ln(REDI-created income), race/ethnicity, education, gender, marital status, disability, labor force"
+svy: logistic ownhouse ///
+	redi_dV_lnhinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married disability labor //
+	
+
+***--------------------------***
+// REGRESSION: REDI Income as IV: Predict Disability - 5-6 IVs
+***--------------------------***	
+
+di in red "Predict disability as function of ln(REDI-created income), race/ethnicity, education, gender, marital status, labor force"
+svy: logistic disability ///
+	redi_dV_lnhinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married labor //
+	
+	
 ***-----
 // Check if systematically different values between REDI and Research Dataset
 *use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
@@ -208,7 +267,6 @@ table race, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
 table hispan, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
 table educ, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
 		 
-
  
 ***--------------------------***
 // CLEAN UP
