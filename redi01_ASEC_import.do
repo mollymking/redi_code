@@ -33,7 +33,7 @@ set more off
 
 cd $source/00_CPS_ASEC/
 // this is code provided by IPUMS - ACS to import data:
-do $redi/cps_00012.do // larger data set includes variables for later regression
+do $redi/cps_00013.do // larger data set includes variables for later regression
 
 
 // CLEAN UP A BIT
