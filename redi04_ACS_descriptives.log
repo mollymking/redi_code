@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
 > S_descriptives.log
   log type:  text
- opened on:  28 Aug 2020, 22:47:56
+ opened on:   9 Sep 2021, 10:37:35
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-28 Aug 2020  22:47:56
+ 9 Sep 2021  10:37:35
 
 . 
 . ***--------------------------***
@@ -230,5 +230,5 @@ Gini coefficient = 0.4536296
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
 > S_descriptives.log
   log type:  text
- closed on:  28 Aug 2020, 22:59:33
+ closed on:   9 Sep 2021, 11:01:19
 --------------------------------------------------------------------------------

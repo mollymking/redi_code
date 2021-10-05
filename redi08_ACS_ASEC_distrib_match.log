@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi08_AC
 > S_ASEC_distrib_match.log
   log type:  text
- opened on:  28 Aug 2020, 23:27:11
+ opened on:  11 Sep 2021, 19:07:37
 
 . 
 . //      project:        REDI Methods Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-28 Aug 2020  23:27:11
+11 Sep 2021  19:07:37
 
 . 
 . ***--------------------------***
@@ -136,14 +136,14 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi08_ACS_ASEC_distrib
 . // # GENERATE PROPORTION
 . ***--------------------------***
 . 
-. by year: egen asec_hinc_shp_N = total(asec_hinc_shp_n)
+. bysort year: egen asec_hinc_shp_N = total(asec_hinc_shp_n)
 
-. by year: gen asec_hinc_shp_prop = asec_hinc_shp_n /  asec_hinc_shp_N
+. bysort year: gen asec_hinc_shp_prop = asec_hinc_shp_n /  asec_hinc_shp_N
 
 . 
-. by year: egen acs_hinc_shp_N = total(acs_hinc_shp_n)
+. bysort year: egen acs_hinc_shp_N = total(acs_hinc_shp_n)
 
-. by year: gen acs_hinc_shp_prop = acs_hinc_shp_n / acs_hinc_shp_N        
+. bysort year: gen acs_hinc_shp_prop = acs_hinc_shp_n / acs_hinc_shp_N    
 
 . 
 . save $deriv/redi08_ACS_ASEC_distrib_match-hinc_shp.dta, replace
@@ -190,5 +190,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi08_ACS_ASEC_distrib
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi08_AC
 > S_ASEC_distrib_match.log
   log type:  text
- closed on:  28 Aug 2020, 23:28:10
+ closed on:  11 Sep 2021, 19:08:59
 --------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi05_AS
 > EC_bins.log
   log type:  text
- opened on:  24 Aug 2021, 09:42:58
+ opened on:   9 Sep 2021, 11:01:19
 
 . 
 . //      project:        REDI Methods Paper
@@ -17,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-24 Aug 2021  09:42:58
+ 9 Sep 2021  11:01:19
 
 . 
 . ***--------------------------***
@@ -196,5 +196,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc_s
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi05_AS
 > EC_bins.log
   log type:  text
- closed on:  24 Aug 2021, 09:43:02
+ closed on:   9 Sep 2021, 11:01:23
 --------------------------------------------------------------------------------

@@ -84,11 +84,11 @@ lab val hinc_shp shp_cat
 // # GENERATE PROPORTION
 ***--------------------------***
 
-by year: egen asec_hinc_shp_N = total(asec_hinc_shp_n)
-by year: gen asec_hinc_shp_prop = asec_hinc_shp_n /  asec_hinc_shp_N
+bysort year: egen asec_hinc_shp_N = total(asec_hinc_shp_n)
+bysort year: gen asec_hinc_shp_prop = asec_hinc_shp_n /  asec_hinc_shp_N
 
-by year: egen acs_hinc_shp_N = total(acs_hinc_shp_n)
-by year: gen acs_hinc_shp_prop = acs_hinc_shp_n / acs_hinc_shp_N	
+bysort year: egen acs_hinc_shp_N = total(acs_hinc_shp_n)
+bysort year: gen acs_hinc_shp_prop = acs_hinc_shp_n / acs_hinc_shp_N	
 
 save $deriv/redi08_ACS_ASEC_distrib_match-hinc_shp.dta, replace
 

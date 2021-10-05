@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi03_AC
 > S_convert.log
   log type:  text
- opened on:  29 Aug 2020, 00:06:46
+ opened on:  11 Sep 2021, 20:43:31
 
 . 
 . //      project:        REDI Methodology Paper
@@ -17,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-29 Aug 2020  00:06:46
+11 Sep 2021  20:43:31
 
 . 
 . ***--------------------------***
@@ -56,8 +56,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi03_ACS_convert-hinc
 . 
 . // A) ASEC CONTINUOUS INCOME CONVERSIONS
 . 
-. *Converts ACS data bins (those defined by acs_hinc_shp) into continuous values
-> , using values found in ASEC
+. *Converts ACS data bins (those defined by acs_hinc_shp) into continuous REDI v
+> alues, using values found in ASEC
 . 
 . include $redi/redi03a_categ_distrib.doi
 
@@ -115,9 +115,9 @@ The income levels are: 1 2 3 4 5 6 7 8 9
 .         tempfile working_regex
 
 .         save `working_regex', replace
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000001 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000001 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000001 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000001 saved
 
 . 
 .         
@@ -366,9 +366,9 @@ inc_decoded: characters L e s space t h a n $ removed; acs_hinc_shp_ub generated
 Lower bound of -100,000 created for inc_level 1
 note: label truncated to 80 characters
 (222,379 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000002 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000002 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000002 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000002 saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (131,174 observations deleted)
@@ -386,6 +386,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc1.dta saved
 Merged ASEC values with original ACS dataset for inc_level 1 ($-100000-15000) an
 > d year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -395,9 +404,9 @@ Merged ASEC values with original ACS dataset for inc_level 1 ($-100000-15000) an
 (233,027 missing values generated)
 (233,027 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000003 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000003 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000003 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000003 saved
 Saved REDI data (with ASEC continuous data) for inc_level 1 ($-100000-15000) and
 >  year 2016 in file
 (Imported original ACS data)
@@ -412,9 +421,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 2of the original ACS income range
 note: label truncated to 80 characters
 (214,506 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000004 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000004 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000004 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000004 saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (132,101 observations deleted)
@@ -432,6 +441,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc2.dta saved
 Merged ASEC values with original ACS dataset for inc_level 2 ($15000-25000) and 
 > year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -441,9 +459,9 @@ Merged ASEC values with original ACS dataset for inc_level 2 ($15000-25000) and
 (223,238 missing values generated)
 (223,238 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000005 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000005 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000005 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000005 saved
 Saved REDI data (with ASEC continuous data) for inc_level 2 ($15000-25000) and y
 > ear 2016 in file
 (Imported original ACS data)
@@ -458,9 +476,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 3of the original ACS income range
 note: label truncated to 80 characters
 (232,186 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000006 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000006 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000006 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000006 saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (132,369 observations deleted)
@@ -478,6 +496,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc3.dta saved
 Merged ASEC values with original ACS dataset for inc_level 3 ($25000-35000) and 
 > year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -487,9 +514,9 @@ Merged ASEC values with original ACS dataset for inc_level 3 ($25000-35000) and
 (241,735 missing values generated)
 (241,735 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000007 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000007 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000007 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000007 saved
 Saved REDI data (with ASEC continuous data) for inc_level 3 ($25000-35000) and y
 > ear 2016 in file
 (Imported original ACS data)
@@ -504,9 +531,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 4of the original ACS income range
 note: label truncated to 80 characters
 (361,132 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000008 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000008 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000008 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000008 saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (130,385 observations deleted)
@@ -524,6 +551,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc4.dta saved
 Merged ASEC values with original ACS dataset for inc_level 4 ($35000-50000) and 
 > year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -533,9 +569,9 @@ Merged ASEC values with original ACS dataset for inc_level 4 ($35000-50000) and
 (368,384 missing values generated)
 (368,384 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000009 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000009 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000009 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000009 saved
 Saved REDI data (with ASEC continuous data) for inc_level 4 ($35000-50000) and y
 > ear 2016 in file
 (Imported original ACS data)
@@ -550,9 +586,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 5of the original ACS income range
 note: label truncated to 80 characters
 (534,663 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000a not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000a not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000a saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000a saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (127,661 observations deleted)
@@ -570,6 +606,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc5.dta saved
 Merged ASEC values with original ACS dataset for inc_level 5 ($50000-75000) and 
 > year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -579,9 +624,9 @@ Merged ASEC values with original ACS dataset for inc_level 5 ($50000-75000) and
 (536,467 missing values generated)
 (536,467 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000b not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000b not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000b saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000b saved
 Saved REDI data (with ASEC continuous data) for inc_level 5 ($50000-75000) and y
 > ear 2016 in file
 (Imported original ACS data)
@@ -596,9 +641,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 6of the original ACS income range
 note: label truncated to 80 characters
 (434,733 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000c not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000c not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000c saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000c saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (130,837 observations deleted)
@@ -616,6 +661,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc6.dta saved
 Merged ASEC values with original ACS dataset for inc_level 6 ($75000-100000) and
 >  year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -625,9 +679,9 @@ Merged ASEC values with original ACS dataset for inc_level 6 ($75000-100000) and
 (427,167 missing values generated)
 (427,167 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000d not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000d not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000d saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000d saved
 Saved REDI data (with ASEC continuous data) for inc_level 6 ($75000-100000) and 
 > year 2016 in file
 (Imported original ACS data)
@@ -642,9 +696,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 7of the original ACS income range
 note: label truncated to 80 characters
 (522,665 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000e not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000e not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000e saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000e saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (129,345 observations deleted)
@@ -662,6 +716,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc7.dta saved
 Merged ASEC values with original ACS dataset for inc_level 7 ($100000-150000) an
 > d year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -671,9 +734,9 @@ Merged ASEC values with original ACS dataset for inc_level 7 ($100000-150000) an
 (500,917 missing values generated)
 (500,917 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000f not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000f not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000f saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000f saved
 Saved REDI data (with ASEC continuous data) for inc_level 7 ($100000-150000) and
 >  year 2016 in file
 (Imported original ACS data)
@@ -688,9 +751,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 8of the original ACS income range
 note: label truncated to 80 characters
 (237,220 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000g not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000g not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000g saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000g saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (135,045 observations deleted)
@@ -708,6 +771,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc8.dta saved
 Merged ASEC values with original ACS dataset for inc_level 8 ($150000-200000) an
 > d year 2016.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -717,9 +789,9 @@ Merged ASEC values with original ACS dataset for inc_level 8 ($150000-200000) an
 (219,987 missing values generated)
 (219,987 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000h not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000h not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000h saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000h saved
 Saved REDI data (with ASEC continuous data) for inc_level 8 ($150000-200000) and
 >  year 2016 in file
 (Imported original ACS data)
@@ -730,9 +802,9 @@ inc_decoded: characters space o e r m removed; acs_hinc_shp_lb generated as long
 Upper bound of 999999 created for inc_level 9
 note: label truncated to 80 characters
 (279,997 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000i not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000i not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000i saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000i saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (135,402 observations deleted)
@@ -752,6 +824,15 @@ Merged ASEC values with original ACS dataset for inc_level 9 ($200000-999999) an
 > d year 2016.
 (note: variable acs_hinc_shp_lb was float, now double to accommodate using
        data's values)
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -761,81 +842,225 @@ Merged ASEC values with original ACS dataset for inc_level 9 ($200000-999999) an
 (257,484 missing values generated)
 (257,484 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000j not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000j not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000j saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000j saved
 Saved REDI data (with ASEC continuous data) for inc_level 9 ($200000-999999) and
 >  year 2016 in file
 Moved outside loop of year income bracket  ($200000-999999).
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (note: variable acs_hinc_shp_lb was float, now double to accommodate using
        data's values)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000k not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000k not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000k saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000k saved
 Saved new tempfile  for year 2016 for all REDI income brackets.
 (Imported original ACS data)
 (5,891,121 observations deleted)
@@ -846,9 +1071,9 @@ inc_decoded: characters L e s space t h a n $ removed; acs_hinc_shp_ub generated
 Lower bound of -100,000 created for inc_level 1
 note: label truncated to 80 characters
 (233,027 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000l not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000l not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000l saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000l saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (131,323 observations deleted)
@@ -866,6 +1091,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc1.dta saved
 Merged ASEC values with original ACS dataset for inc_level 1 ($-100000-15000) an
 > d year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -875,9 +1109,9 @@ Merged ASEC values with original ACS dataset for inc_level 1 ($-100000-15000) an
 (222,379 missing values generated)
 (222,379 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000m not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000m not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000m saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000m saved
 Saved REDI data (with ASEC continuous data) for inc_level 1 ($-100000-15000) and
 >  year 2017 in file
 (Imported original ACS data)
@@ -892,9 +1126,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 2of the original ACS income range
 note: label truncated to 80 characters
 (223,238 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000n not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000n not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000n saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000n saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (132,584 observations deleted)
@@ -912,6 +1146,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc2.dta saved
 Merged ASEC values with original ACS dataset for inc_level 2 ($15000-25000) and 
 > year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -921,9 +1164,9 @@ Merged ASEC values with original ACS dataset for inc_level 2 ($15000-25000) and
 (214,506 missing values generated)
 (214,506 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000o not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000o not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000o saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000o saved
 Saved REDI data (with ASEC continuous data) for inc_level 2 ($15000-25000) and y
 > ear 2017 in file
 (Imported original ACS data)
@@ -938,9 +1181,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 3of the original ACS income range
 note: label truncated to 80 characters
 (241,735 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000p not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000p not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000p saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000p saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (132,715 observations deleted)
@@ -958,6 +1201,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc3.dta saved
 Merged ASEC values with original ACS dataset for inc_level 3 ($25000-35000) and 
 > year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -967,9 +1219,9 @@ Merged ASEC values with original ACS dataset for inc_level 3 ($25000-35000) and
 (232,186 missing values generated)
 (232,186 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000q not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000q not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000q saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000q saved
 Saved REDI data (with ASEC continuous data) for inc_level 3 ($25000-35000) and y
 > ear 2017 in file
 (Imported original ACS data)
@@ -984,9 +1236,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 4of the original ACS income range
 note: label truncated to 80 characters
 (368,384 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000r not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000r not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000r saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000r saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (130,332 observations deleted)
@@ -1004,6 +1256,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc4.dta saved
 Merged ASEC values with original ACS dataset for inc_level 4 ($35000-50000) and 
 > year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -1013,9 +1274,9 @@ Merged ASEC values with original ACS dataset for inc_level 4 ($35000-50000) and
 (361,132 missing values generated)
 (361,132 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000s not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000s not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000s saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000s saved
 Saved REDI data (with ASEC continuous data) for inc_level 4 ($35000-50000) and y
 > ear 2017 in file
 (Imported original ACS data)
@@ -1030,9 +1291,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 5of the original ACS income range
 note: label truncated to 80 characters
 (536,467 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000t not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000t not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000t saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000t saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (127,464 observations deleted)
@@ -1050,6 +1311,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc5.dta saved
 Merged ASEC values with original ACS dataset for inc_level 5 ($50000-75000) and 
 > year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -1059,9 +1329,9 @@ Merged ASEC values with original ACS dataset for inc_level 5 ($50000-75000) and
 (534,663 missing values generated)
 (534,663 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000u not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000u not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000u saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000u saved
 Saved REDI data (with ASEC continuous data) for inc_level 5 ($50000-75000) and y
 > ear 2017 in file
 (Imported original ACS data)
@@ -1076,9 +1346,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 6of the original ACS income range
 note: label truncated to 80 characters
 (427,167 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000v not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000v not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000v saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000v saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (130,672 observations deleted)
@@ -1096,6 +1366,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc6.dta saved
 Merged ASEC values with original ACS dataset for inc_level 6 ($75000-100000) and
 >  year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -1105,9 +1384,9 @@ Merged ASEC values with original ACS dataset for inc_level 6 ($75000-100000) and
 (434,733 missing values generated)
 (434,733 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000w not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000w not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000w saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000w saved
 Saved REDI data (with ASEC continuous data) for inc_level 6 ($75000-100000) and 
 > year 2017 in file
 (Imported original ACS data)
@@ -1122,9 +1401,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 7of the original ACS income range
 note: label truncated to 80 characters
 (500,917 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000x not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000x not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.00000x saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.00000x saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (129,189 observations deleted)
@@ -1142,6 +1421,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc7.dta saved
 Merged ASEC values with original ACS dataset for inc_level 7 ($100000-150000) an
 > d year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -1151,9 +1439,9 @@ Merged ASEC values with original ACS dataset for inc_level 7 ($100000-150000) an
 (522,665 missing values generated)
 (522,665 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000010 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000010 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000010 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000010 saved
 Saved REDI data (with ASEC continuous data) for inc_level 7 ($100000-150000) and
 >  year 2017 in file
 (Imported original ACS data)
@@ -1168,9 +1456,9 @@ Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 8of the original ACS income range
 note: label truncated to 80 characters
 (219,987 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000011 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000011 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000011 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000011 saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (134,776 observations deleted)
@@ -1188,6 +1476,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
 > ar_inc8.dta saved
 Merged ASEC values with original ACS dataset for inc_level 8 ($150000-200000) an
 > d year 2017.
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -1197,9 +1494,9 @@ Merged ASEC values with original ACS dataset for inc_level 8 ($150000-200000) an
 (237,220 missing values generated)
 (237,220 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000012 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000012 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000012 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000012 saved
 Saved REDI data (with ASEC continuous data) for inc_level 8 ($150000-200000) and
 >  year 2017 in file
 (Imported original ACS data)
@@ -1210,9 +1507,9 @@ inc_decoded: characters space o e r m removed; acs_hinc_shp_lb generated as long
 Upper bound of 999999 created for inc_level 9
 note: label truncated to 80 characters
 (257,484 observations deleted)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000013 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000013 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000013 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000013 saved
 (Household Income - CPS ASEC data)
 Calculating household income using hhincome ASEC variable.
 (134,810 observations deleted)
@@ -1232,6 +1529,15 @@ Merged ASEC values with original ACS dataset for inc_level 9 ($200000-999999) an
 > d year 2017.
 (note: variable acs_hinc_shp_lb was float, now double to accommodate using
        data's values)
+(label diffmob_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
 
     Result                           # of obs.
     -----------------------------------------
@@ -1241,81 +1547,225 @@ Merged ASEC values with original ACS dataset for inc_level 9 ($200000-999999) an
 (279,997 missing values generated)
 (279,997 real changes made)
 note: label truncated to 80 characters
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000014 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000014 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000014 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000014 saved
 Saved REDI data (with ASEC continuous data) for inc_level 9 ($200000-999999) and
 >  year 2017 in file
 Moved outside loop of year income bracket  ($200000-999999).
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
 (note: variable acs_hinc_shp_lb was float, now double to accommodate using
        data's values)
 (label _merge already defined)
 (label cat_inc already defined)
+(label sample_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label empstat_lbl already defined)
+(label empstatd_lbl already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
 (label educ_lbl already defined)
+(label labforce_lbl already defined)
 (label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
 (label race_lbl already defined)
 (label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
 (label asecflag_lbl already defined)
 (label month_lbl already defined)
-(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000015 not
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000015 not
 >  found)
-file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_17061.000015 saved
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_22418.000015 saved
 Saved new tempfile  for year 2017 for all REDI income brackets.
 
 .                                 
@@ -1338,10 +1788,28 @@ Saved new tempfile  for year 2017 for all REDI income brackets.
   3.                         }
 (label month_lbl already defined)
 (label asecflag_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
 (label sex_lbl already defined)
 (label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
 (label hispan_lbl already defined)
+(label labforce_lbl already defined)
 (label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label empstatd_lbl already defined)
+(label empstat_lbl already defined)
+(label educd_lbl already defined)
+(label hispand_lbl already defined)
+(label raced_lbl already defined)
+(label ownershpd_lbl already defined)
+(label gq_lbl already defined)
+(label sample_lbl already defined)
 (label cat_inc already defined)
 (label _merge already defined)
 
@@ -1378,7 +1846,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi03_ACS_convert-hinc
 
 . 
 .         
-. // B) CONVERT CONTINUOUS INCOME TO `conv_year' DOLLARS
+. // B) INFLATION ADJUSTMENT: CONVERT CONTINUOUS INCOME TO `conv_year' DOLLARS
 . 
 . include $redi/redi03b_inflate_dollars.doi
 
@@ -1504,7 +1972,7 @@ End of redi03b_inflate_dollars.doi for household and shp variables
   (0 bytes saved)
 
 . datasignature set, reset  
-  6047887:108(94321):909347115:3922874410       (data signature reset)
+  6047887:212(76489):3280098127:505324142       (data signature reset)
 
 . 
 . save $deriv/redi03_ACS_convert-hinc_shp.dta, replace
@@ -1524,5 +1992,5 @@ End of redi_inflate_dollars.doi for household and shp variables
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi03_AC
 > S_convert.log
   log type:  text
- closed on:  29 Aug 2020, 00:19:01
+ closed on:  11 Sep 2021, 22:09:35
 --------------------------------------------------------------------------------

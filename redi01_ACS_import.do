@@ -31,7 +31,7 @@ set more off
 // and change name of .do file to match below
 
 cd $source/80_ACS/
-do $redi/usa_00008.do // this is code provided by IPUMS - ACS to import data
+do $redi/usa_00010.do // this is code provided by IPUMS - ACS to import data
 
 *survey weighting according to documentation: https://usa.ipums.org/usa/repwt.shtml
 svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
@@ -43,14 +43,20 @@ svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
 // RENAME to avoid confusion with CPS ASEC
 rename hhincome hhincome_acs
 
-keep if year  == 2016 | year == 2017
-
 ***--------------------------***
 // SAVE DATA
 ***--------------------------***
 
-label data "Imported original ACS data"
 compress
+
+label data "Imported original ACS data, 2016, 2017, 2019"
+datasignature set, reset
+save $deriv/redi01_ACS_all.dta, replace
+
+
+keep if year  == 2016 | year == 2017 
+
+label data "Imported original ACS data, 2016-2017"
 datasignature set, reset
 
 save $deriv/redi01_ACS.dta, replace

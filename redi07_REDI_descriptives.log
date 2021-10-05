@@ -1,9 +1,8 @@
---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi07_RE
-> DI_descriptives.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi07_REDI_descriptives.log
   log type:  text
- opened on:  28 Aug 2020, 22:59:38
+ opened on:  11 Sep 2021, 18:05:38
 
 . 
 . //      project:        REDI Methods Paper
@@ -15,7 +14,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-28 Aug 2020  22:59:38
+11 Sep 2021  18:05:38
 
 . 
 . ***--------------------------***
@@ -118,7 +117,7 @@ Survey: Mean estimation         Number of obs   =    3,008,406
              |                BRR *
              |       Mean   Std. Err.     [95% Conf. Interval]
 -------------+------------------------------------------------
-    __000006 |  -.0000142   .0006934     -.0013943     .001366
+    __000006 |  -3.33e-06   .0006749     -.0013467    .0013401
 --------------------------------------------------------------
 
 Percentile estimation
@@ -126,7 +125,7 @@ Percentile estimation
              |                BRR *
 redi_dV~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-         p50 |   68755.48   156.8027   438.48   0.000     68448.16    69062.81
+         p50 |   68736.08   151.4375   453.89   0.000     68439.27    69032.89
 ------------------------------------------------------------------------------
 
 
@@ -139,12 +138,12 @@ matrices:
 
 r(table)[9,1]
               p50
-     b  68755.484
-    se  156.80273
-     z  438.48396
+     b  68736.078
+    se   151.4375
+     z  453.89073
 pvalue          0
-    ll  68448.157
-    ul  69062.812
+    ll  68439.266
+    ul   69032.89
     df          .
   crit   1.959964
  eform          0
@@ -168,7 +167,7 @@ Survey: Mean estimation         Number of obs   =    3,039,481
              |                BRR *
              |       Mean   Std. Err.     [95% Conf. Interval]
 -------------+------------------------------------------------
-    __000006 |  -2.88e-06   .0006891     -.0013745    .0013688
+    __000006 |  -.0000121   .0006824     -.0013704    .0013463
 --------------------------------------------------------------
 
 Percentile estimation
@@ -176,7 +175,7 @@ Percentile estimation
              |                BRR *
 redi_dV~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-         p50 |      70211      101.5   691.73   0.000     70012.06    70409.94
+         p50 |      70200         93   754.84   0.000     70017.72    70382.28
 ------------------------------------------------------------------------------
 
 
@@ -189,12 +188,12 @@ matrices:
 
 r(table)[9,1]
               p50
-     b      70211
-    se      101.5
-     z  691.73399
+     b      70200
+    se         93
+     z  754.83871
 pvalue          0
-    ll  70012.064
-    ul  70409.936
+    ll  70017.723
+    ul  70382.277
     df          .
   crit   1.959964
  eform          0
@@ -249,8 +248,8 @@ Survey: Mean estimation                         Number of obs   =    6,047,887
                              |       Mean   Std. Err.     [95% Conf. Interval]
 -----------------------------+------------------------------------------------
 c.redi_dV_hinc_shp_2017@year |
-                       2016  |   90126.47   109.7984      89907.92    90345.02
-                       2017  |   91831.74   101.3306      91630.05    92033.44
+                       2016  |   90113.29   110.0231       89894.3    90332.29
+                       2017  |   91821.17   106.6964      91608.79    92033.54
 ------------------------------------------------------------------------------
 
 . cap matrix X = r(table) 
@@ -263,7 +262,7 @@ c.redi_dV_hinc_shp_2017@year |
 The inflation-adjusted 2016 REDI mean in 2017 dollars is:
 
 . di mn16 
-90126.471
+90113.291
 
 . replace redi_dV_hinc_shp_`conv_year'_mean = mn16 if year == 2016
 (3,008,406 real changes made)
@@ -276,7 +275,7 @@ The inflation-adjusted 2016 REDI mean in 2017 dollars is:
 The inflation-adjusted 2017 REDI mean in 2017 dollars is:
 
 . di mn17
-91831.742
+91821.168
 
 . replace redi_dV_hinc_shp_`conv_year'_mean = mn17 if year == 2017
 (3,039,481 real changes made)
@@ -322,15 +321,15 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_REDI_descriptive
 (28,505 real changes made)
 Below is the gini hinc shp for 2016:
 
-Gini coefficient = 0.4419172
-.44191724
+Gini coefficient = 0.4417894
+.44178939
 (ACS data converted to continuous REDI-calculated values)
 (3,008,406 observations deleted)
 (27,982 real changes made)
 Below is the gini hinc shp for 2017:
 
-Gini coefficient = 0.4411670
-.441167
+Gini coefficient = 0.4411404
+.44114037
 
 . 
 . ***--------------------------***
@@ -340,5 +339,5 @@ Gini coefficient = 0.4411670
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi07_RE
 > DI_descriptives.log
   log type:  text
- closed on:  28 Aug 2020, 23:27:10
+ closed on:  11 Sep 2021, 19:07:37
 --------------------------------------------------------------------------------

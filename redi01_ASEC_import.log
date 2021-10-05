@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------
       name:  redi01_ASEC_import
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_ASEC_import.log
   log type:  text
- opened on:  24 Aug 2021, 09:41:07
+ opened on:  28 Sep 2021, 18:26:09
 
 . 
 . 
@@ -18,7 +18,7 @@
 . 
 . 
 . display "$S_DATE  $S_TIME"
-24 Aug 2021  09:41:07
+28 Sep 2021  18:26:09
 
 . 
 . ***--------------------------***
@@ -46,7 +46,7 @@
 /Users/mollymking/Documents/SocResearch/Dissertation/data/data_sorc/00_CPS_ASEC
 
 . // this is code provided by IPUMS - ACS to import data:
-. do $redi/cps_00012.do // larger data set includes variables for later regressi
+. do $redi/cps_00015.do // larger data set includes variables for later regressi
 > on
 
 . * NOTE: You need to set the Stata working directory to the path
@@ -57,34 +57,41 @@
 . 
 . clear
 
-. quietly infix              ///
->   int     year      1-4    ///
->   long    serial    5-9    ///
->   byte    month     10-11  ///
->   double  cpsid     12-25  ///
->   byte    asecflag  26-26  ///
->   double  asecwth   27-36  ///
->   byte    ownershp  37-38  ///
->   double  hhincome  39-46  ///
->   byte    pernum    47-48  ///
->   double  cpsidp    49-62  ///
->   double  asecwt    63-72  ///
->   byte    age       73-74  ///
->   byte    sex       75-75  ///
->   int     race      76-78  ///
->   byte    marst     79-79  ///
->   int     hispan    80-82  ///
->   byte    labforce  83-83  ///
->   int     educ      84-86  ///
->   byte    diffmob   87-87  ///
->   using `"cps_00012.dat"'
+. quietly infix                ///
+>   int     year      1-4      ///
+>   long    serial    5-9      ///
+>   byte    month     10-11    ///
+>   double  cpsid     12-25    ///
+>   byte    asecflag  26-26    ///
+>   double  asecwth   27-36    ///
+>   byte    statefip  37-38    ///
+>   long    county    39-43    ///
+>   byte    ownershp  44-45    ///
+>   double  hhincome  46-53    ///
+>   byte    pernum    54-55    ///
+>   double  cpsidp    56-69    ///
+>   double  asecwt    70-79    ///
+>   byte    age       80-81    ///
+>   byte    sex       82-82    ///
+>   int     race      83-85    ///
+>   byte    marst     86-86    ///
+>   byte    nchild    87-87    ///
+>   int     hispan    88-90    ///
+>   byte    labforce  91-91    ///
+>   int     educ      92-94    ///
+>   byte    diffmob   95-95    ///
+>   byte    whymove   96-97    ///
+>   byte    migrate1  98-98    ///
+>   byte    health    99-99    ///
+>   byte    union     100-100  ///
+>   using `"cps_00015.dat"'
 
 . 
 . replace asecwth  = asecwth  / 10000
-(371,401 real changes made)
+(551,502 real changes made)
 
 . replace asecwt   = asecwt   / 10000
-(371,401 real changes made)
+(551,502 real changes made)
 
 . 
 . format cpsid    %14.0f
@@ -110,6 +117,10 @@
 
 . label var asecwth  `"Annual Social and Economic Supplement Household weight"'
 
+. label var statefip `"State (FIPS code)"'
+
+. label var county   `"FIPS county code"'
+
 . label var ownershp `"Ownership of dwelling"'
 
 . label var hhincome `"Total household income"'
@@ -128,6 +139,8 @@
 
 . label var marst    `"Marital status"'
 
+. label var nchild   `"Number of own children in household"'
+
 . label var hispan   `"Hispanic origin"'
 
 . label var labforce `"Labor force status"'
@@ -135,6 +148,14 @@
 . label var educ     `"Educational attainment recode"'
 
 . label var diffmob  `"Disability limiting mobility"'
+
+. label var whymove  `"Reason for moving"'
+
+. label var migrate1 `"Migration status, 1 year"'
+
+. label var health   `"Health status"'
+
+. label var union    `"Union membership"'
 
 . 
 . label define month_lbl 01 `"January"'
@@ -169,6 +190,163 @@
 . label define asecflag_lbl 2 `"March Basic"', add
 
 . label values asecflag asecflag_lbl
+
+. 
+. label define statefip_lbl 01 `"Alabama"'
+
+. label define statefip_lbl 02 `"Alaska"', add
+
+. label define statefip_lbl 04 `"Arizona"', add
+
+. label define statefip_lbl 05 `"Arkansas"', add
+
+. label define statefip_lbl 06 `"California"', add
+
+. label define statefip_lbl 08 `"Colorado"', add
+
+. label define statefip_lbl 09 `"Connecticut"', add
+
+. label define statefip_lbl 10 `"Delaware"', add
+
+. label define statefip_lbl 11 `"District of Columbia"', add
+
+. label define statefip_lbl 12 `"Florida"', add
+
+. label define statefip_lbl 13 `"Georgia"', add
+
+. label define statefip_lbl 15 `"Hawaii"', add
+
+. label define statefip_lbl 16 `"Idaho"', add
+
+. label define statefip_lbl 17 `"Illinois"', add
+
+. label define statefip_lbl 18 `"Indiana"', add
+
+. label define statefip_lbl 19 `"Iowa"', add
+
+. label define statefip_lbl 20 `"Kansas"', add
+
+. label define statefip_lbl 21 `"Kentucky"', add
+
+. label define statefip_lbl 22 `"Louisiana"', add
+
+. label define statefip_lbl 23 `"Maine"', add
+
+. label define statefip_lbl 24 `"Maryland"', add
+
+. label define statefip_lbl 25 `"Massachusetts"', add
+
+. label define statefip_lbl 26 `"Michigan"', add
+
+. label define statefip_lbl 27 `"Minnesota"', add
+
+. label define statefip_lbl 28 `"Mississippi"', add
+
+. label define statefip_lbl 29 `"Missouri"', add
+
+. label define statefip_lbl 30 `"Montana"', add
+
+. label define statefip_lbl 31 `"Nebraska"', add
+
+. label define statefip_lbl 32 `"Nevada"', add
+
+. label define statefip_lbl 33 `"New Hampshire"', add
+
+. label define statefip_lbl 34 `"New Jersey"', add
+
+. label define statefip_lbl 35 `"New Mexico"', add
+
+. label define statefip_lbl 36 `"New York"', add
+
+. label define statefip_lbl 37 `"North Carolina"', add
+
+. label define statefip_lbl 38 `"North Dakota"', add
+
+. label define statefip_lbl 39 `"Ohio"', add
+
+. label define statefip_lbl 40 `"Oklahoma"', add
+
+. label define statefip_lbl 41 `"Oregon"', add
+
+. label define statefip_lbl 42 `"Pennsylvania"', add
+
+. label define statefip_lbl 44 `"Rhode Island"', add
+
+. label define statefip_lbl 45 `"South Carolina"', add
+
+. label define statefip_lbl 46 `"South Dakota"', add
+
+. label define statefip_lbl 47 `"Tennessee"', add
+
+. label define statefip_lbl 48 `"Texas"', add
+
+. label define statefip_lbl 49 `"Utah"', add
+
+. label define statefip_lbl 50 `"Vermont"', add
+
+. label define statefip_lbl 51 `"Virginia"', add
+
+. label define statefip_lbl 53 `"Washington"', add
+
+. label define statefip_lbl 54 `"West Virginia"', add
+
+. label define statefip_lbl 55 `"Wisconsin"', add
+
+. label define statefip_lbl 56 `"Wyoming"', add
+
+. label define statefip_lbl 61 `"Maine-New Hampshire-Vermont"', add
+
+. label define statefip_lbl 65 `"Montana-Idaho-Wyoming"', add
+
+. label define statefip_lbl 68 `"Alaska-Hawaii"', add
+
+. label define statefip_lbl 69 `"Nebraska-North Dakota-South Dakota"', add
+
+. label define statefip_lbl 70 `"Maine-Massachusetts-New Hampshire-Rhode Island-
+> Vermont"', add
+
+. label define statefip_lbl 71 `"Michigan-Wisconsin"', add
+
+. label define statefip_lbl 72 `"Minnesota-Iowa"', add
+
+. label define statefip_lbl 73 `"Nebraska-North Dakota-South Dakota-Kansas"', ad
+> d
+
+. label define statefip_lbl 74 `"Delaware-Virginia"', add
+
+. label define statefip_lbl 75 `"North Carolina-South Carolina"', add
+
+. label define statefip_lbl 76 `"Alabama-Mississippi"', add
+
+. label define statefip_lbl 77 `"Arkansas-Oklahoma"', add
+
+. label define statefip_lbl 78 `"Arizona-New Mexico-Colorado"', add
+
+. label define statefip_lbl 79 `"Idaho-Wyoming-Utah-Montana-Nevada"', add
+
+. label define statefip_lbl 80 `"Alaska-Washington-Hawaii"', add
+
+. label define statefip_lbl 81 `"New Hampshire-Maine-Vermont-Rhode Island"', add
+
+. label define statefip_lbl 83 `"South Carolina-Georgia"', add
+
+. label define statefip_lbl 84 `"Kentucky-Tennessee"', add
+
+. label define statefip_lbl 85 `"Arkansas-Louisiana-Oklahoma"', add
+
+. label define statefip_lbl 87 `"Iowa-N Dakota-S Dakota-Nebraska-Kansas-Minnesot
+> a-Missouri"', add
+
+. label define statefip_lbl 88 `"Washington-Oregon-Alaska-Hawaii"', add
+
+. label define statefip_lbl 89 `"Montana-Wyoming-Colorado-New Mexico-Utah-Nevada
+> -Arizona"', add
+
+. label define statefip_lbl 90 `"Delaware-Maryland-Virginia-West Virginia"', add
+
+. label define statefip_lbl 99 `"State not identified"', add
+
+. label values statefip statefip_lbl
 
 . 
 . label define ownershp_lbl 00 `"NIU"'
@@ -476,6 +654,29 @@
 . label values marst marst_lbl
 
 . 
+. label define nchild_lbl 0 `"0 children present"'
+
+. label define nchild_lbl 1 `"1 child present"', add
+
+. label define nchild_lbl 2 `"2"', add
+
+. label define nchild_lbl 3 `"3"', add
+
+. label define nchild_lbl 4 `"4"', add
+
+. label define nchild_lbl 5 `"5"', add
+
+. label define nchild_lbl 6 `"6"', add
+
+. label define nchild_lbl 7 `"7"', add
+
+. label define nchild_lbl 8 `"8"', add
+
+. label define nchild_lbl 9 `"9+"', add
+
+. label values nchild nchild_lbl
+
+. 
 . label define hispan_lbl 000 `"Not Hispanic"'
 
 . label define hispan_lbl 100 `"Mexican"', add
@@ -607,16 +808,99 @@
 . label values diffmob diffmob_lbl
 
 . 
+. label define whymove_lbl 00 `"NIU"'
+
+. label define whymove_lbl 01 `"Change in marital status"', add
+
+. label define whymove_lbl 02 `"To establish own household"', add
+
+. label define whymove_lbl 03 `"Other family reason"', add
+
+. label define whymove_lbl 04 `"New job or job transfer"', add
+
+. label define whymove_lbl 05 `"To look for work or lost job"', add
+
+. label define whymove_lbl 06 `"For easier commute"', add
+
+. label define whymove_lbl 07 `"Retired"', add
+
+. label define whymove_lbl 08 `"Other job-related reason"', add
+
+. label define whymove_lbl 09 `"Wanted to own home, not rent"', add
+
+. label define whymove_lbl 10 `"Wanted new or better housing"', add
+
+. label define whymove_lbl 11 `"Wanted better neighborhood"', add
+
+. label define whymove_lbl 12 `"For cheaper housing"', add
+
+. label define whymove_lbl 13 `"Other housing reason"', add
+
+. label define whymove_lbl 14 `"Attend/leave college"', add
+
+. label define whymove_lbl 15 `"Change of climate"', add
+
+. label define whymove_lbl 16 `"Health reasons"', add
+
+. label define whymove_lbl 17 `"Other reasons"', add
+
+. label define whymove_lbl 18 `"Natural disaster"', add
+
+. label define whymove_lbl 19 `"Foreclosure or eviction"', add
+
+. label define whymove_lbl 20 `"Relationship with unmarried partner"', add
+
+. label values whymove whymove_lbl
+
+. 
+. label define migrate1_lbl 0 `"NIU"'
+
+. label define migrate1_lbl 1 `"Same house"', add
+
+. label define migrate1_lbl 2 `"Different house, place not reported"', add
+
+. label define migrate1_lbl 3 `"Moved within county"', add
+
+. label define migrate1_lbl 4 `"Moved within state, different county"', add
+
+. label define migrate1_lbl 5 `"Moved between states"', add
+
+. label define migrate1_lbl 6 `"Abroad"', add
+
+. label define migrate1_lbl 9 `"Unknown"', add
+
+. label values migrate1 migrate1_lbl
+
+. 
+. label define health_lbl 1 `"Excellent"'
+
+. label define health_lbl 2 `"Very good"', add
+
+. label define health_lbl 3 `"Good"', add
+
+. label define health_lbl 4 `"Fair"', add
+
+. label define health_lbl 5 `"Poor"', add
+
+. label values health health_lbl
+
+. 
+. label define union_lbl 0 `"NIU"'
+
+. label define union_lbl 1 `"No union coverage"', add
+
+. label define union_lbl 2 `"Member of labor union"', add
+
+. label define union_lbl 3 `"Covered by union but not a member"', add
+
+. label values union union_lbl
+
+. 
 . 
 . 
 end of do-file
 
 . 
-. 
-. // CLEAN UP A BIT
-. keep if year == 2016 | year == 2017
-(0 observations deleted)
-
 . 
 . // SAVE
 . label data "Imported original CPS ASEC data from IPUMS"
@@ -626,10 +910,10 @@ end of do-file
 
 . compress
   variable hhincome was double now long
-  (1,485,604 bytes saved)
+  (2,206,008 bytes saved)
 
 . datasignature set, reset
-  371401:19(83160):3656212263:1316194508       (data signature set)
+  551502:26(66367):257040575:843338531       (data signature set)
 
 . save $extr/redi01_ASEC-extr.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
@@ -650,7 +934,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
 . *histogram hhincome, frequency kdensity
 . 
 . keep if pernum == 1
-(231,960 observations deleted)
+(343,716 observations deleted)
 
 . svyset [pweight=asecwth]
 
@@ -661,38 +945,39 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
          SU 1: <observations>
         FPC 1: <zero>
 
-. 
-. svy: mean hhincome
-(running mean on estimation sample)
-
-Survey: Mean estimation
-
-Number of strata =       1      Number of obs   =      139,441
-Number of PSUs   = 139,441      Population size =  252,586,892
-                                Design df       =      139,440
-
---------------------------------------------------------------
-             |             Linearized
-             |       Mean   Std. Err.     [95% Conf. Interval]
--------------+------------------------------------------------
-    hhincome |   81042.31     288.47      80476.92    81607.71
---------------------------------------------------------------
-
-. 
-. ***--------------------------***
-. // # SAVE DATA
-. ***--------------------------***
-. 
-. label data "Household Income - CPS ASEC data"
-
-. notes: redi01_ASEC-hhincome.dta \ CPS ASEC Data - Household Income distributio
-> n overlay \ redi01_ASEC.do
-
 . compress
   (0 bytes saved)
 
+. 
+. // SAVE ALL YEARS
+. 
+. label data "CPS ASEC data - Household Income - 2016, 2017, 2019"
+
+. notes: redi01_ASEC-hhincome_all.dta \ CPS ASEC Data - Household Income 2016-20
+> 17, 2019 \ redi01_ASEC.do
+
 . datasignature set, reset
-  139441:19(83160):966963857:1008318800       (data signature reset)
+  207786:26(66367):1175710109:781505746       (data signature reset)
+
+. save $deriv/redi01_ASEC-hhincome_all.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
+> l.dta saved
+
+. 
+. 
+. // SAVE YEARS 2016-2017
+. 
+. keep if year == 2016 | year == 2017 
+(68,345 observations deleted)
+
+. 
+. label data "CPS ASEC data - Household Income - 2016-2017"
+
+. notes: redi01_ASEC-hhincome.dta \ CPS ASEC Data - Household Income 2016-2017 \
+>  redi01_ASEC.do
+
+. datasignature set, reset
+  139441:26(66367):4164444312:2333080517       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
@@ -705,5 +990,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
 > EC_import.log
   log type:  text
- closed on:  24 Aug 2021, 09:42:01
+ closed on:  28 Sep 2021, 18:26:21
 --------------------------------------------------------------------------------

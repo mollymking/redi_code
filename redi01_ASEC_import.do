@@ -33,11 +33,8 @@ set more off
 
 cd $source/00_CPS_ASEC/
 // this is code provided by IPUMS - ACS to import data:
-do $redi/cps_00013.do // larger data set includes variables for later regression
+do $redi/cps_00015.do // larger data set includes variables for later regression
 
-
-// CLEAN UP A BIT
-keep if year == 2016 | year == 2017
 
 // SAVE
 label data "Imported original CPS ASEC data from IPUMS"
@@ -61,16 +58,22 @@ save $extr/redi01_ASEC-extr.dta, replace
 
 keep if pernum == 1
 svyset [pweight=asecwth]
-
-svy: mean hhincome
-
-***--------------------------***
-// # SAVE DATA
-***--------------------------***
-
-label data "Household Income - CPS ASEC data"
-notes: redi01_ASEC-hhincome.dta \ CPS ASEC Data - Household Income distribution overlay \ redi01_ASEC.do
 compress
+
+// SAVE ALL YEARS
+
+label data "CPS ASEC data - Household Income - 2016, 2017, 2019"
+notes: redi01_ASEC-hhincome_all.dta \ CPS ASEC Data - Household Income 2016-2017, 2019 \ redi01_ASEC.do
+datasignature set, reset
+save $deriv/redi01_ASEC-hhincome_all.dta, replace
+
+
+// SAVE YEARS 2016-2017
+
+keep if year == 2016 | year == 2017 
+
+label data "CPS ASEC data - Household Income - 2016-2017"
+notes: redi01_ASEC-hhincome.dta \ CPS ASEC Data - Household Income 2016-2017 \ redi01_ASEC.do
 datasignature set, reset
 save $deriv/redi01_ASEC-hhincome.dta, replace
 

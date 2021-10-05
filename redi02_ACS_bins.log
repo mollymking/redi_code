@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_AC
 > S_bins.log
   log type:  text
- opened on:  28 Aug 2020, 22:31:58
+ opened on:   9 Sep 2021, 09:41:00
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-28 Aug 2020  22:31:58
+ 9 Sep 2021  09:41:00
 
 . 
 . ***--------------------------***
@@ -121,5 +121,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_AC
 > S_bins.log
   log type:  text
- closed on:  28 Aug 2020, 22:32:56
+ closed on:   9 Sep 2021, 09:44:02
 --------------------------------------------------------------------------------

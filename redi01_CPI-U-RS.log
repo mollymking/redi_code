@@ -1,17 +1,15 @@
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
       name:  CPIURS
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_CP
-> I-U-RS.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_CPI-U-RS.log
   log type:  text
- opened on:  28 Aug 2020, 22:28:25
+ opened on:   9 Sep 2021, 09:29:21
 
 . 
 . //      project:        REDI Methodology Paper
 . 
 . //  task:       Convert continuous income variables to same year dollar values
 . //                              in this case, using 2017 as conversion year
-. //  data:               CPI-U-RS, available: https://www.bls.gov/cpi/cpiurs.ht
-> m
+. //  data:               CPI-U-RS, available: https://www.bls.gov/cpi/cpiurs.htm
 . 
 . //  github:     redi
 . //  OSF:                https://osf.io/qmhe8/
@@ -20,7 +18,7 @@
 . 
 . 
 . display "$S_DATE  $S_TIME"
-28 Aug 2020  22:28:25
+ 9 Sep 2021  09:29:21
 
 . 
 . ***--------------------------***
@@ -126,5 +124,5 @@ file redi01_CPI-U-RS.dta saved
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_CP
 > I-U-RS.log
   log type:  text
- closed on:  28 Aug 2020, 22:28:25
+ closed on:   9 Sep 2021, 09:29:23
 --------------------------------------------------------------------------------
