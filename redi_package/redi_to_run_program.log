@@ -1,0 +1,49 @@
+-------------------------------------------------------------------------------------------------------------------
+      name:  redi_to_run_program
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi_package/redi_to_run_program.log
+  log type:  text
+ opened on:  11 Oct 2021, 10:18:41
+
+. display "$S_DATE  $S_TIME"
+11 Oct 2021  10:18:41
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. set seed 1
+
+. 
+. ***--------------------------***
+. // # REDI
+. ***--------------------------***
+. 
+. cd Desktop/reditest/
+unable to change to Desktop/reditest/
+r(170);
+
+end of do-file
+
+r(170);
+
+. do "/Users/mollymking/Documents/SocResearch/Dissertation/redi/redi_package/red
+> i_to_run_program.do"
+
+. * Setup notes:
+. * put all files in same folder, set as working directory,
+. * and create an empty folder named "temp" within it - 
+.         *this is one of the issues I have not resolved yet
+. ***--------------------------***
+. cd "~/Desktop/reditest/"
+/Users/mollymking/Desktop/reditest
+
+. capture log close redi_to_run_program
