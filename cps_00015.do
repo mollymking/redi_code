@@ -4,32 +4,34 @@
 set more off
 
 clear
-quietly infix              ///
-  int     year      1-4    ///
-  long    serial    5-9    ///
-  byte    month     10-11  ///
-  double  cpsid     12-25  ///
-  byte    asecflag  26-26  ///
-  double  asecwth   27-36  ///
-  byte    ownershp  37-38  ///
-  double  hhincome  39-46  ///
-  byte    pernum    47-48  ///
-  double  cpsidp    49-62  ///
-  double  asecwt    63-72  ///
-  byte    age       73-74  ///
-  byte    sex       75-75  ///
-  int     race      76-78  ///
-  byte    marst     79-79  ///
-  byte    nchild    80-80  ///
-  int     hispan    81-83  ///
-  byte    labforce  84-84  ///
-  int     educ      85-87  ///
-  byte    diffmob   88-88  ///
-  byte    whymove   89-90  ///
-  byte    migrate1  91-91  ///
-  byte    health    92-92  ///
-  byte    union     93-93  ///
-  using `"cps_00013.dat"'
+quietly infix                ///
+  int     year      1-4      ///
+  long    serial    5-9      ///
+  byte    month     10-11    ///
+  double  cpsid     12-25    ///
+  byte    asecflag  26-26    ///
+  double  asecwth   27-36    ///
+  byte    statefip  37-38    ///
+  long    county    39-43    ///
+  byte    ownershp  44-45    ///
+  double  hhincome  46-53    ///
+  byte    pernum    54-55    ///
+  double  cpsidp    56-69    ///
+  double  asecwt    70-79    ///
+  byte    age       80-81    ///
+  byte    sex       82-82    ///
+  int     race      83-85    ///
+  byte    marst     86-86    ///
+  byte    nchild    87-87    ///
+  int     hispan    88-90    ///
+  byte    labforce  91-91    ///
+  int     educ      92-94    ///
+  byte    diffmob   95-95    ///
+  byte    whymove   96-97    ///
+  byte    migrate1  98-98    ///
+  byte    health    99-99    ///
+  byte    union     100-100  ///
+  using `"cps_00015.dat"'
 
 replace asecwth  = asecwth  / 10000
 replace asecwt   = asecwt   / 10000
@@ -46,6 +48,8 @@ label var month    `"Month"'
 label var cpsid    `"CPSID, household record"'
 label var asecflag `"Flag for ASEC"'
 label var asecwth  `"Annual Social and Economic Supplement Household weight"'
+label var statefip `"State (FIPS code)"'
+label var county   `"FIPS county code"'
 label var ownershp `"Ownership of dwelling"'
 label var hhincome `"Total household income"'
 label var pernum   `"Person number in sample unit"'
@@ -82,6 +86,83 @@ label values month month_lbl
 label define asecflag_lbl 1 `"ASEC"'
 label define asecflag_lbl 2 `"March Basic"', add
 label values asecflag asecflag_lbl
+
+label define statefip_lbl 01 `"Alabama"'
+label define statefip_lbl 02 `"Alaska"', add
+label define statefip_lbl 04 `"Arizona"', add
+label define statefip_lbl 05 `"Arkansas"', add
+label define statefip_lbl 06 `"California"', add
+label define statefip_lbl 08 `"Colorado"', add
+label define statefip_lbl 09 `"Connecticut"', add
+label define statefip_lbl 10 `"Delaware"', add
+label define statefip_lbl 11 `"District of Columbia"', add
+label define statefip_lbl 12 `"Florida"', add
+label define statefip_lbl 13 `"Georgia"', add
+label define statefip_lbl 15 `"Hawaii"', add
+label define statefip_lbl 16 `"Idaho"', add
+label define statefip_lbl 17 `"Illinois"', add
+label define statefip_lbl 18 `"Indiana"', add
+label define statefip_lbl 19 `"Iowa"', add
+label define statefip_lbl 20 `"Kansas"', add
+label define statefip_lbl 21 `"Kentucky"', add
+label define statefip_lbl 22 `"Louisiana"', add
+label define statefip_lbl 23 `"Maine"', add
+label define statefip_lbl 24 `"Maryland"', add
+label define statefip_lbl 25 `"Massachusetts"', add
+label define statefip_lbl 26 `"Michigan"', add
+label define statefip_lbl 27 `"Minnesota"', add
+label define statefip_lbl 28 `"Mississippi"', add
+label define statefip_lbl 29 `"Missouri"', add
+label define statefip_lbl 30 `"Montana"', add
+label define statefip_lbl 31 `"Nebraska"', add
+label define statefip_lbl 32 `"Nevada"', add
+label define statefip_lbl 33 `"New Hampshire"', add
+label define statefip_lbl 34 `"New Jersey"', add
+label define statefip_lbl 35 `"New Mexico"', add
+label define statefip_lbl 36 `"New York"', add
+label define statefip_lbl 37 `"North Carolina"', add
+label define statefip_lbl 38 `"North Dakota"', add
+label define statefip_lbl 39 `"Ohio"', add
+label define statefip_lbl 40 `"Oklahoma"', add
+label define statefip_lbl 41 `"Oregon"', add
+label define statefip_lbl 42 `"Pennsylvania"', add
+label define statefip_lbl 44 `"Rhode Island"', add
+label define statefip_lbl 45 `"South Carolina"', add
+label define statefip_lbl 46 `"South Dakota"', add
+label define statefip_lbl 47 `"Tennessee"', add
+label define statefip_lbl 48 `"Texas"', add
+label define statefip_lbl 49 `"Utah"', add
+label define statefip_lbl 50 `"Vermont"', add
+label define statefip_lbl 51 `"Virginia"', add
+label define statefip_lbl 53 `"Washington"', add
+label define statefip_lbl 54 `"West Virginia"', add
+label define statefip_lbl 55 `"Wisconsin"', add
+label define statefip_lbl 56 `"Wyoming"', add
+label define statefip_lbl 61 `"Maine-New Hampshire-Vermont"', add
+label define statefip_lbl 65 `"Montana-Idaho-Wyoming"', add
+label define statefip_lbl 68 `"Alaska-Hawaii"', add
+label define statefip_lbl 69 `"Nebraska-North Dakota-South Dakota"', add
+label define statefip_lbl 70 `"Maine-Massachusetts-New Hampshire-Rhode Island-Vermont"', add
+label define statefip_lbl 71 `"Michigan-Wisconsin"', add
+label define statefip_lbl 72 `"Minnesota-Iowa"', add
+label define statefip_lbl 73 `"Nebraska-North Dakota-South Dakota-Kansas"', add
+label define statefip_lbl 74 `"Delaware-Virginia"', add
+label define statefip_lbl 75 `"North Carolina-South Carolina"', add
+label define statefip_lbl 76 `"Alabama-Mississippi"', add
+label define statefip_lbl 77 `"Arkansas-Oklahoma"', add
+label define statefip_lbl 78 `"Arizona-New Mexico-Colorado"', add
+label define statefip_lbl 79 `"Idaho-Wyoming-Utah-Montana-Nevada"', add
+label define statefip_lbl 80 `"Alaska-Washington-Hawaii"', add
+label define statefip_lbl 81 `"New Hampshire-Maine-Vermont-Rhode Island"', add
+label define statefip_lbl 83 `"South Carolina-Georgia"', add
+label define statefip_lbl 84 `"Kentucky-Tennessee"', add
+label define statefip_lbl 85 `"Arkansas-Louisiana-Oklahoma"', add
+label define statefip_lbl 87 `"Iowa-N Dakota-S Dakota-Nebraska-Kansas-Minnesota-Missouri"', add
+label define statefip_lbl 88 `"Washington-Oregon-Alaska-Hawaii"', add
+label define statefip_lbl 89 `"Montana-Wyoming-Colorado-New Mexico-Utah-Nevada-Arizona"', add
+label define statefip_lbl 90 `"Delaware-Maryland-Virginia-West Virginia"', add
+label define statefip_lbl 99 `"State not identified"', add
+label values statefip statefip_lbl
 
 label define ownershp_lbl 00 `"NIU"'
 label define ownershp_lbl 10 `"Owned or being bought"', add
