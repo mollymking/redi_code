@@ -1,16 +1,15 @@
-*! 1.0.1 Molly M. King 16 September 2021
+*! 1.1 Molly M. King 11 October 2021
 
 ***-----------------------------***
 
 *for debugging:
-set trace on
 noisily
 
 capture program drop redi
 program define redi
 	version 16
-	*syntax 
 	args inc_var year
+	*syntax inc_var(varname) year(varname)
 
 ***-----------------------------***
 
@@ -37,7 +36,7 @@ bysort `year' `inc_var': gen id = _n
 	*http://stats.idre.ucla.edu/stata/faq/how-can-i-extract-a-portion-of-a-string-variable-using-regular-expressions/
 
 // List income levels
-di in red "The income levels are: " "``inc_var'_levels'"
+di "The income levels are: " "``inc_var'_levels'"
 		
 *If variables are present either as strings OR as labels of numeric categorical variables:
 capture confirm string variable `inc_var'
@@ -54,7 +53,7 @@ save `working_regex', replace
 
 //Levels of year variable to loop through years in dataset
 levelsof `year', local(years)
-di in red  "Create local variable years to loop through within that income bracket - values:" `years'
+di  "Create local variable years to loop through within that income bracket - values:" `years'
 
 foreach y of local years { // loop through all years
 
@@ -133,21 +132,24 @@ foreach y of local years { // loop through all years
 		save `premerge_`inc_level'_`y'', replace
 		di "Saved tempfile with upper and lower bounds of research data income levels"
 		// Select CPS reference dataset
-		**** will need to replace with appropriate selecting mechanism
+		
+		**** TO DO: will need to replace with appropriate selecting mechanism
+			* add back family income and personal income decision tree (this I can do easily)
+			* move reference data specification outside .ado file 
+				*(currently specifies CPS-ASEC file as $temp/redi13_cps_state_ca.dta)
+	
 			di "Now open CPS-ASEC data"
 			use $temp/redi13_cps_state_ca.dta, clear // use CA HH income
 			*use $temp/redi13_cps_state_wy.dta, clear // use WY HH income
-		
-		****
-		
-				keep if pernum == 1 // keeps only one person per household
-				svyset [pweight=asecwth]
-				compress
-				tempfile ref_data
-				save `ref_data'
-				local inc_var_short "hinc"
-				local inc_var_name "hhincome" // name in reference (ASEC) dataset
-				di "Income type set as `inc_var' income; Calculating household income using hhincome CPS-ASEC variable."
+
+			keep if pernum == 1 // keeps only one person per household
+			svyset [pweight=asecwth]
+			compress
+			tempfile ref_data
+			save `ref_data'
+			local inc_var_short "hinc"
+			local inc_var_name "hhincome" // name in reference (ASEC) dataset
+			di "Income type set as `inc_var' income; Calculating household income using hhincome CPS-ASEC variable."
 		
 		// #3B) Takes a random draw of number of incomes w/in that income boundary and year from the CPS-ASEC
 		// Keep ASEC data if within income bounds and for given year
@@ -155,11 +157,14 @@ foreach y of local years { // loop through all years
 			`inc_var_name' >= `lower_bound' & ///
 			`inc_var_name' <= `upper_bound'
 		gen obs_no = _n
-		di in red "Observation number generated"
+		di "Observation number generated"
+	
+		**** TO DO: convert  $temp/`ASECdata'_`year'_inc`inc_level'.dta to tempfile - currently not working
 		*tempfile ref_`ref_data'_`year'_`inc_level'
 		*di "tempfile created"
 		*save `ref_`ref_data'_`year'_`inc_level'', replace
-			save $temp/`ASECdata'_`year'_inc`inc_level'.dta, replace
+		save $temp/`ASECdata'_`year'_inc`inc_level'.dta, replace
+	
 		di "Ref to keep income between $`lower_bound' and $`upper_bound' for `y' year."
 			
 		// #3C) Sample, with replacement, 
@@ -249,15 +254,24 @@ drop _merge
 
 ***-----------------------------***
 
-// FINAL VARIABLES if inflation not specified
+// PROGRAM TO RENAME FINAL VARIABLES if inflation not specified
 local newvar "redi_`inc_var_short'"
-	
+
 *original income variable
 gen `newvar' = `inc_var_name'
 format `newvar' %6.0fc
 label var `newvar' "REDI continuous `inc_var' income"
+
+**** TO DO: * cannot yet specify name of new continuous income variable
+
+/* attempt with syntax:
+gen `newvarname' = `inc_var_name'
+format `newvarname' %6.0fc
+label var `newvarname' "REDI-generated continuous `inc_var' income"
 drop `inc_var_name'
-		
+*/
+	
+
 ***-----------------------------***
 
 end
