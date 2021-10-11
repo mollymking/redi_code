@@ -76,6 +76,12 @@ do $redi/redi11_ASEC_regressions.do 		// Regression of original continuous CPS A
 do $redi/redi12_REDI_regressions.do 		// Regressions of original ASEC variables and new continuous REDI-created income
 
 ***--------------------------***
+// 13 ANOTHER EXAMPLE
+***--------------------------***
+
+*do $redi/redi13_REDI_state_example.do		// Another example using 2019 and a single state
+
+***--------------------------***
 // 20-22 ALTERNATIVE METHODS
 ***--------------------------***
 
@@ -85,6 +91,6 @@ do $redi/redi22_ACS_mgbe.do					// MGBE method of describing ACS
 
 
 ***--------------------------***
-
+*/
 log close master
 exit
