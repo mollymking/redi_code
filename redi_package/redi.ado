@@ -26,7 +26,7 @@ program define redi
 // #1 Create local for levels of income = e.g., levelsof year, local(years)
 levelsof `inc_var', local("`inc_var'_levels")
 
-// sort for later join & create variable recording the original observation order within the identifier
+// sort for later join & create variable recording original observation order within the identifier
 bysort `year' `inc_var': gen id = _n
 
 // #2 create numeric variables indicating edges of income categories //
@@ -38,7 +38,7 @@ bysort `year' `inc_var': gen id = _n
 // List income levels
 di "The income levels are: " "``inc_var'_levels'"
 		
-*If variables are present either as strings OR as labels of numeric categorical variables:
+// If variables are present either as strings OR as labels of categorical variables:
 capture confirm string variable `inc_var'
 if !_rc {
 	gen inc_decoded = `inc_var' // action for string variable
@@ -50,10 +50,12 @@ else {
 				
 tempfile working_regex
 save `working_regex', replace
+*use frames instead
+
 
 //Levels of year variable to loop through years in dataset
 levelsof `year', local(years)
-di  "Create local variable years to loop through within that income bracket - values:" `years'
+di  "Create local variable years to loop within that income bracket - values:" `years'
 
 foreach y of local years { // loop through all years
 
@@ -62,22 +64,26 @@ foreach y of local years { // loop through all years
 
 		use `working_regex', clear
 
-		// Keep the data if the income variable is equal to the current income level (of the loop)
-		keep if `inc_var' == `inc_level'  // do this to make sure not replacing things with wrong level later	
+		// Keep data if income variable is equal to current income level (of loop)
+		keep if `inc_var' == `inc_level'  
 		di "The current inc_level is: " `inc_level'
 
 		// text at beginning of the string:
 		if regexm(inc_decoded, "^[a-z/A-Z]+") == 1 {
-			di "The inc_level " `inc_level' " is at the lowest end of the original Research dataset income range"
-			destring inc_decoded, ignore("Less than LESS THAN Under,$ ") generate(`inc_var'_ub) 
+			di "The inc_level " `inc_level' " is at the lowest end of the " ///
+			   "original Research dataset income range"
+			destring inc_decoded, ///
+				ignore("Less than LESS THAN Under,$ ") generate(`inc_var'_ub) 
 			gen `inc_var'_lb = -100000
 			di "Lower bound of -100,000 created for inc_level " `inc_level'
 		}
 
 		// text at end of the string:
 		else if regexm(inc_decoded, "[a-z/A-Z]+$") == 1 {
-			di "The inc_level " `inc_level' " is at the highest end of the original Research dataset income range"
-			destring inc_decoded, ignore("and over or over,$ or more OR MORE") generate(`inc_var'_lb) 
+			di "The inc_level " `inc_level' " is at the highest end of the " ///
+			   "original Research dataset income range"
+			destring inc_decoded, ///
+				ignore("and over or over,$ or more OR MORE") generate(`inc_var'_lb) 
 			gen `inc_var'_ub = 999999  // my topcode for asec purposes
 			di "Upper bound of 999999 created for inc_level " `inc_level'
 		}
@@ -92,18 +98,27 @@ foreach y of local years { // loop through all years
 
 		// for labels with 2 numbers in them
 		else if regexm(inc_decoded, "[0-9]+$") == 1 {
-		// since those at lowest and highest ranges have already been matched (using text), this leaves those with ranges
+		// since those at lowest and highest ranges have already been matched 
+		// (using text), this leaves those with ranges
 			di "The inc_level " `inc_level' " has a lower and an upper level"
 			split inc_decoded, ///
 				parse("-" "to" "-" "to under" "to less than" "UP TO" "but less than") ///
 				ignore(" ,$") destring
 			gen `inc_var'_lb = inc_decoded1
 			gen `inc_var'_ub = inc_decoded2
-			di "Lower bound of `inc_var'_lb and upper bound of `inc_var'_ub created for inc_level " `inc_level' "of the original Research dataset income range"
+			di "Lower bound of `inc_var'_lb and upper bound of `inc_var'_ub " ///
+			   "created for inc_level " `inc_level' "of the original Research " ///
+			   "dataset income range"
 		}
 		
 		else { // error - in case doesn't fit any existing category
-			display as error "Error: The inc_level " `inc_level' " does not fit any of the existing regular expressions designs. Please email the REDI program creator at mollymkingphd@gmail.com with information about this error and a list of all of your income levels so she can update the program. Thank you for your help!"
+			di as error "Error: The inc_level " `inc_level' ///
+						" does not fit any of the existing regular expressions " ///
+						"designs. Please email the REDI program creator at " ///
+						"mollymkingphd@gmail.com with information about this " ///
+						"error and a list of all of your income levels so she " ///
+						"can update the program. Thank you for your help!"
+			error 999
 		}
 
 		// create locals to use later for selecting appropriate ASEC bounds
@@ -118,7 +133,8 @@ foreach y of local years { // loop through all years
 		// summarize so can get count of how many individuals in that income level during year
 		quietly summarize if `year' == `y' & `inc_var' == `inc_level'
 		local sample_size = r(N) // count how many rows there are in survey dataset
-		 // count N_B for each bin (# of observations in Research dataset income category between L_bn and U_bn)
+		 // count N_B for each bin 
+		 // (# of observations in Research dataset income category between L_bn and U_bn)
 				
 		// create count within each Research dataset income bin
 		gen `inc_var'_n = `sample_size' // contains size of bin in Research dataset
@@ -149,10 +165,10 @@ foreach y of local years { // loop through all years
 			save `ref_data'
 			local inc_var_short "hinc"
 			local inc_var_name "hhincome" // name in reference (ASEC) dataset
-			di "Income type set as `inc_var' income; Calculating household income using hhincome CPS-ASEC variable."
+			di "Income type set as `inc_var' income; " ///
+			   "Calculating household income using hhincome CPS-ASEC variable."
 		
-		// #3B) Takes a random draw of number of incomes w/in that income boundary and year from the CPS-ASEC
-		// Keep ASEC data if within income bounds and for given year
+		// #3B) Keep ASEC data if within income bounds and for given year
 		keep if `year' == `y' & ///
 			`inc_var_name' >= `lower_bound' & ///
 			`inc_var_name' <= `upper_bound'
@@ -164,49 +180,56 @@ foreach y of local years { // loop through all years
 		*di "tempfile created"
 		*save `ref_`ref_data'_`year'_`inc_level'', replace
 		save $temp/`ASECdata'_`year'_inc`inc_level'.dta, replace
+		//use frames here
+		//or use tempname - for the frames* then drop the tempname at the end
 	
 		di "Ref to keep income between $`lower_bound' and $`upper_bound' for `y' year."
 			
-		// #3C) Sample, with replacement, 
-		*such that ASEC income has an equal probability assigned to each observation 
-		*in this artificial data set (which will later be matched to Research data set)
-		// Thanks to Clyde Schechter;  
-			*https://www.statalist.org/forums/forum/general-stata-discussion/general/ 	
-			* 1475890-is-there-a-command-that-is-equivalent-to-bsample-more-than-_n
+		// #3C) Take random draw of number of incomes w/in income boundary, year
+		// Sample, with replacement, such that ASEC income has an equal probability 
+		// of being assigned to each observation, creting sample of size equal
+		// to research dataset for income level, year
+		// Thanks to Clyde Schechter:
+			//https://www.statalist.org/forums/forum/general-stata-discussion/general/ 	
+			// 1475890-is-there-a-command-that-is-equivalent-to-bsample-more-than-_n
 		quietly des 
 		local N = r(N)
 		clear
 		set obs `sample_size'
 		gen obs_no = runiformint(1, `N')
 		*merge m:1 obs_no using `temp_`ref_data'_`year'_inc`inc_level'', keep(match) nogenerate 
-		merge m:1 obs_no using  $temp/`ASECdata'_`year'_inc`inc_level'.dta, keep(match) nogenerate 
-		// here, artificial data set is matched to ASEC data set for that incomebin for that year 								
-																	
+		merge m:1 obs_no using  $temp/`ASECdata'_`year'_inc`inc_level'.dta, ///
+		keep(match) nogenerate 
 
 		*save `temp_`ref_data'_`year'_inc`inc_level'', replace
 		save $temp/`ASECdata'_`year'_inc`inc_level'.dta, replace
 			
-		di "Merged ASEC values with original Research dataset for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
+		di "Merged ASEC values with original Research dataset for inc_level " ///
+		   `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
 
-		// #4) Merge Research and ASEC data
-		// here, ASEC artificial data set (from step 3C) is matched to Research for that incomebin for that year 								
+		// #4) Merge Research and random sample of reference (ASEC) data
+		// within incomebin, year
+		
 		gen id = _n
 		merge 1:1 id using `premerge_`inc_level'_`y''
-						
+				
 		// #5) create count within each REDI income bin
 		generate 	category_n = .
 		replace 	category_n = `N' // r(N) from above
 		label var 	category_n "`inc_type' (REDI) count of respondents in each income bin in post-merge dataset'"
 
-		// Save these new REDI data (with yearly ASEC continuous data) in a tempfile we can use later for merging, etc.
+		// Save these new REDI data (with yearly ASEC continuous data) 
+		// in a tempfile we can use later for merging, etc.
 		tempfile temp_`inc_level'_`y'
 		save `temp_`inc_level'_`y'', replace
-		di "Saved REDI data (with ASEC continuous data) for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y' in file"
+		di "Saved REDI data (with ASEC continuous data) for inc_level " ///
+		   `inc_level' " ($`lower_bound'-`upper_bound') and year `y' in file"
 		
 	}
 	//  close loop through all values of income categories (`inc_level')
 				
-	*di "Moved outside loop of `year' income bracket " `inc_level' " ($`lower_bound'-`upper_bound')."
+	*di "Moved outside loop of `year' income bracket " ///
+	*   `inc_level' " ($`lower_bound'-`upper_bound')."
 		
 	// append all income brackets across all years
 	tokenize ``inc_var'_levels'
@@ -249,21 +272,9 @@ drop _merge
 ***-----------------------------***
 
 // PROGRAM TO RENAME FINAL VARIABLES if inflation not specified
-local newvar "redi_`inc_var_short'"
-
-*original income variable
-gen `newvar' = `inc_var_name'
-format `newvar' %6.0fc
-label var `newvar' "REDI continuous `inc_var' income"
-
-**** TO DO: * cannot yet specify name of new continuous income variable
-
-/* attempt with syntax:
-gen `newvarname' = `inc_var_name'
-format `newvarname' %6.0fc
-label var `newvarname' "REDI-generated continuous `inc_var' income"
-drop `inc_var_name'
-*/
+gen `new_variable' = `inc_var_name'
+format `new_variable' %6.0fc
+label var `new_variable' "REDI continuous `inc_var' income"
 	
 
 ***-----------------------------***
