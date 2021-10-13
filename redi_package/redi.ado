@@ -182,12 +182,6 @@ foreach y of local years { // loop through all years
 		merge m:1 obs_no using  $temp/`ASECdata'_`year'_inc`inc_level'.dta, keep(match) nogenerate 
 		// here, artificial data set is matched to ASEC data set for that incomebin for that year 								
 																	
-		// #3D) Add new columns for lower_bound and upper_bound of income bin
-		gen `inc_var'_lb = `lower_bound'
-		gen `inc_var'_ub = `upper_bound'
-		// Label new upper and lower income bound variables
-		label variable `inc_var'_lb "`inc_var' Lower Bound"
-		label variable `inc_var'_ub "`inc_var' Upper Bound"
 
 		*save `temp_`ref_data'_`year'_inc`inc_level'', replace
 		save $temp/`ASECdata'_`year'_inc`inc_level'.dta, replace
