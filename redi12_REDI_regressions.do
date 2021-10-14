@@ -221,33 +221,16 @@ svy: reg redi_dV_hinc_shp_`conv_year' ///
 	married disability labor
 
 ***--------------------------***
-// REGRESSION: REDI Income as IV: Predict Home Ownership
 ***--------------------------***	
 
-di in red "Predict home ownership as function of ln(REDI-created income), race/ethnicity, education, gender"
-svy: logistic ownhouse ///
-	redi_dV_lnhinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
 
-*est store `v'_modB
-	
-*svylogitgof
-	
-
-***--------------------------***
-// REGRESSION: REDI Income as IV: Predict Home Ownership - 5-6 IVs
-***--------------------------***	
-
-di in red "Predict home ownership as function of ln(REDI-created income), race/ethnicity, education, gender, marital status, disability, labor force"
-svy: logistic ownhouse ///
 	redi_dV_lnhinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	married disability labor //
-	
 
 ***--------------------------***
 // REGRESSION: REDI Income as IV: Predict Disability - 5-6 IVs
