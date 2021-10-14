@@ -1,13 +1,3 @@
-* Setup notes:
-* download full "reditest" folder, including "temp", 
-* and change working directory below
-* to direct if different from Desktop
-
-*cd "~/Desktop/reditest/"
-*global temp		"~/Desktop/reditest/temp"
-
-***--------------------------***
-
 capture log close redi_to_run_program
 log using redi_to_run_program.log, name(redi_to_run_program) replace text
 display "$S_DATE  $S_TIME"
