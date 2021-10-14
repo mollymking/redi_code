@@ -3,8 +3,8 @@
 * and change working directory below
 * to direct if different from Desktop
 
-cd "~/Desktop/reditest/"
-global temp		"~/Desktop/reditest/temp"
+*cd "~/Desktop/reditest/"
+*global temp		"~/Desktop/reditest/temp"
 
 ***--------------------------***
 
@@ -23,14 +23,36 @@ set more off
 set seed 1
 
 ***--------------------------***
-// # REDI
+// # RANDOM SAMPLE OF ACS 2019 for TESTING
+***--------------------------***
+/*
+use $deriv/redi13_ACS2019.dta, clear
+gen random = runiform()
+sort hhincome_acs random
+by hhincome_acs: gen group = ceil(10* _n/_N)
+keep if group == 1
+drop random group
+save $deriv/redi13_ACS2019sample.dta, replace
+*/
+***--------------------------***
+// # RUN REDI.ADO PROGRAM ON 2019 California DATA
 ***--------------------------***
 
-use redi13_ACS2019sample.dta, clear
+use $deriv/redi13_ACS2019sample.dta, clear
 
-discard
+*for debugging:
+noisily
 set trace on 
-redi acs_hhinc year // newvar = ca_redi_inc19
+program drop _all
+discard
+
+use $deriv/redi13_ACS2019sample.dta, clear
+cd $redi/redi_package/
+
+redi acs_hhinc year, generate(ca_redi_inc19) cpstype(household)
+
+*redi inc_research_dataset year, gen(newvarname) inflation
+*if inflation is not specified, it will be 0, so then
 
 * want to look something like:
 * redi inc_var(acs_hhinc) year(year), newvar = ca_redi_inc19 inflate(2020)

@@ -92,30 +92,6 @@ tab acs_hhinc, m
 save $deriv/redi13_ACS2019.dta, replace
 
 ***--------------------------***
-// # RANDOM SAMPLE OF ACS 2019 for TESTING
-***--------------------------***
-
-use $deriv/redi13_ACS2019.dta, clear
-gen random = runiform()
-sort hhincome_acs random
-by hhincome_acs: gen group = ceil(10* _n/_N)
-keep if group == 1
-drop random group
-save $deriv/redi13_ACS2019sample.dta, replace
-
-***--------------------------***
-// # RUN REDI.ADO PROGRAM ON 2019 California DATA
-***--------------------------***
-use $deriv/redi13_ACS2019.dta, clear
-
-cd $redi/redi_package
-discard
-set trace on 
-redi acs_hhinc year // newvar = ca_redi_inc19
-*redi inc_var(acs_hhinc) year(year) // newvar = ca_redi_inc19
-
-
-***--------------------------***
 // # RUN REDI.ADO PROGRAM ON 2019  Wyoming  DATA
 ***--------------------------***
 
