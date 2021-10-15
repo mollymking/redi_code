@@ -31,7 +31,7 @@ set more off
 // and change name of .do file to match below
 
 cd $source/80_ACS/
-do $redi/usa_00010.do // this is code provided by IPUMS - ACS to import data
+do $redi/usa_00011.do // this is code provided by IPUMS - ACS to import data
 
 *survey weighting according to documentation: https://usa.ipums.org/usa/repwt.shtml
 svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
