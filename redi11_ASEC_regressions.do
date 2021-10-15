@@ -196,6 +196,19 @@ replace ownhouse = 0 if ownershp == 21 | ownershp == 22
 
 tab ownershp ownhouse, m
 
+***--------------------------***
+
+// # MIGRATION STATUS
+
+/*MIGRATE1 indicates whether the respondent had changed residence in the past year. Those who were living in the same house as one year ago were considered non-movers and were asked no further questions about migration over the past year. Movers were asked about the city, county and state and/or the U.S. territory or foreign country where they resided one year ago.*/
+
+tab migrate1
+tab migrate1, nolab
+
+generate migrate = .
+replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate1 == 5 | migrate1 == 6
+replace migrate = 0 if migrate1	== 1
+
 
 ***--------------------------***
 
@@ -213,10 +226,6 @@ svy: reg asec_hinc_shp_`conv_year' ///
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
 
-	
-***--------------------------***
-// REGRESSION: CPS ASEC Income as DV - with 5-6 IVs
-***--------------------------***	
 
 di in red "Predict ASEC income as function of race/ethnicity, education, gender, marital status, disability, labor force"
 
@@ -239,32 +248,8 @@ svy: logistic ownhouse ///
 	asec_lnhinc_shp_2017 ///	
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	, gradient trace difficult
-	
-/*
-di in red "Predict home ownership as function of ASEC income, race/ethnicity, education, gender"
-svy: logistic ownhouse ///
-	asec_hinc_shp_2017 /// 
-	dB_fem /// men comparison
-	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	, gradient trace difficult
-
-*vif, uncentered - find the version that works with svy
-*log income
-*z-score - see if sensitive to unit - if it is not, then there must be something wrong
-*build up model slowly - start with just income - 
-
-*- then transform variable
-*having children
-*health behavior
-*moved to a new place - residential stability - less 
-
-*/		
-***--------------------------***
-// REGRESSION: REDI Income as IV: Predict Home Ownership - 5-6 IVs
-***--------------------------***	
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
+	*, gradient trace difficult
 
 di in red "Predict home ownership as function of ASEC ln(income), race/ethnicity, education, gender, marital status, disability, labor force"
 svy: logistic ownhouse ///
@@ -272,8 +257,35 @@ svy: logistic ownhouse ///
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	married disability labor ///
-	, gradient trace difficult
+	married disability labor //
+	*, gradient trace difficult
+		
+
+***--------------------------***
+// REGRESSION: REDI Income as IV: Predict Migration
+***--------------------------***	
+
+di in red "Predict migration as function of ASEC ln(income)"
+svy: logistic migrate ///
+	asec_lnhinc_shp_2017 //
+
+di in red "Predict migration as function of ASEC ln(income), race/ethnicity, education, gender"
+svy: logistic migrate ///
+	asec_lnhinc_shp_2017 ///	
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
+	*, gradient trace difficult
+
+di in red "Predict migration as function of ASEC ln(income), race/ethnicity, education, gender, disability, labor force, home ownership"
+svy: logistic migrate ///
+	asec_lnhinc_shp_2017 /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	disability labor ownhouse //
+	*, gradient trace difficult
+
 
 ***--------------------------***
 

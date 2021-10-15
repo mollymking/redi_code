@@ -35,8 +35,8 @@ local y = year
 // # CREATE NATURAL LOG INCOME VARIABLES
 ***--------------------------***
 
-gen acs_lnhinc_shp_`conv_year' = ln(acs_hinc_shp_`conv_year')
-label var acs_hinc_shp_`conv_year' "Inflation-adjusted natural log household income (ACS), from shp categories, `conv_year' dollars"
+gen redi_dV_lnhinc_shp_`conv_year' = ln(redi_dV_hinc_shp_`conv_year')
+label var redi_dV_lnhinc_shp_`conv_year' "Inflation-adjusted natural log household income (ACS), from shp categories, `conv_year' dollars"
 
 ***--------------------------***
 // DEMOGRAPHICS
@@ -183,6 +183,19 @@ replace ownhouse = 0 if ownershp == 21 | ownershp == 22
 
 tab ownershp ownhouse, m
 
+***--------------------------***
+
+// # MIGRATION STATUS
+
+/*MIGRATE1 indicates whether the respondent had changed residence in the past year. Those who were living in the same house as one year ago were considered non-movers and were asked no further questions about migration over the past year. Movers were asked about the city, county and state and/or the U.S. territory or foreign country where they resided one year ago.*/
+
+tab migrate1
+tab migrate1, nolab
+
+generate migrate = .
+replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate1 == 5 | migrate1 == 6
+replace migrate = 0 if migrate1	== 1
+
 
 ***--------------------------***
 
@@ -192,26 +205,25 @@ save $deriv/redi12_REDI_regressions-hinc_shp.dta, replace
 // REGRESSION: ACS Income as DV (Original - not included in results)
 ***--------------------------***	
 
+use $deriv/redi12_REDI_regressions-hinc_shp.dta, clear
+
 di in red "Predict original ACS continuous income as a function of education, race/ethnicity, gender of householder"		
 svy: reg acs_hinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
 
-
+	
 ***--------------------------***
 // REGRESSION: REDI Income as DV
 ***--------------------------***	
-
+/*
 di in red "Predict REDI-created income as a function of education, race/ethnicity, gender of householder"	
 svy: reg redi_dV_hinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
- 
-***--------------------------***
-// REGRESSION: REDI Income as DV - with 5-6 IVs
-***--------------------------***	
+*/ 
 
 di in red "Predict REDI-created income as a function of education, race/ethnicity, gender of householder, marital status, disability, and labor force"	
 svy: reg redi_dV_hinc_shp_`conv_year' /// 
@@ -220,29 +232,35 @@ svy: reg redi_dV_hinc_shp_`conv_year' ///
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
 	married disability labor
 
-***--------------------------***
-***--------------------------***	
 
+***--------------------------***
+// REGRESSION: REDI Income as IV: Predict Migration
+***--------------------------***	
+/*
+di in red "Predict migration as function of ln(REDI-created income)"
+svy: logistic migrate ///
+	redi_dV_lnhinc_shp_`conv_year' //
+
+di in red "Predict migration as function of ln(REDI-created income), race/ethnicity, education, gender"
+svy: logistic migrate ///
+	redi_dV_lnhinc_shp_`conv_year' ///	
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
+	*, gradient trace difficult
+*/
 
+di in red "Predict migration as function of ln(REDI-created income), race/ethnicity, education, gender, disability, labor force, home ownership"
+svy: logistic migrate ///
 	redi_dV_lnhinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	disability labor ownhouse //
+	*, gradient trace difficult
 
-***--------------------------***
-// REGRESSION: REDI Income as IV: Predict Disability - 5-6 IVs
-***--------------------------***	
 
-di in red "Predict disability as function of ln(REDI-created income), race/ethnicity, education, gender, marital status, labor force"
-svy: logistic disability ///
-	redi_dV_lnhinc_shp_`conv_year' /// 
-	dB_fem /// men comparison
-	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	married labor //
+
 	
 	
 ***-----

@@ -3,13 +3,12 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi11_AS
 > EC_regressions.log
   log type:  text
- opened on:   8 Sep 2021, 10:15:12
+ opened on:  13 Sep 2021, 09:32:31
 
 . 
 . //      project:        REDI Methods Paper
 . 
-. //  task:       Regression of original continuous CPS ASEC variables - before 
-> conversion to REDI
+. //  task:       Regression of original continuous CPS ASEC variables
 . //  data:       CPS ASEC from IPUMS, available: https://cps.ipums.org/
 . 
 . //  github:     redi
@@ -18,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
- 8 Sep 2021  10:15:12
+13 Sep 2021  09:32:31
 
 . 
 . ***--------------------------***
@@ -1466,6 +1465,54 @@ Owned or being bought |         0     89,370 |    89,370
                 Total |    50,071     89,370 |   139,441 
 
 . 
+. ***--------------------------***
+. 
+. // # MIGRATION STATUS
+. 
+. /*MIGRATE1 indicates whether the respondent had changed residence in the past 
+> year. Those who were living in the same house as one year ago were considered 
+> non-movers and were asked no further questions about migration over the past y
+> ear. Movers were asked about the city, county and state and/or the U.S. territ
+> ory or foreign country where they resided one year ago.*/
+. 
+. tab migrate1
+
+            Migration status, 1 year |      Freq.     Percent        Cum.
+-------------------------------------+-----------------------------------
+                          Same house |    125,953       90.33       90.33
+                 Moved within county |      8,312        5.96       96.29
+Moved within state, different county |      2,573        1.85       98.13
+                Moved between states |      2,187        1.57       99.70
+                              Abroad |        416        0.30      100.00
+-------------------------------------+-----------------------------------
+                               Total |    139,441      100.00
+
+. tab migrate1, nolab
+
+  Migration |
+  status, 1 |
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |    125,953       90.33       90.33
+          3 |      8,312        5.96       96.29
+          4 |      2,573        1.85       98.13
+          5 |      2,187        1.57       99.70
+          6 |        416        0.30      100.00
+------------+-----------------------------------
+      Total |    139,441      100.00
+
+. 
+. generate migrate = .
+(139,441 missing values generated)
+
+. replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate
+> 1 == 5 | migrate1 == 6
+(13,488 real changes made)
+
+. replace migrate = 0 if migrate1 == 1
+(125,953 real changes made)
+
+. 
 . 
 . ***--------------------------***
 . 
@@ -1519,10 +1566,6 @@ asec_hi~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 ------------------------------------------------------------------------------
 
 . 
-.         
-. ***--------------------------***
-. // REGRESSION: CPS ASEC Income as DV - with 5-6 IVs
-. ***--------------------------***        
 . 
 . di in red "Predict ASEC income as function of race/ethnicity, education, gende
 > r, marital status, disability, labor force"
@@ -1605,176 +1648,9 @@ Predict home ownership as function of ASEC ln(income), race/ethnicity, education
 >         asec_lnhinc_shp_2017 ///        
 >         dB_fem /// men comparison
 >         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
->         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
-> egory
->         , gradient trace difficult
---------------------------------------------------------------------------------
-Iteration 0:
-Parameter vector:
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1             0             0             0             0             0
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1             0             0             0             0             0
-
-        ownhouse:
-           _cons
-r1      .5661632
-
-                                                   log likelihood = -1.629e+08
-Gradient vector (length = 3.59e+07):
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      3.43e+07      -3828540      -6410283     -779502.1      -5934777
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1     -722071.5      -1177371     -990337.6       2759812       3333900
-
-        ownhouse:
-           _cons
-r1     -4.26e-07
---------------------------------------------------------------------------------
-Iteration 1:
-Parameter vector:
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      .4631096     -.1062796     -1.155158     -.8078318     -1.103974
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1     -.9043338      .2230051      .1147386       .138098      .2722926
-
-        ownhouse:
-           _cons
-r1     -4.223954
-
-                                                   log likelihood = -1.481e+08
-Gradient vector (length = 3.17e+07):
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      3.15e+07       1535746      950155.4      121614.4        962439
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1      113160.4      735113.7      701109.9      413718.1      382934.9
-
-        ownhouse:
-           _cons
-r1       2826233
---------------------------------------------------------------------------------
-Iteration 2:
-Parameter vector:
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      .4918688     -.0943708     -1.037821     -.7945119     -1.009664
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1     -.8339857      .1766503      .0594707      .0748629      .2283074
-
-        ownhouse:
-           _cons
-r1     -4.471025
-
-                                                   log likelihood = -1.480e+08
-Gradient vector (length = 31572.57):
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1       29734.2     -4172.962     -6677.603      925.7055     -4243.976
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1      413.7279     -655.7526     -692.7008      2106.068      5046.818
-
-        ownhouse:
-           _cons
-r1     -919.3223
---------------------------------------------------------------------------------
-Iteration 3:
-Parameter vector:
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      .4926405     -.0944278     -1.038825     -.7947377     -1.010296
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1     -.8338327       .177459      .0600837       .075352      .2293346
-
-        ownhouse:
-           _cons
-r1      -4.47972
-
-                                                   log likelihood = -1.480e+08
-Gradient vector (length = 33.77193):
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      33.57494     -.5825168     -2.035368      .1811773     -1.100886
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1      .0358243       .053189     -.0239696      .7962448      2.224707
-
-        ownhouse:
-           _cons
-r1      1.397072
---------------------------------------------------------------------------------
-Iteration 4:
-Parameter vector:
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      .4926409     -.0944278     -1.038825     -.7947379     -1.010296
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1     -.8338327      .1774591      .0600837      .0753519      .2293348
-
-        ownhouse:
-           _cons
-r1     -4.479725
-
-                                                   log likelihood = -1.480e+08
-Gradient vector (length = 9.49e-06):
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-    asec_ln~2017        dB_fem     dB_rblack     dB_rasian      dB_rhisp
-r1      9.46e-06      4.75e-08     -3.02e-07      1.20e-08     -1.50e-07
-
-        ownhouse:     ownhouse:     ownhouse:     ownhouse:     ownhouse:
-       dB_rother     dB_edu_HS   dB_edu_sCol    dB_edu_col   dB_edu_grad
-r1     -5.70e-09      5.20e-08      3.04e-08      1.63e-07      4.58e-07
-
-        ownhouse:
-           _cons
-r1      5.32e-07
---------------------------------------------------------------------------------
-
-Logistic regression                             Number of obs     =    137,395
-                                                LR chi2(10)       =   2.99e+07
-                                                Prob > chi2       =     0.0000
-Log likelihood = -1.480e+08                     Pseudo R2         =     0.0918
-
--------------------------------------------------------------------------------
-     ownhouse | Odds Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-asec_lnh~2017 |   1.636633   .0002602  3098.27   0.000     1.636123    1.637143
-       dB_fem |   .9098934   .0002588  -331.94   0.000     .9093862    .9104009
-    dB_rblack |   .3538702   .0001477 -2488.63   0.000     .3535808    .3541599
-    dB_rasian |   .4516996   .0002853 -1258.37   0.000     .4511408    .4522591
-     dB_rhisp |   .3641112   .0001505 -2443.50   0.000     .3638162    .3644064
-    dB_rother |   .4343812   .0003966  -913.27   0.000     .4336046    .4351592
-    dB_edu_HS |   1.194179   .0006116   346.50   0.000     1.192981    1.195379
-  dB_edu_sCol |   1.061925   .0005477   116.49   0.000     1.060852       1.063
-   dB_edu_col |   1.078264   .0006074   133.77   0.000     1.077074    1.079455
-  dB_edu_grad |   1.257763   .0008028   359.32   0.000     1.256191    1.259337
-        _cons |   .0113365   .0000194 -2613.71   0.000     .0112985    .0113747
--------------------------------------------------------------------------------
-Note: _cons estimates baseline odds.
-
-Computing scores...
-
-Survey results:
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
+> gory
+(running logistic on estimation sample)
 
 Survey: Logistic regression
 
@@ -1802,45 +1678,300 @@ asec_lnh~2017 |   1.636633   .0174082    46.32   0.000     1.602866    1.671111
 -------------------------------------------------------------------------------
 Note: _cons estimates baseline odds.
 
+.         *, gradient trace difficult
+. 
+. di in red "Predict home ownership as function of ASEC ln(income), race/ethnici
+> ty, education, gender, marital status, disability, labor force"
+Predict home ownership as function of ASEC ln(income), race/ethnicity, education
+> , gender, marital status, disability, labor force
+
+. svy: logistic ownhouse ///
+>         asec_lnhinc_shp_2017 /// 
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability labor //
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =         1                Number of obs     =      136,715
+Number of PSUs     =   136,715                Population size   =  247,937,719
+                                              Design df         =      136,714
+                                              F(  13, 136702)   =      1222.64
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+     ownhouse | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |   1.534602   .0181342    36.24   0.000     1.499468    1.570559
+       dB_fem |   .9893959   .0150712    -0.70   0.484     .9602932    1.019381
+    dB_rblack |   .4083159   .0085809   -42.62   0.000     .3918391    .4254854
+    dB_rasian |   .3942791   .0124009   -29.59   0.000     .3707075    .4193495
+     dB_rhisp |   .3596156   .0072157   -50.97   0.000     .3457476      .37404
+    dB_rother |   .4655613   .0200739   -17.73   0.000     .4278336     .506616
+    dB_edu_HS |   1.353856   .0353042    11.62   0.000     1.286399    1.424851
+  dB_edu_sCol |   1.295664   .0344082     9.75   0.000     1.229949    1.364889
+   dB_edu_col |   1.339135    .039648     9.86   0.000     1.263637    1.419143
+  dB_edu_grad |   1.532315   .0521598    12.54   0.000     1.433418    1.638034
+      married |   3.034237   .0501395    67.17   0.000     2.937538    3.134118
+   disability |   .6214737   .0219523   -13.47   0.000     .5799032    .6660243
+        labor |    .457506   .0084132   -42.52   0.000     .4413099    .4742964
+        _cons |   .0192532   .0023189   -32.80   0.000     .0152049    .0243795
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.         *, gradient trace difficult
+.                 
+. 
+. ***--------------------------***
+. // REGRESSION: REDI Income as IV: Predict Migration
+. ***--------------------------***        
+. 
+. di in red "Predict migration as function of ASEC ln(income)"
+Predict migration as function of ASEC ln(income)
+
+. svy: logistic migrate ///
+>         asec_lnhinc_shp_2017 //
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =         1                Number of obs     =      137,395
+Number of PSUs     =   137,395                Population size   =  248,911,400
+                                              Design df         =      137,394
+                                              F(   1, 137394)   =       389.36
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |   .8523667   .0069001   -19.73   0.000     .8389492    .8659987
+        _cons |   .6811752   .0596989    -4.38   0.000     .5736645    .8088344
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. 
+. di in red "Predict migration as function of ASEC ln(income), race/ethnicity, e
+> ducation, gender"
+Predict migration as function of ASEC ln(income), race/ethnicity, education, gen
+> der
+
+. svy: logistic migrate ///
+>         asec_lnhinc_shp_2017 ///        
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
+> gory
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =         1                Number of obs     =      137,395
+Number of PSUs     =   137,395                Population size   =  248,911,400
+                                              Design df         =      137,394
+                                              F(  10, 137385)   =        79.18
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |   .8424906   .0071184   -20.29   0.000     .8286536    .8565587
+       dB_fem |   .9985509   .0218588    -0.07   0.947     .9566141    1.042326
+    dB_rblack |   1.403395   .0452077    10.52   0.000     1.317528    1.494858
+    dB_rasian |   1.526322   .0678861     9.51   0.000     1.398901    1.665349
+     dB_rhisp |   1.387455   .0437711    10.38   0.000     1.304263    1.475953
+    dB_rother |   1.673082   .1046862     8.23   0.000     1.479982    1.891377
+    dB_edu_HS |    1.15316   .0484202     3.39   0.001     1.062057    1.252077
+  dB_edu_sCol |   1.465937   .0607277     9.23   0.000     1.351616    1.589928
+   dB_edu_col |   1.508767   .0670245     9.26   0.000     1.382957    1.646023
+  dB_edu_grad |   1.384561   .0685721     6.57   0.000     1.256478      1.5257
+        _cons |    .512757   .0490216    -6.99   0.000     .4251406      .61843
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.         *, gradient trace difficult
+. 
+. di in red "Predict migration as function of ASEC ln(income), race/ethnicity, e
+> ducation, gender, disability, labor force, home ownership"
+Predict migration as function of ASEC ln(income), race/ethnicity, education, gen
+> der, disability, labor force, home ownership
+
+. svy: logistic migrate ///
+>         asec_lnhinc_shp_2017 /// 
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         disability labor ownhouse //
+(running logistic on estimation sample)
+
+Survey: Logistic regression
+
+Number of strata   =         1                Number of obs     =      136,715
+Number of PSUs     =   136,715                Population size   =  247,937,719
+                                              Design df         =      136,714
+                                              F(  13, 136702)   =       487.29
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |   .9044281   .0098922    -9.18   0.000     .8852459     .924026
+       dB_fem |   1.007563   .0231072     0.33   0.743     .9632757    1.053886
+    dB_rblack |   .8782777   .0298037    -3.82   0.000     .8217632    .9386788
+    dB_rasian |   1.109587   .0523584     2.20   0.028     1.011568    1.217103
+     dB_rhisp |   .8491208   .0286041    -4.86   0.000     .7948681    .9070766
+    dB_rother |   1.189322   .0776274     2.66   0.008     1.046504    1.351631
+    dB_edu_HS |   1.149503   .0493006     3.25   0.001     1.056825    1.250309
+  dB_edu_sCol |   1.383488   .0590747     7.60   0.000     1.272416    1.504257
+   dB_edu_col |   1.431937    .065887     7.80   0.000     1.308452    1.567076
+  dB_edu_grad |   1.422525   .0735646     6.82   0.000     1.285407    1.574271
+   disability |   .7347239   .0444585    -5.09   0.000     .6525549    .8272395
+        labor |   1.728712   .0507479    18.65   0.000     1.632054    1.831094
+     ownhouse |    .166169   .0042936   -69.46   0.000     .1579632    .1748011
+        _cons |   .4553852   .0523301    -6.85   0.000     .3635492    .5704198
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.         *, gradient trace difficult
+. 
+. 
+. ***--------------------------***
+. // REGRESSION: REDI Income as IV: Predict Health Status
+. ***--------------------------***        
 .         
-. /*
-> di in red "Predict home ownership as function of ASEC income, race/ethnicity, 
-> education, gender"
-> svy: logistic ownhouse ///
->         asec_hinc_shp_2017 /// 
+. di in red "Predict health status as function of ASEC ln(income)"
+Predict health status as function of ASEC ln(income)
+
+. svy: ologit health ///
+>         asec_lnhinc_shp_2017 ///
+>         , or // report odds ratios
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata   =         1                Number of obs     =      137,395
+Number of PSUs     =   137,395                Population size   =  248,911,400
+                                              Design df         =      137,394
+                                              F(   1, 137394)   =      3510.49
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+       health | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |   .6450132   .0047735   -59.25   0.000     .6357248    .6544374
+--------------+----------------------------------------------------------------
+        /cut1 |  -5.954823   .0830991                     -6.117696   -5.791951
+        /cut2 |  -4.513826   .0817497                     -4.674054   -4.353598
+        /cut3 |  -3.043789   .0808595                     -3.202272   -2.885305
+        /cut4 |  -1.603787   .0812451                     -1.763026   -1.444548
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+. 
+. di in red "Predict health status as function of ASEC ln(income), race/ethnicit
+> y, education, gender"
+Predict health status as function of ASEC ln(income), race/ethnicity, education,
+>  gender
+
+. svy: ologit health ///
+>         asec_lnhinc_shp_2017 ///        
 >         dB_fem /// men comparison
 >         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 >         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
 > egory
->         , gradient trace difficult
-> 
-> *vif, uncentered - find the version that works with svy
-> *log income
-> *z-score - see if sensitive to unit - if it is not, then there must be somethi
-> ng wrong
-> *build up model slowly - start with just income - 
-> 
-> *- then transform variable
-> *having children
-> *health behavior
-> *moved to a new place - residential stability - less 
-> 
->         
-> ***--------------------------***
-> // REGRESSION: REDI Income as IV: Predict Home Ownership - 5-6 IVs
-> ***--------------------------***        
-> 
-> di in red "Predict home ownership as function of ASEC income, race/ethnicity, 
-> education, gender, marital status, disability, labor force"
-> svy: logistic ownhouse ///
->         asec_hinc_shp_`conv_year' /// 
+>         , or // report odds ratios
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata   =         1                Number of obs     =      137,395
+Number of PSUs     =   137,395                Population size   =  248,911,400
+                                              Design df         =      137,394
+                                              F(  10, 137385)   =       837.32
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+       health | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |     .72708   .0054404   -42.60   0.000     .7164947    .7378216
+       dB_fem |   1.053224    .012328     4.43   0.000     1.029337    1.077666
+    dB_rblack |   1.060962    .019035     3.30   0.001     1.024302    1.098934
+    dB_rasian |   .9175579     .02243    -3.52   0.000     .8746319    .9625905
+     dB_rhisp |   .7228596   .0120773   -19.42   0.000     .6995717    .7469227
+    dB_rother |   1.125598   .0432973     3.08   0.002     1.043856    1.213741
+    dB_edu_HS |   .6103654    .013699   -22.00   0.000     .5840977    .6378144
+  dB_edu_sCol |   .4607593   .0105209   -33.94   0.000     .4405932    .4818485
+   dB_edu_col |   .3096789   .0076432   -47.49   0.000      .295055    .3250276
+  dB_edu_grad |   .3064668   .0082432   -43.97   0.000     .2907287    .3230568
+--------------+----------------------------------------------------------------
+        /cut1 |   -5.45278   .0833081                     -5.616063   -5.289498
+        /cut2 |  -3.976634   .0822823                     -4.137905   -3.815362
+        /cut3 |   -2.47232   .0815959                     -2.632247   -2.312394
+        /cut4 |  -1.016741   .0820811                     -1.177618   -.8558631
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+.         *, gradient trace difficult
+. 
+. di in red "Predict health status as function of ASEC ln(income), race/ethnicit
+> y, education, gender, disability, labor force, home ownership"
+Predict health status as function of ASEC ln(income), race/ethnicity, education,
+>  gender, disability, labor force, home ownership
+
+. svy: ologit health ///
+>         asec_lnhinc_shp_2017 /// 
 >         dB_fem /// men comparison
 >         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 >         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
 > egory
->         married disability labor ///
->         , gradient trace difficult
-> */      
+>         disability labor ownhouse ///
+>         , or // report odds ratios
+(running ologit on estimation sample)
+
+Survey: Ordered logistic regression
+
+Number of strata   =         1                Number of obs     =      136,715
+Number of PSUs     =   136,715                Population size   =  247,937,719
+                                              Design df         =      136,714
+                                              F(  13, 136702)   =      1420.14
+                                              Prob > F          =       0.0000
+
+-------------------------------------------------------------------------------
+              |             Linearized
+       health | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+asec_lnh~2017 |   .8504816   .0063375   -21.73   0.000     .8381505    .8629942
+       dB_fem |    .934808   .0111473    -5.65   0.000     .9132128    .9569138
+    dB_rblack |   1.255974   .0226238    12.65   0.000     1.212405    1.301108
+    dB_rasian |   1.003634   .0251686     0.14   0.885     .9554969    1.054197
+     dB_rhisp |   .9220816   .0159172    -4.70   0.000     .8914061    .9538128
+    dB_rother |   1.259445   .0475993     6.10   0.000     1.169523    1.356281
+    dB_edu_HS |   .7123171   .0159989   -15.10   0.000     .6816397     .744375
+  dB_edu_sCol |   .5782244   .0132334   -23.94   0.000     .5528603    .6047521
+   dB_edu_col |   .3931803   .0097188   -37.76   0.000     .3745857     .412698
+  dB_edu_grad |   .3759544   .0101183   -36.35   0.000     .3566367    .3963185
+   disability |    5.03457   .1617968    50.29   0.000     4.727233    5.361889
+        labor |   .3592623   .0052319   -70.29   0.000     .3491528    .3696646
+     ownhouse |   1.111403   .0148699     7.89   0.000     1.082637    1.140933
+--------------+----------------------------------------------------------------
+        /cut1 |  -4.183264   .0797521                     -4.339576   -4.026951
+        /cut2 |   -2.63212   .0789366                     -2.786834   -2.477406
+        /cut3 |  -.9822343   .0784156                     -1.135927   -.8285412
+        /cut4 |   .6125534   .0791281                      .4574639    .7676429
+-------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+.         *, gradient trace difficult
+.         
 . ***--------------------------***
 . 
 . 

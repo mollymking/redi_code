@@ -1,0 +1,1503 @@
+--------------------------------------------------------------------------------------------------------------------------
+      name:  redi12_REDI_regressions
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi12_REDI_regressions.log
+  log type:  text
+ opened on:  13 Sep 2021, 19:53:50
+
+. 
+. //      project:        REDI Methods Paper
+. 
+. //  task:               Regressions of original CPS ASEC Variables and new continuous REDI-created income
+. //  data:               CPS ASEC original available: https://cps.ipums.org/
+. //                              & newly created REDI income variable
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+13 Sep 2021  19:53:50
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. set seed 1
+
+. 
+. use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. save $deriv/redi12_REDI_regressions-hinc_shp.dta, replace       
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_REDI_regressions
+> -hinc_shp.dta saved
+
+. 
+. local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
+
+. local y = year
+
+. 
+. 
+. ***--------------------------***
+. // # CREATE NATURAL LOG INCOME VARIABLES
+. ***--------------------------***
+. 
+. gen redi_dV_lnhinc_shp_`conv_year' = ln(redi_dV_hinc_shp_`conv_year')
+(56,487 missing values generated)
+
+. label var redi_dV_lnhinc_shp_`conv_year' "Inflation-adjusted natural log house
+> hold income (ACS), from shp categories, `conv_year' dollars"
+note: label truncated to 80 characters
+
+. 
+. ***--------------------------***
+. // DEMOGRAPHICS
+. ***--------------------------***        
+.                 
+. // #1 GENDER
+.  
+. local gender_var sex
+
+. tab `gender_var', m
+
+        Sex |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       Male |  3,139,660       51.91       51.91
+     Female |  2,908,227       48.09      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. tab `gender_var', nolab m
+
+        Sex |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |  3,139,660       51.91       51.91
+          2 |  2,908,227       48.09      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. include $redi/redi11a_include_female_from2W_1M.doi
+
+. *! include file to convert gender variable
+. *! Produces gender dummy bariable from woman=2-->fem=1; man=1-->man=0
+. *! version 1.1 \ molly king 2017-03-29
+. 
+. gen dB_fem = . 
+(6,047,887 missing values generated)
+
+.         replace dB_fem = 1 if `gender_var' == 2
+(2,908,227 real changes made)
+
+.         replace dB_fem = 0 if `gender_var' == 1
+(3,139,660 real changes made)
+
+. 
+. label var dB_fem "Respondent's sex (=1 if female)" 
+
+. label define dB_fem 0 "0_Male" 1 "1_Female"
+
+.         label val dB_fem dB_fem
+
+. 
+. notes dB_fem: Created from `gender_var' in `data_using' \ `do_file'.do mmk $S_
+> DATE
+
+. 
+. 
+. ***--------------------------***        
+. 
+. // #2 RACE / ETHNICITY - with RACE variable only
+. 
+. local race_var race
+
+. tab `race_var'
+
+                                   Race |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                                  White |  4,708,707       77.86       77.86
+                            Black/Negro |    768,601       12.71       90.57
+           American Indian/Aleut/Eskimo |     87,193        1.44       92.01
+                             Asian only |    350,318        5.79       97.80
+         Hawaiian/Pacific Islander only |     27,024        0.45       98.25
+                            White-Black |     20,871        0.35       98.59
+                  White-American Indian |     46,989        0.78       99.37
+                            White-Asian |     13,598        0.22       99.59
+        White-Hawaiian/Pacific Islander |      4,334        0.07       99.67
+                  Black-American Indian |      6,173        0.10       99.77
+                            Black-Asian |      1,463        0.02       99.79
+        Black-Hawaiian/Pacific Islander |        583        0.01       99.80
+                  American Indian-Asian |        308        0.01       99.81
+        Asian-Hawaiian/Pacific Islander |      4,023        0.07       99.87
+            White-Black-American Indian |      4,137        0.07       99.94
+                      White-Black-Asian |        343        0.01       99.95
+            White-American Indian-Asian |        346        0.01       99.95
+  White-Asian-Hawaiian/Pacific Islander |      2,011        0.03       99.99
+      White-Black-American Indian-Asian |         54        0.00       99.99
+American Indian-Hawaiian/Pacific Island |         77        0.00       99.99
+White-American Indian-Hawaiian/Pacific  |        161        0.00       99.99
+            Black-American Indian-Asian |         79        0.00       99.99
+White-American Indian-Asian-Hawaiian/Pa |        108        0.00       99.99
+        Two or three races, unspecified |         56        0.00       99.99
+        Four or five races, unspecified |        330        0.01      100.00
+----------------------------------------+-----------------------------------
+                                  Total |  6,047,887      100.00
+
+. tab `race_var', m nolab
+
+       Race |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        100 |  4,708,707       77.86       77.86
+        200 |    768,601       12.71       90.57
+        300 |     87,193        1.44       92.01
+        651 |    350,318        5.79       97.80
+        652 |     27,024        0.45       98.25
+        801 |     20,871        0.35       98.59
+        802 |     46,989        0.78       99.37
+        803 |     13,598        0.22       99.59
+        804 |      4,334        0.07       99.67
+        805 |      6,173        0.10       99.77
+        806 |      1,463        0.02       99.79
+        807 |        583        0.01       99.80
+        808 |        308        0.01       99.81
+        809 |      4,023        0.07       99.87
+        810 |      4,137        0.07       99.94
+        811 |        343        0.01       99.95
+        812 |        346        0.01       99.95
+        813 |      2,011        0.03       99.99
+        814 |         54        0.00       99.99
+        815 |         77        0.00       99.99
+        817 |        161        0.00       99.99
+        818 |         79        0.00       99.99
+        819 |        108        0.00       99.99
+        820 |         56        0.00       99.99
+        830 |        330        0.01      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. gen hisp = .
+(6,047,887 missing values generated)
+
+. replace hisp = 1 if hispan >=1
+(935,750 real changes made)
+
+. replace hisp = 0 if hispan == 0
+(5,112,137 real changes made)
+
+. 
+. replace race = 800 if race >=800
+(106,044 real changes made)
+
+. 
+. local hisp_var hisp
+
+. 
+. if "`hisp_var'" != "none" {
+.         tab `hisp_var', m
+
+       hisp |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |  5,112,137       84.53       84.53
+          1 |    935,750       15.47      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+.         tab `hisp_var', m nolab
+
+       hisp |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |  5,112,137       84.53       84.53
+          1 |    935,750       15.47      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+.         tab `race_var' `hisp_var'
+
+                      |         hisp
+                 Race |         0          1 |     Total
+----------------------+----------------------+----------
+                White | 3,845,427    863,280 | 4,708,707 
+          Black/Negro |   741,967     26,634 |   768,601 
+American Indian/Aleut |    68,700     18,493 |    87,193 
+           Asian only |   343,247      7,071 |   350,318 
+Hawaiian/Pacific Isla |    23,065      3,959 |    27,024 
+                  800 |    89,731     16,313 |   106,044 
+----------------------+----------------------+----------
+                Total | 5,112,137    935,750 | 6,047,887 
+. }
+
+. 
+. *don't know/refused code(s) for `race_var'
+. local race_missing_condition none
+
+. 
+. local white_race_value =        100 
+
+. local black_race_value =        200
+
+. local asian_race_value =        651
+
+. local hisp_value =                      1
+
+. local other_race_value =        652
+
+. local mult_race_value =         800
+
+. local amerInd_race_value  = 300
+
+. 
+. include $redi/redi11b_racethnicity.doi
+
+. *! include file to label race/ethnicity variables
+. *! version 1.0 \ molly king 2017-01-20
+. 
+.   *compilation of originally individual include files that programmed each rac
+> e/ethnicity separate
+. ***--------------------------***
+. 
+. // #1 GENERATE ALL VARIABLES, AND LABEL, ADD NOTES
+. 
+. // White
+.                 gen dB_rwhite = 0
+
+.                 // Replace each with . for missing race if there is a race mis
+> sing condition: 
+.                         if "`race_missing_condition'" != "none" {
+.                                 replace dB_rwhite = . if `race_var' == `race_m
+> issing_condition' // don't know/refused
+.                         }
+
+.                 label var dB_rwhite "Non-Hispanic White race = 1"
+
+.                         label define dB_rwhite 0 "0_NotWhite" 1 "1_White"
+
+.                 label val dB_rwhite dB_rwhite
+
+.                 notes dB_rwhite: White respondent race created from `race_var'
+>  & `hisp_var' in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+
+. 
+. // Black
+.                 gen dB_rblack = 0
+
+.                 // Replace each with . for missing race if there is a race mis
+> sing condition: 
+.                         if "`race_missing_condition'" != "none" {
+.                                 replace dB_rblack = . if  `race_var' == `race_
+> missing_condition' // don't know/refused
+.                         }
+
+.                 label var dB_rblack "Non-Hispanic Black/AfAmer race = 1"
+
+.                 label define dB_rblack 0 "0_NotBlack" 1 "1_Black"
+
+.                         label val dB_rblack dB_rblack
+
+.                 notes dB_rblack: Black/AfAmer race created from `race_var' & `
+> hisp_var' in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+
+. 
+. // Asian
+.         if "`asian_race_value'" != "none" {
+.                 gen dB_rasian = 0
+.                 // Replace each with . for missing race if there is a race mis
+> sing condition: 
+.                         if "`race_missing_condition'" != "none" {
+.                                 replace dB_rasian = . if `race_var' == `race_m
+> issing_condition' 
+.                         }
+.                 label var dB_rasian "Non-Hispanic Asian race = 1"
+.                 label define dB_rasian 0 "0_NotAsian" 1 "1_Asian"
+.                         label val dB_rasian dB_rasian
+.                 notes dB_rasian: Asian race created from `race_var' & `hisp_va
+> r' in `dataset' \ ki`category'`dataset'.do mmk $S_DATE    
+.         }
+
+. 
+. // Hispanic
+.         if "`hisp_value'" != "none" {
+.                 gen dB_rhisp = 0
+.                 // Replace each with . for missing race if there is a race mis
+> sing condition: 
+.                         if "`race_missing_condition'" != "none" {
+.                                 replace dB_rhisp  = . if `race_var' == `race_m
+> issing_condition' 
+.                         }
+.                 label var dB_rhisp  "Hispanic ethnicity = 1"
+.                 label define dB_rhisp  0 "0_NotHispanic" 1 "1_Hispanic"
+.                         label val dB_rhisp dB_rhisp     
+.                 notes dB_rhisp: Hispanic ethnicity only created from `race_var
+> ' & `hisp_var' in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+.         }
+
+. 
+. // Other
+.         if "`mult_race_value'" != "none" |  "`other_race_value'" != "none" |  
+> "`amerInd_race_value'" != "none" {
+.                 gen dB_rother = 0
+.                 // Replace each with . for missing race if there is a race mis
+> sing condition: 
+.                         if "`race_missing_condition'" != "none" {
+.                                 replace dB_rother = . if `race_var' == `race_m
+> issing_condition' // don't know/refused
+.                         }
+.                 label var dB_rother "Non-Hispanic Other, mixed race = 1"
+.                 label define dB_rother 0 "0_NotOther" 1 "1_Mixed/OtherRace"
+.                         label val dB_rother dB_rother   
+.                 notes dB_rother: Other, unknown, or mixed race created from `r
+> ace_var' & `hisp_var' in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+.         }
+
+.         
+.         
+. // All Categories
+.         gen dG_race = .
+(6,047,887 missing values generated)
+
+.         label var dG_race "Categorical race variable"
+
+.         label define race_5categ 1 "White" 2 "Black" 3 "Asian" 4 "Hispanic" 5 
+> "Other/mixed"
+
+.                 label val dG_race race_5categ
+
+.         notes dG_race: Race/ethnicity categorical variable, created from `race
+> _var' & `hisp_var'  variable in `dataset' \ ki`category'`dataset'.do mmk $S_DA
+> TE
+
+.         
+. 
+. ***--------------------------***
+. 
+. // #2 SEPARATE RACE AND HISPANIC VARIABLES
+. 
+. if "`hisp_var'" != "none" {
+. 
+. *White: dB_rwhite
+.         if "`white_race_value'" != "none" {
+.                 replace dB_rwhite = 1   if `race_var' == `white_race_value' & 
+> `hisp_var' != `hisp_value'
+(3,845,427 real changes made)
+.                 replace dG_race = 1     if `race_var' == `white_race_value' & 
+> `hisp_var' != `hisp_value'
+(3,845,427 real changes made)
+.         }
+.         
+. *Black: dB_rblack
+.         if "`black_race_value'" != "none" {
+.                 replace dB_rblack = 1   if `race_var' == `black_race_value' & 
+> `hisp_var' != `hisp_value'
+(741,967 real changes made)
+.                 replace dG_race = 2     if `race_var' == `black_race_value' & 
+> `hisp_var' != `hisp_value'
+(741,967 real changes made)
+.         }
+.         
+. *Asian: dB_rasian
+.         if "`asian_race_value'" != "none" {
+.                 replace dB_rasian = 1   if `race_var' == `asian_race_value' & 
+> `hisp_var' != `hisp_value' 
+(343,247 real changes made)
+.                 replace dG_race = 3     if `race_var' == `asian_race_value' & 
+> `hisp_var' != `hisp_value' 
+(343,247 real changes made)
+.         }
+.                 
+. *Other/mixed: dB_rother
+.         if "`other_race_value'" != "none" {
+.                 replace dB_rother = 1   if `race_var' == `other_race_value' & 
+> `hisp_var' != `hisp_value' 
+(23,065 real changes made)
+.                 replace dG_race = 5     if `race_var' == `other_race_value' & 
+> `hisp_var' != `hisp_value' 
+(23,065 real changes made)
+.         }
+.         if "`mult_race_value'" != "none" {
+.                 replace dB_rother = 1   if `race_var' == `mult_race_value' & `
+> hisp_var' != `hisp_value' 
+(89,731 real changes made)
+.                 replace dG_race = 5     if `race_var' == `mult_race_value' & `
+> hisp_var' != `hisp_value' 
+(89,731 real changes made)
+.         }
+.         if "`amerInd_race_value'" != "none" {
+.                  replace dB_rother = 1  if `race_var' == `amerInd_race_value' 
+> & `hisp_var' != `hisp_value' 
+(68,700 real changes made)
+.                  replace dG_race = 5    if `race_var' == `amerInd_race_value' 
+> & `hisp_var' != `hisp_value' 
+(68,700 real changes made)
+.         }
+.         
+. *Hispanic: dB_rhisp
+.                 replace dB_rhisp = 1    if `hisp_var' == `hisp_value'
+(935,750 real changes made)
+.                 replace dG_race = 4     if `hisp_var' == `hisp_value'
+(935,750 real changes made)
+. }
+
+. 
+. 
+. ***--------------------------***
+. 
+. // #3 with RACE variable only
+. 
+. if "`hisp_var'" == "none" {
+. 
+. *White: dB_rwhite
+.         if "`white_race_value'" != "none" {
+.                 replace dB_rwhite = 1   if `race_var' == `white_race_value'
+.                 replace dG_race = 1     if `race_var' == `white_race_value'
+.         }
+.         
+. *Black: dB_rblack
+.         if "`black_race_value'" != "none" {
+.                 replace dB_rblack = 1   if `race_var' == `black_race_value'
+.                 replace dG_race = 2     if `race_var' == `black_race_value'
+.         }
+.         
+. *Asian: dB_rasian
+.         if "`asian_race_value'" != "none" {
+.                 replace dB_rasian = 1   if `race_var' == `asian_race_value'
+.                 replace dG_race = 3     if `race_var' == `asian_race_value'
+.         }
+.         
+. *Other/mixed: dB_rother
+.         if "`other_race_value'" != "none" {
+.                 replace dB_rother = 1   if `race_var' == `other_race_value'
+.                 replace dG_race = 5     if `race_var' == `other_race_value'
+.         }
+.         if "`mult_race_value'" != "none" {
+.                 replace dB_rother = 1   if `race_var' == `mult_race_value'
+.                 replace dG_race = 5     if `race_var' == `mult_race_value'
+.         }
+.         if "`amerInd_race_value'" != "none" {
+.                 replace dB_rother = 1   if `race_var' == `amerInd_race_value'
+.                 replace dG_race = 5     if `race_var' == `amerInd_race_value'
+.         }
+.         
+. *Hispanic: dB_rhisp
+.         if "`hisp_value'" != "none" {
+.                 replace dB_rhisp = 1    if `race_var' == `hisp_value'
+.                 replace dG_race = 4     if `race_var' == `hisp_value'
+.         }
+. }
+
+.         
+. ***--------------------------***
+. 
+. //else {
+. //      display as err /*
+. //      */ "Need to enter either name of Hispanic variable or none after local
+>  hisp_var"
+. //      exit 198
+. //}
+.         
+. ***--------------------------***
+.         
+. // #4 CHECK ALL RESULTING VARIABLES     
+. ***check all to ensure correct***
+. 
+. 
+. *Check White
+. capture confirm variable dB_rwhite
+
+. if !_rc {
+.         tab `race_var' dB_rwhite, m
+
+                      |  Non-Hispanic White
+                      |       race = 1
+                 Race | 0_NotWhit    1_White |     Total
+----------------------+----------------------+----------
+                White |   863,280  3,845,427 | 4,708,707 
+          Black/Negro |   768,601          0 |   768,601 
+American Indian/Aleut |    87,193          0 |    87,193 
+           Asian only |   350,318          0 |   350,318 
+Hawaiian/Pacific Isla |    27,024          0 |    27,024 
+                  800 |   106,044          0 |   106,044 
+----------------------+----------------------+----------
+                Total | 2,202,460  3,845,427 | 6,047,887 
+. }
+
+. 
+. *Check Black
+. capture confirm variable dB_rblack
+
+. if !_rc {
+.         tab `race_var' dB_rblack, m
+
+                      |     Non-Hispanic
+                      | Black/AfAmer race = 1
+                 Race | 0_NotBlac    1_Black |     Total
+----------------------+----------------------+----------
+                White | 4,708,707          0 | 4,708,707 
+          Black/Negro |    26,634    741,967 |   768,601 
+American Indian/Aleut |    87,193          0 |    87,193 
+           Asian only |   350,318          0 |   350,318 
+Hawaiian/Pacific Isla |    27,024          0 |    27,024 
+                  800 |   106,044          0 |   106,044 
+----------------------+----------------------+----------
+                Total | 5,305,920    741,967 | 6,047,887 
+. }
+
+. 
+. *Check Asian
+. capture confirm variable dB_rasian
+
+. if !_rc {
+.         tab `race_var' dB_rasian, m
+
+                      |  Non-Hispanic Asian
+                      |       race = 1
+                 Race | 0_NotAsia    1_Asian |     Total
+----------------------+----------------------+----------
+                White | 4,708,707          0 | 4,708,707 
+          Black/Negro |   768,601          0 |   768,601 
+American Indian/Aleut |    87,193          0 |    87,193 
+           Asian only |     7,071    343,247 |   350,318 
+Hawaiian/Pacific Isla |    27,024          0 |    27,024 
+                  800 |   106,044          0 |   106,044 
+----------------------+----------------------+----------
+                Total | 5,704,640    343,247 | 6,047,887 
+. } 
+
+. 
+. *Check Other
+. capture confirm variable dB_rother
+
+. if !_rc {
+.         tab `race_var' dB_rother, m
+
+                      |  Non-Hispanic Other,
+                      |    mixed race = 1
+                 Race | 0_NotOthe  1_Mixed/O |     Total
+----------------------+----------------------+----------
+                White | 4,708,707          0 | 4,708,707 
+          Black/Negro |   768,601          0 |   768,601 
+American Indian/Aleut |    18,493     68,700 |    87,193 
+           Asian only |   350,318          0 |   350,318 
+Hawaiian/Pacific Isla |     3,959     23,065 |    27,024 
+                  800 |    16,313     89,731 |   106,044 
+----------------------+----------------------+----------
+                Total | 5,866,391    181,496 | 6,047,887 
+. }
+
+. 
+. *Check Hispanic
+. capture confirm variable dB_rhisp
+
+. if !_rc {
+.         tab `race_var' dB_rhisp, m
+
+                      | Hispanic ethnicity =
+                      |           1
+                 Race | 0_NotHisp  1_Hispani |     Total
+----------------------+----------------------+----------
+                White | 3,845,427    863,280 | 4,708,707 
+          Black/Negro |   741,967     26,634 |   768,601 
+American Indian/Aleut |    68,700     18,493 |    87,193 
+           Asian only |   343,247      7,071 |   350,318 
+Hawaiian/Pacific Isla |    23,065      3,959 |    27,024 
+                  800 |    89,731     16,313 |   106,044 
+----------------------+----------------------+----------
+                Total | 5,112,137    935,750 | 6,047,887 
+. }
+
+. 
+. *Check Categorical Race Variable
+. tab `race_var' dG_race, m
+
+                      |          Categorical race variable
+                 Race |     White      Black      Asian   Hispanic |     Total
+----------------------+--------------------------------------------+----------
+                White | 3,845,427          0          0    863,280 | 4,708,707 
+          Black/Negro |         0    741,967          0     26,634 |   768,601 
+American Indian/Aleut |         0          0          0     18,493 |    87,193 
+           Asian only |         0          0    343,247      7,071 |   350,318 
+Hawaiian/Pacific Isla |         0          0          0      3,959 |    27,024 
+                  800 |         0          0          0     16,313 |   106,044 
+----------------------+--------------------------------------------+----------
+                Total | 3,845,427    741,967    343,247    935,750 | 6,047,887 
+
+
+                      | Categorica
+                      |   l race
+                      |  variable
+                 Race | Other/mix |     Total
+----------------------+-----------+----------
+                White |         0 | 4,708,707 
+          Black/Negro |         0 |   768,601 
+American Indian/Aleut |    68,700 |    87,193 
+           Asian only |         0 |   350,318 
+Hawaiian/Pacific Isla |    23,065 |    27,024 
+                  800 |    89,731 |   106,044 
+----------------------+-----------+----------
+                Total |   181,496 | 6,047,887 
+
+. tab dG_race `race_var', m
+
+Categorical |
+       race |                          Race
+   variable |     White  Black/Neg  American   Asian onl  Hawaiian/ |     Total
+------------+-------------------------------------------------------+----------
+      White | 3,845,427          0          0          0          0 | 3,845,427 
+      Black |         0    741,967          0          0          0 |   741,967 
+      Asian |         0          0          0    343,247          0 |   343,247 
+   Hispanic |   863,280     26,634     18,493      7,071      3,959 |   935,750 
+Other/mixed |         0          0     68,700          0     23,065 |   181,496 
+------------+-------------------------------------------------------+----------
+      Total | 4,708,707    768,601     87,193    350,318     27,024 | 6,047,887 
+
+
+Categorical |
+       race |    Race
+   variable |       800 |     Total
+------------+-----------+----------
+      White |         0 | 3,845,427 
+      Black |         0 |   741,967 
+      Asian |         0 |   343,247 
+   Hispanic |    16,313 |   935,750 
+Other/mixed |    89,731 |   181,496 
+------------+-----------+----------
+      Total |   106,044 | 6,047,887 
+
+. if "`hisp_var'" != "none" {
+.         tab dG_race `hisp_var', m
+
+Categorical |
+       race |         hisp
+   variable |         0          1 |     Total
+------------+----------------------+----------
+      White | 3,845,427          0 | 3,845,427 
+      Black |   741,967          0 |   741,967 
+      Asian |   343,247          0 |   343,247 
+   Hispanic |         0    935,750 |   935,750 
+Other/mixed |   181,496          0 |   181,496 
+------------+----------------------+----------
+      Total | 5,112,137    935,750 | 6,047,887 
+. }
+
+. 
+. 
+. fvset base 1 dG_race            // ref: white_race_value
+
+. 
+. ***--------------------------***        
+. 
+. // #3 EDUCATION
+. 
+. local edu_var educ
+
+. tab `edu_var'
+
+          Educational attainment recode |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                      None or preschool |     12,754        0.21        0.21
+                   Grades 1, 2, 3, or 4 |     34,067        0.56        0.77
+                          Grades 5 or 6 |     74,187        1.23        2.00
+                          Grades 7 or 8 |     88,511        1.46        3.46
+                                Grade 9 |     83,454        1.38        4.84
+                               Grade 10 |     92,804        1.53        6.38
+                               Grade 11 |    112,044        1.85        8.23
+                 12th grade, no diploma |     70,103        1.16        9.39
+      High school diploma or equivalent |  1,558,107       25.76       35.15
+             Some college but no degree |  1,093,106       18.07       53.23
+Associate's degree, occupational/vocati |    267,775        4.43       57.66
+   Associate's degree, academic program |    363,313        6.01       63.66
+                      Bachelor's degree |  1,334,671       22.07       85.73
+                        Master's degree |    625,754       10.35       96.08
+             Professional school degree |    102,841        1.70       97.78
+                       Doctorate degree |    134,396        2.22      100.00
+----------------------------------------+-----------------------------------
+                                  Total |  6,047,887      100.00
+
+. tab `edu_var', nolab m
+
+Educational |
+ attainment |
+     recode |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          2 |     12,754        0.21        0.21
+         10 |     34,067        0.56        0.77
+         20 |     74,187        1.23        2.00
+         30 |     88,511        1.46        3.46
+         40 |     83,454        1.38        4.84
+         50 |     92,804        1.53        6.38
+         60 |    112,044        1.85        8.23
+         71 |     70,103        1.16        9.39
+         73 |  1,558,107       25.76       35.15
+         81 |  1,093,106       18.07       53.23
+         91 |    267,775        4.43       57.66
+         92 |    363,313        6.01       63.66
+        111 |  1,334,671       22.07       85.73
+        123 |    625,754       10.35       96.08
+        124 |    102,841        1.70       97.78
+        125 |    134,396        2.22      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. *don't know/refused code(s) for `edu_var'
+. local edu_missing_condition `"`edu_var' == 8 | `edu_var' == 9"'
+
+. 
+. * Conditions for each category
+. local lHS_condition     `"`edu_var' <= 71"'
+
+. local HS_condition              `"`edu_var' == 73"'
+
+. local sCol_condition    `"`edu_var' == 81 | `edu_var' == 91 | `edu_var' == 92"
+> '
+
+. local col_condition             `"`edu_var' == 111"'
+
+. local grad_condition    `"`edu_var' >= 123"'
+
+. 
+. include $redi/redi11c_education.doi
+
+. *! include file to label education variables
+. *! version 1.0 \ molly king 2017-01-24
+. 
+.   *compilation of originally individual include files that programmed each edu
+> cation variable separate
+. ***--------------------------***
+. 
+. // #1 GENERATE ALL VARIABLES, AND LABEL, ADD NOTES
+. 
+. 
+. // Categorical Education Variable
+.         gen dG_edu = .
+(6,047,887 missing values generated)
+
+.         label var dG_edu "Categorical education variable"
+
+.         label define edu_5categ 1 "< HS" 2 "HS" 3 "some college" 4 "college" 5
+>  "grad school"
+
+.                 label val dG_edu edu_5categ
+
+.         notes dG_edu: Education categorical variable, created from `edu_var' v
+> ariable in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+
+. 
+.         
+. // Less than HS
+.         if "`lHS_condition'" != "none" {
+.                 gen dB_edu_lHS = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_lHS = . if `edu_missing_conditi
+> on'
+(0 real changes made)
+.                         }
+.                 label var dB_edu_lHS "<HS"
+.                 label define dB_edu_lHS 0 "0_>HS" 1 "1_<HS"
+.                         label val dB_edu_lHS dB_edu_lHS
+.                 notes dB_edu_lHS: Less than HS edu. created from `edu_var' var
+> iable in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+.                 
+.                 replace dB_edu_lHS = 1 if `lHS_condition'
+(567,924 real changes made)
+.                 replace dG_edu     = 1 if `lHS_condition'
+(567,924 real changes made)
+.         }
+
+.         
+. 
+. // High School
+.         if "`HS_condition'" != "none" {
+.                 gen dB_edu_HS = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_HS = . if `edu_missing_conditio
+> n'
+(0 real changes made)
+.                         }
+.                 label var dB_edu_HS "HS"
+.                 label define dB_edu_HS 0 "0_notHS" 1 "1_HS"
+.                         label val dB_edu_HS dB_edu_HS
+.                 notes dB_edu_HS: HS edu. created from `edu_var' variable in `d
+> ataset' \ ki`category'`dataset'.do mmk $S_DATE
+.                 
+.                 replace dB_edu_HS = 1 if `HS_condition'
+(1,558,107 real changes made)
+.                 replace dG_edu    = 2 if `HS_condition'
+(1,558,107 real changes made)
+.         }
+
+.         
+.         
+. // Some college
+.         if "`sCol_condition'" != "none" {
+.                 gen dB_edu_sCol = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_sCol = . if `edu_missing_condit
+> ion'
+(0 real changes made)
+.                         }
+.                 label var dB_edu_sCol "Some College / Voc. Training"
+.                 label define dB_edu_sCol 0 "0_notSomeCol" 1 "1_SomeCol"
+.                         label val dB_edu_sCol dB_edu_sCol
+.                 notes dB_edu_sCol: Some College edu. created from `edu_var' va
+> riable in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+. 
+.                 replace dB_edu_sCol = 1 if `sCol_condition'
+(1,724,194 real changes made)
+.                 replace dG_edu      = 3 if `sCol_condition'
+(1,724,194 real changes made)
+.         }
+
+. 
+.         
+. // College Degree
+.         if "`col_condition'" != "none" {
+.                 gen dB_edu_col = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_col = . if `edu_missing_conditi
+> on'
+(0 real changes made)
+.                         }
+.                 label var dB_edu_col "College degree"
+.                 label define dB_edu_col 0 "0_notCol" 1 "1_College"
+.                         label val dB_edu_col dB_edu_col
+.                 notes dB_edu_col: College degree, created from `edu_var' varia
+> ble in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+.         
+.                 replace dB_edu_col = 1 if `col_condition'
+(1,334,671 real changes made)
+.                 replace dG_edu     = 4 if `col_condition'
+(1,334,671 real changes made)
+.         }
+
+.         
+.         
+. // Post-graduate degree
+.         if "`grad_condition'" != "none" {
+.                 gen dB_edu_grad = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_grad = . if `edu_missing_condit
+> ion'
+(0 real changes made)
+.                         }
+.                 label var dB_edu_grad "Graduate degree"
+.                 label define dB_edu_grad 0 "0_<GradDeg" 1 "1_GradDegree"
+.                         label val dB_edu_grad dB_edu_grad
+.                 notes dB_edu_grad: Graduate degree, created from `edu_var' var
+> iable in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+.                 
+.                 replace dB_edu_grad = 1 if `grad_condition'
+(862,991 real changes made)
+.                 replace dG_edu      = 5 if `grad_condition'
+(862,991 real changes made)
+.         }
+
+.         
+. 
+. // College + post-graduate
+.         if "`grad_condition'" != "none" & "`col_condition'" != "none" {
+.                 gen dB_edu_colp = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_colp = . if `edu_missing_condit
+> ion'
+(0 real changes made)
+.                         }
+.                 label var dB_edu_colp "College or Graduate Degree"
+.                 label define dB_edu_colp 0 "0_NoBA" 1 "1_BA+"
+.                         label val dB_edu_colp dB_edu_colp       
+.                 notes dB_edu_colp: College plus grad, created from `edu_var' v
+> ariable in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+. 
+.                 replace dB_edu_colp = 1  if `col_condition' | `grad_condition'
+(2,197,662 real changes made)
+.         }
+
+. 
+. // College + post-graduate, where can't disentangle the two
+.         if "`grad_condition'" == "none" & "`col_condition'" != "none" {
+.                 gen dB_edu_colp = 0
+.                 // Replace each with . for missing edu. if there is a edu. mis
+> sing condition: 
+.                         if "`edu_missing_condition'" != "none" {
+.                                 replace dB_edu_colp = . if `edu_missing_condit
+> ion'
+.                         }
+.                 label var dB_edu_colp "College or Graduate Degree"
+.                 label define dB_edu_colp 0 "0_NoBA" 1 "1_BA+"
+.                         label val dB_edu_colp dB_edu_colp       
+.                 notes dB_edu_colp: College plus grad, created from `edu_var' v
+> ariable in `dataset' \ ki`category'`dataset'.do mmk $S_DATE
+. 
+.                 replace dB_edu_colp = 1  if `col_condition' 
+.                 // here, the college condition covers both those who have a ba
+> chelors and more
+.                 drop dB_edu_col
+.         }
+
+.         
+. 
+. 
+. // # CHECK TO ENSURE CORRECT
+. if "`lHS_condition'" != "none" {
+.         tab `edu_var' dB_edu_lHS, m
+
+          Educational |          <HS
+    attainment recode |     0_>HS      1_<HS |     Total
+----------------------+----------------------+----------
+    None or preschool |         0     12,754 |    12,754 
+ Grades 1, 2, 3, or 4 |         0     34,067 |    34,067 
+        Grades 5 or 6 |         0     74,187 |    74,187 
+        Grades 7 or 8 |         0     88,511 |    88,511 
+              Grade 9 |         0     83,454 |    83,454 
+             Grade 10 |         0     92,804 |    92,804 
+             Grade 11 |         0    112,044 |   112,044 
+12th grade, no diplom |         0     70,103 |    70,103 
+High school diploma o | 1,558,107          0 | 1,558,107 
+Some college but no d | 1,093,106          0 | 1,093,106 
+Associate's degree, o |   267,775          0 |   267,775 
+Associate's degree, a |   363,313          0 |   363,313 
+    Bachelor's degree | 1,334,671          0 | 1,334,671 
+      Master's degree |   625,754          0 |   625,754 
+Professional school d |   102,841          0 |   102,841 
+     Doctorate degree |   134,396          0 |   134,396 
+----------------------+----------------------+----------
+                Total | 5,479,963    567,924 | 6,047,887 
+. }
+
+. if "`HS_condition'" != "none" {
+.         tab `edu_var' dB_edu_HS, m
+
+          Educational |          HS
+    attainment recode |   0_notHS       1_HS |     Total
+----------------------+----------------------+----------
+    None or preschool |    12,754          0 |    12,754 
+ Grades 1, 2, 3, or 4 |    34,067          0 |    34,067 
+        Grades 5 or 6 |    74,187          0 |    74,187 
+        Grades 7 or 8 |    88,511          0 |    88,511 
+              Grade 9 |    83,454          0 |    83,454 
+             Grade 10 |    92,804          0 |    92,804 
+             Grade 11 |   112,044          0 |   112,044 
+12th grade, no diplom |    70,103          0 |    70,103 
+High school diploma o |         0  1,558,107 | 1,558,107 
+Some college but no d | 1,093,106          0 | 1,093,106 
+Associate's degree, o |   267,775          0 |   267,775 
+Associate's degree, a |   363,313          0 |   363,313 
+    Bachelor's degree | 1,334,671          0 | 1,334,671 
+      Master's degree |   625,754          0 |   625,754 
+Professional school d |   102,841          0 |   102,841 
+     Doctorate degree |   134,396          0 |   134,396 
+----------------------+----------------------+----------
+                Total | 4,489,780  1,558,107 | 6,047,887 
+. }
+
+. if "`sCol_condition'" != "none" {
+.         tab `edu_var' dB_edu_sCol, m
+
+                      |  Some College / Voc.
+          Educational |       Training
+    attainment recode | 0_notSome  1_SomeCol |     Total
+----------------------+----------------------+----------
+    None or preschool |    12,754          0 |    12,754 
+ Grades 1, 2, 3, or 4 |    34,067          0 |    34,067 
+        Grades 5 or 6 |    74,187          0 |    74,187 
+        Grades 7 or 8 |    88,511          0 |    88,511 
+              Grade 9 |    83,454          0 |    83,454 
+             Grade 10 |    92,804          0 |    92,804 
+             Grade 11 |   112,044          0 |   112,044 
+12th grade, no diplom |    70,103          0 |    70,103 
+High school diploma o | 1,558,107          0 | 1,558,107 
+Some college but no d |         0  1,093,106 | 1,093,106 
+Associate's degree, o |         0    267,775 |   267,775 
+Associate's degree, a |         0    363,313 |   363,313 
+    Bachelor's degree | 1,334,671          0 | 1,334,671 
+      Master's degree |   625,754          0 |   625,754 
+Professional school d |   102,841          0 |   102,841 
+     Doctorate degree |   134,396          0 |   134,396 
+----------------------+----------------------+----------
+                Total | 4,323,693  1,724,194 | 6,047,887 
+. }
+
+. if "`col_condition'" != "none" & "`grad_condition'" != "none" {
+.         tab `edu_var' dB_edu_col, m
+
+          Educational |    College degree
+    attainment recode |  0_notCol  1_College |     Total
+----------------------+----------------------+----------
+    None or preschool |    12,754          0 |    12,754 
+ Grades 1, 2, 3, or 4 |    34,067          0 |    34,067 
+        Grades 5 or 6 |    74,187          0 |    74,187 
+        Grades 7 or 8 |    88,511          0 |    88,511 
+              Grade 9 |    83,454          0 |    83,454 
+             Grade 10 |    92,804          0 |    92,804 
+             Grade 11 |   112,044          0 |   112,044 
+12th grade, no diplom |    70,103          0 |    70,103 
+High school diploma o | 1,558,107          0 | 1,558,107 
+Some college but no d | 1,093,106          0 | 1,093,106 
+Associate's degree, o |   267,775          0 |   267,775 
+Associate's degree, a |   363,313          0 |   363,313 
+    Bachelor's degree |         0  1,334,671 | 1,334,671 
+      Master's degree |   625,754          0 |   625,754 
+Professional school d |   102,841          0 |   102,841 
+     Doctorate degree |   134,396          0 |   134,396 
+----------------------+----------------------+----------
+                Total | 4,713,216  1,334,671 | 6,047,887 
+. }
+
+. if "`col_condition'" != "none" {
+.         tab `edu_var' dB_edu_colp, m
+
+                      |  College or Graduate
+          Educational |        Degree
+    attainment recode |    0_NoBA      1_BA+ |     Total
+----------------------+----------------------+----------
+    None or preschool |    12,754          0 |    12,754 
+ Grades 1, 2, 3, or 4 |    34,067          0 |    34,067 
+        Grades 5 or 6 |    74,187          0 |    74,187 
+        Grades 7 or 8 |    88,511          0 |    88,511 
+              Grade 9 |    83,454          0 |    83,454 
+             Grade 10 |    92,804          0 |    92,804 
+             Grade 11 |   112,044          0 |   112,044 
+12th grade, no diplom |    70,103          0 |    70,103 
+High school diploma o | 1,558,107          0 | 1,558,107 
+Some college but no d | 1,093,106          0 | 1,093,106 
+Associate's degree, o |   267,775          0 |   267,775 
+Associate's degree, a |   363,313          0 |   363,313 
+    Bachelor's degree |         0  1,334,671 | 1,334,671 
+      Master's degree |         0    625,754 |   625,754 
+Professional school d |         0    102,841 |   102,841 
+     Doctorate degree |         0    134,396 |   134,396 
+----------------------+----------------------+----------
+                Total | 3,850,225  2,197,662 | 6,047,887 
+. }
+
+. if "`grad_condition'" != "none" {
+.         tab `edu_var' dB_edu_grad, m
+
+          Educational |    Graduate degree
+    attainment recode | 0_<GradDe  1_GradDeg |     Total
+----------------------+----------------------+----------
+    None or preschool |    12,754          0 |    12,754 
+ Grades 1, 2, 3, or 4 |    34,067          0 |    34,067 
+        Grades 5 or 6 |    74,187          0 |    74,187 
+        Grades 7 or 8 |    88,511          0 |    88,511 
+              Grade 9 |    83,454          0 |    83,454 
+             Grade 10 |    92,804          0 |    92,804 
+             Grade 11 |   112,044          0 |   112,044 
+12th grade, no diplom |    70,103          0 |    70,103 
+High school diploma o | 1,558,107          0 | 1,558,107 
+Some college but no d | 1,093,106          0 | 1,093,106 
+Associate's degree, o |   267,775          0 |   267,775 
+Associate's degree, a |   363,313          0 |   363,313 
+    Bachelor's degree | 1,334,671          0 | 1,334,671 
+      Master's degree |         0    625,754 |   625,754 
+Professional school d |         0    102,841 |   102,841 
+     Doctorate degree |         0    134,396 |   134,396 
+----------------------+----------------------+----------
+                Total | 5,184,896    862,991 | 6,047,887 
+.         tab `edu_var' dB_edu_grad, m nolabel
+
+Educationa |
+         l |
+attainment |    Graduate degree
+    recode |         0          1 |     Total
+-----------+----------------------+----------
+         2 |    12,754          0 |    12,754 
+        10 |    34,067          0 |    34,067 
+        20 |    74,187          0 |    74,187 
+        30 |    88,511          0 |    88,511 
+        40 |    83,454          0 |    83,454 
+        50 |    92,804          0 |    92,804 
+        60 |   112,044          0 |   112,044 
+        71 |    70,103          0 |    70,103 
+        73 | 1,558,107          0 | 1,558,107 
+        81 | 1,093,106          0 | 1,093,106 
+        91 |   267,775          0 |   267,775 
+        92 |   363,313          0 |   363,313 
+       111 | 1,334,671          0 | 1,334,671 
+       123 |         0    625,754 |   625,754 
+       124 |         0    102,841 |   102,841 
+       125 |         0    134,396 |   134,396 
+-----------+----------------------+----------
+     Total | 5,184,896    862,991 | 6,047,887 
+. }
+
+. tab `edu_var' dG_edu, m
+
+          Educational |       Categorical education variable
+    attainment recode |      < HS         HS  some coll    college |     Total
+----------------------+--------------------------------------------+----------
+    None or preschool |    12,754          0          0          0 |    12,754 
+ Grades 1, 2, 3, or 4 |    34,067          0          0          0 |    34,067 
+        Grades 5 or 6 |    74,187          0          0          0 |    74,187 
+        Grades 7 or 8 |    88,511          0          0          0 |    88,511 
+              Grade 9 |    83,454          0          0          0 |    83,454 
+             Grade 10 |    92,804          0          0          0 |    92,804 
+             Grade 11 |   112,044          0          0          0 |   112,044 
+12th grade, no diplom |    70,103          0          0          0 |    70,103 
+High school diploma o |         0  1,558,107          0          0 | 1,558,107 
+Some college but no d |         0          0  1,093,106          0 | 1,093,106 
+Associate's degree, o |         0          0    267,775          0 |   267,775 
+Associate's degree, a |         0          0    363,313          0 |   363,313 
+    Bachelor's degree |         0          0          0  1,334,671 | 1,334,671 
+      Master's degree |         0          0          0          0 |   625,754 
+Professional school d |         0          0          0          0 |   102,841 
+     Doctorate degree |         0          0          0          0 |   134,396 
+----------------------+--------------------------------------------+----------
+                Total |   567,924  1,558,107  1,724,194  1,334,671 | 6,047,887 
+
+
+                      | Categorica
+                      |     l
+                      | education
+          Educational |  variable
+    attainment recode | grad scho |     Total
+----------------------+-----------+----------
+    None or preschool |         0 |    12,754 
+ Grades 1, 2, 3, or 4 |         0 |    34,067 
+        Grades 5 or 6 |         0 |    74,187 
+        Grades 7 or 8 |         0 |    88,511 
+              Grade 9 |         0 |    83,454 
+             Grade 10 |         0 |    92,804 
+             Grade 11 |         0 |   112,044 
+12th grade, no diplom |         0 |    70,103 
+High school diploma o |         0 | 1,558,107 
+Some college but no d |         0 | 1,093,106 
+Associate's degree, o |         0 |   267,775 
+Associate's degree, a |         0 |   363,313 
+    Bachelor's degree |         0 | 1,334,671 
+      Master's degree |   625,754 |   625,754 
+Professional school d |   102,841 |   102,841 
+     Doctorate degree |   134,396 |   134,396 
+----------------------+-----------+----------
+                Total |   862,991 | 6,047,887 
+
+.         
+. 
+. 
+. fvset base 1 dG_edu             // ref: less than HS
+
+. 
+. 
+. ***--------------------------***
+. 
+. // # LABOR FORCE
+. 
+. /*LABFORCE is a dichotomous variable indicating whether a person participated 
+> in the labor force. See EMPSTAT for a non-dichotomous variable that indicates 
+> whether the respondent was part of the labor force -- working or seeking work 
+> -- and, if so, whether the person was currently unemployed.*/
+. 
+. tab labforce
+
+        Labor force status |      Freq.     Percent        Cum.
+---------------------------+-----------------------------------
+                       NIU |     32,143        0.53        0.53
+No, not in the labor force |  1,829,915       30.26       30.79
+   Yes, in the labor force |  4,185,829       69.21      100.00
+---------------------------+-----------------------------------
+                     Total |  6,047,887      100.00
+
+. tab labforce, nolab m
+
+Labor force |
+     status |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     32,143        0.53        0.53
+          1 |  1,829,915       30.26       30.79
+          2 |  4,185,829       69.21      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate labor = .
+(6,047,887 missing values generated)
+
+. replace labor = 1 if labforce == 2  // yes in labor force
+(4,185,829 real changes made)
+
+. replace labor = 0 if labforce == 1  // not in labor force
+(1,829,915 real changes made)
+
+. 
+. tab labforce labor, m
+
+                      |              labor
+   Labor force status |         0          1          . |     Total
+----------------------+---------------------------------+----------
+                  NIU |         0          0     32,143 |    32,143 
+No, not in the labor  | 1,829,915          0          0 | 1,829,915 
+Yes, in the labor for |         0  4,185,829          0 | 4,185,829 
+----------------------+---------------------------------+----------
+                Total | 1,829,915  4,185,829     32,143 | 6,047,887 
+
+. 
+. 
+. ***--------------------------***
+. 
+. // # INDEPENDENT LIVING DIFFICULTY
+. 
+. /*DIFFMOB indicates whether the respondent has any physical, mental, or 
+> emotional condition lasting six months or more that makes it difficult or 
+> impossible to perform basic activities outside the home alone. 
+> This does not include temporary health problems, such as broken bones.*/
+. 
+. tab diffmob 
+
+    Disability limiting |
+               mobility |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+                    NIU |     32,143        0.53        0.53
+ No mobility limitation |  5,789,448       95.73       96.26
+Has mobility limitation |    226,296        3.74      100.00
+------------------------+-----------------------------------
+                  Total |  6,047,887      100.00
+
+. tab diffmob, nolab
+
+ Disability |
+   limiting |
+   mobility |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |     32,143        0.53        0.53
+          1 |  5,789,448       95.73       96.26
+          2 |    226,296        3.74      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate disability = .
+(6,047,887 missing values generated)
+
+. replace disability = 1 if diffmob == 2  // has mobility limitation
+(226,296 real changes made)
+
+. replace disability = 0 if diffmob == 1  // no mobility limitation
+(5,789,448 real changes made)
+
+. 
+. tab diffmob disability, m
+
+  Disability limiting |            disability
+             mobility |         0          1          . |     Total
+----------------------+---------------------------------+----------
+                  NIU |         0          0     32,143 |    32,143 
+No mobility limitatio | 5,789,448          0          0 | 5,789,448 
+Has mobility limitati |         0    226,296          0 |   226,296 
+----------------------+---------------------------------+----------
+                Total | 5,789,448    226,296     32,143 | 6,047,887 
+
+. 
+. 
+. ***--------------------------***
+. 
+. // # MARITAL STATUS
+. 
+. /*MARST gives each person's current marital status,
+>  including whether the spouse was currently living in the same household.*/
+. 
+. tab marst
+
+         Marital status |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+Married, spouse present |  3,310,321       54.74       54.74
+ Married, spouse absent |     98,842        1.63       56.37
+              Separated |    152,797        2.53       58.90
+               Divorced |    838,510       13.86       72.76
+                Widowed |    445,891        7.37       80.13
+   Never married/single |  1,201,526       19.87      100.00
+------------------------+-----------------------------------
+                  Total |  6,047,887      100.00
+
+. tab marst, nolab
+
+    Marital |
+     status |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |  3,310,321       54.74       54.74
+          2 |     98,842        1.63       56.37
+          3 |    152,797        2.53       58.90
+          4 |    838,510       13.86       72.76
+          5 |    445,891        7.37       80.13
+          6 |  1,201,526       19.87      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate married = .
+(6,047,887 missing values generated)
+
+. replace married = 1 if marst == 1 | marst == 2
+(3,409,163 real changes made)
+
+. replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
+(2,638,724 real changes made)
+
+. 
+. tab marst married, m
+
+                      |        married
+       Marital status |         0          1 |     Total
+----------------------+----------------------+----------
+Married, spouse prese |         0  3,310,321 | 3,310,321 
+Married, spouse absen |         0     98,842 |    98,842 
+            Separated |   152,797          0 |   152,797 
+             Divorced |   838,510          0 |   838,510 
+              Widowed |   445,891          0 |   445,891 
+ Never married/single | 1,201,526          0 | 1,201,526 
+----------------------+----------------------+----------
+                Total | 2,638,724  3,409,163 | 6,047,887 
+
+. 
+. ***--------------------------***
+. 
+. // # OWNERSHIP OF HOUSING
+. 
+. /*OWNERSHP indicates whether the household rented or owned its housing unit. 
+> Households that acquired their unit with a mortgage or other lending arrangeme
+> nt
+>  were understood to "own" their unit even if they had not yet completed repaym
+> ent.
+> Two types of renters were identified: those who paid cash rent and those who 
+> paid no cash rent. The latter category included occupants who paid only for th
+> eir utilities.*/
+. 
+. tab ownershp
+
+Ownership of dwelling |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+Owned or being bought |  4,040,515       66.81       66.81
+         No cash rent |     74,506        1.23       68.04
+       With cash rent |  1,932,866       31.96      100.00
+----------------------+-----------------------------------
+                Total |  6,047,887      100.00
+
+. tab ownershp, nolab
+
+  Ownership |
+of dwelling |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         10 |  4,040,515       66.81       66.81
+         21 |     74,506        1.23       68.04
+         22 |  1,932,866       31.96      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate ownhouse = .
+(6,047,887 missing values generated)
+
+. replace ownhouse = 1 if ownershp == 10
+(4,040,515 real changes made)
+
+. replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+(2,007,372 real changes made)
+
+. 
+. tab ownershp ownhouse, m
+
+                      |       ownhouse
+Ownership of dwelling |         0          1 |     Total
+----------------------+----------------------+----------
+Owned or being bought |         0  4,040,515 | 4,040,515 
+         No cash rent |    74,506          0 |    74,506 
+       With cash rent | 1,932,866          0 | 1,932,866 
+----------------------+----------------------+----------
+                Total | 2,007,372  4,040,515 | 6,047,887 
+
+. 
+. ***--------------------------***
+. 
+. // # MIGRATION STATUS
+. 
+. /*MIGRATE1 indicates whether the respondent had changed residence in the past 
+> year. Those who were living in the same house as one year ago were considered 
+> non-movers and were asked no further questions about migration over the past y
+> ear. Movers were asked about the city, county and state and/or the U.S. territ
+> ory or foreign country where they resided one year ago.*/
+. 
+. tab migrate1
+
+            Migration status, 1 year |      Freq.     Percent        Cum.
+-------------------------------------+-----------------------------------
+                          Same house |  5,481,585       90.64       90.64
+                 Moved within county |    348,837        5.77       96.40
+Moved within state, different county |    107,373        1.78       98.18
+                Moved between states |     93,636        1.55       99.73
+                              Abroad |     16,456        0.27      100.00
+-------------------------------------+-----------------------------------
+                               Total |  6,047,887      100.00
+
+. tab migrate1, nolab
+
+  Migration |
+  status, 1 |
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |  5,481,585       90.64       90.64
+          3 |    348,837        5.77       96.40
+          4 |    107,373        1.78       98.18
+          5 |     93,636        1.55       99.73
+          6 |     16,456        0.27      100.00
+------------+-----------------------------------
+      Total |  6,047,887      100.00
+
+. 
+. generate migrate = .
+(6,047,887 missing values generated)
+
+. replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate
+> 1 == 5 | migrate1 == 6
+(566,302 real changes made)
+
+. replace migrate = 0 if migrate1 == 1
+(5,481,585 real changes made)
+
+. 
+. 
+. ***--------------------------***
+. 
+. save $deriv/redi12_REDI_regressions-hinc_shp.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi12_REDI_regressions
+> -hinc_shp.dta saved
+
+. 
+. ***--------------------------***
+. // REGRESSION: ACS Income as DV (Original - not included in results)
+. ***--------------------------***        
+. 
+. di in red "Predict original ACS continuous income as a function of education, 
+> race/ethnicity, gender of householder"            
+Predict original ACS continuous income as a function of education, race/ethnicit
+> y, gender of householder
+
+. svy: reg acs_hinc_shp_`conv_year' /// 
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
+> gory
+(running regress on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
