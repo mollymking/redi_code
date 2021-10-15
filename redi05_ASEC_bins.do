@@ -43,17 +43,17 @@ label define  cat_inc	 				///
 
 *arbitrary categories invented to demonstrate flexibility of method
 gen 	asec_hinc_shp = .
-replace asec_hinc_shp = 1 if hhincome	<= 15000
-replace asec_hinc_shp = 2 if hhincome  > 15000 	& hhincome <= 25000
-replace asec_hinc_shp = 3 if hhincome  > 25000 	& hhincome <= 35000
-replace asec_hinc_shp = 4 if hhincome  > 35000 	& hhincome <= 50000	
-replace asec_hinc_shp = 5 if hhincome  > 50000 	& hhincome <= 75000	
-replace asec_hinc_shp = 6 if hhincome  > 75000 	& hhincome <= 100000
-replace asec_hinc_shp = 7 if hhincome  > 100000 	& hhincome <= 150000 
-replace asec_hinc_shp = 8 if hhincome  > 150000 	& hhincome <= 200000
-replace asec_hinc_shp = 9 if hhincome  > 200000 	& hhincome != 9999999 
-replace asec_hinc_shp = . if hhincome == 9999999 
-replace asec_hinc_shp = . if hhincome == .
+replace asec_hinc_shp = 1 if hhincome_asec	<= 15000
+replace asec_hinc_shp = 2 if hhincome_asec  > 15000 	& hhincome_asec <= 25000
+replace asec_hinc_shp = 3 if hhincome_asec  > 25000 	& hhincome_asec <= 35000
+replace asec_hinc_shp = 4 if hhincome_asec  > 35000 	& hhincome_asec <= 50000	
+replace asec_hinc_shp = 5 if hhincome_asec  > 50000 	& hhincome_asec <= 75000	
+replace asec_hinc_shp = 6 if hhincome_asec  > 75000 	& hhincome_asec <= 100000
+replace asec_hinc_shp = 7 if hhincome_asec  > 100000 	& hhincome_asec <= 150000 
+replace asec_hinc_shp = 8 if hhincome_asec  > 150000 	& hhincome_asec <= 200000
+replace asec_hinc_shp = 9 if hhincome_asec  > 200000 	& hhincome_asec != 9999999 
+replace asec_hinc_shp = . if hhincome_asec == 9999999 
+replace asec_hinc_shp = . if hhincome_asec == .
 
 label values asec_hinc_shp cat_inc
 
@@ -61,8 +61,8 @@ tab asec_hinc_shp, m
 tab asec_hinc_shp, m nolab
 
 * SAVE SHARP INCOME VARIABLE
-label var asec_hinc_shp "household Income (ASEC) sharp categories based on hhincome"
-notes asec_hinc_shp: ASEC household Income Sharp Categories from hhincome \  mmk $S_DATE
+label var asec_hinc_shp "household Income (ASEC) sharp categories based on hhincome_asec"
+notes asec_hinc_shp: ASEC household Income Sharp Categories from hhincome_asec \  mmk $S_DATE
 
 save $deriv/redi05_ASEC_bins-hinc.dta, replace
 

@@ -40,7 +40,7 @@ drop _merge
 svyset [iweight=asecwth]
 
 *original income variable, adjusted for inflation
-gen asec_hinc_shp_`conv_year' = hhincome / conv_factor
+gen asec_hinc_shp_`conv_year' = hhincome_asec / conv_factor
 format asec_hinc_shp_`conv_year' %6.0fc
 label var asec_hinc_shp_`conv_year' "Inflation-adjusted household income (ASEC), from shp categories, `conv_year' dollars"
 

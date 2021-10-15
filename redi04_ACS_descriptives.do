@@ -44,7 +44,7 @@ label var acs_hinc_shp_`conv_year'_mean "household (ACS) shp grand mean"
 
 local y = year
 di in red "Calculate grand mean for hinc shp for year `y'" 
-svy: mean acs_hinc_shp_`conv_year' if year == 2016 // this is original variable: hhincome
+svy: mean acs_hinc_shp_`conv_year' if year == 2016 // this is original variable: hhincome_asec
 cap matrix X = r(table) 
 	cap loc mf = X[1,1]
 	di `mf'
@@ -52,7 +52,7 @@ replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2016
 
 local y = year
 di in red "Calculate grand mean for hinc shp for year `y'"
-svy: mean acs_hinc_shp_`conv_year' if year == 2017 // this is original variable: hhincome
+svy: mean acs_hinc_shp_`conv_year' if year == 2017 // this is original variable: hhincome_asec
 cap matrix X = r(table) 
 	cap loc mf = X[1,1]
 	di `mf'

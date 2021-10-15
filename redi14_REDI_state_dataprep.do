@@ -122,6 +122,7 @@ include $redi/redi03a_categ_distrib.doi
 
 // Clean Up
 keep if year == 2019
+drop gq sample serial cbserial countyfip age nchild whymove union  month
 svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
 
 rename hhincome redi_hinc 

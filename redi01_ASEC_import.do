@@ -60,6 +60,10 @@ keep if pernum == 1
 svyset [pweight=asecwth]
 compress
 
+
+// RENAME to avoid confusion with ACS
+rename hhincome hhincome_asec
+
 // SAVE ALL YEARS
 
 label data "CPS ASEC data - Household Income - 2016, 2017, 2019"

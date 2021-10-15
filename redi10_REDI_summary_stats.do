@@ -138,7 +138,7 @@ forvalues n=1(1)$n_replications{
 	gen rep_n = `n'
 	capture drop repwtp* perwt repwtp pers_inc ftotinc_acs repwt  ///
 		asecwth acs_rinc_perc acs_finc_perc acs_rinc_shp acs_finc_shp ///
-		acs_hinc_perc acs_hinc_shp acs_hinc_shp_lb acs_hinc_shp_ub hhincome hhincome_acs ///
+		acs_hinc_perc acs_hinc_shp acs_hinc_shp_lb acs_hinc_shp_ub hhincome_asec hhincome_acs ///
 		acs_hinc_shp_2017lb acs_hinc_shp_2017ub acs_hinc_shp_2017 redi_dV_hinc_shp_2017
 	
 	gen run_n = `run'		

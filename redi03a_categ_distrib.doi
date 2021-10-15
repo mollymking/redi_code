@@ -128,8 +128,8 @@
 			// Keep ASEC data if within income bounds and for given year
 
 				keep if year == `y' & ///
-					hhincome >= `lower_bound' & ///
-					hhincome <= `upper_bound'
+					hhincome_asec >= `lower_bound' & ///
+					hhincome_asec <= `upper_bound'
 				gen obs_no = _n
 				save "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", replace
 				di "Keep income between $`lower_bound' and $`upper_bound' for `y' year."

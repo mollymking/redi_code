@@ -1,8 +1,9 @@
--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
       name:  redi01_ASEC_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_ASEC_import.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
+> EC_import.log
   log type:  text
- opened on:  28 Sep 2021, 18:26:09
+ opened on:  15 Oct 2021, 11:46:10
 
 . 
 . 
@@ -18,7 +19,7 @@
 . 
 . 
 . display "$S_DATE  $S_TIME"
-28 Sep 2021  18:26:09
+15 Oct 2021  11:46:10
 
 . 
 . ***--------------------------***
@@ -949,6 +950,11 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
   (0 bytes saved)
 
 . 
+. 
+. // RENAME to avoid confusion with ACS
+. rename hhincome hhincome_asec
+
+. 
 . // SAVE ALL YEARS
 . 
 . label data "CPS ASEC data - Household Income - 2016, 2017, 2019"
@@ -957,7 +963,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
 > 17, 2019 \ redi01_ASEC.do
 
 . datasignature set, reset
-  207786:26(66367):1175710109:781505746       (data signature reset)
+  207786:26(97515):1175710109:781505746       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome_all.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
@@ -977,7 +983,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
 >  redi01_ASEC.do
 
 . datasignature set, reset
-  139441:26(66367):4164444312:2333080517       (data signature reset)
+  139441:26(97515):4164444312:2333080517       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
@@ -990,5 +996,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
 > EC_import.log
   log type:  text
- closed on:  28 Sep 2021, 18:26:21
+ closed on:  15 Oct 2021, 11:46:15
 --------------------------------------------------------------------------------

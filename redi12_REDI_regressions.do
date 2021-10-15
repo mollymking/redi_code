@@ -267,10 +267,10 @@ svy: logistic migrate ///
 // Check if systematically different values between REDI and Research Dataset
 *use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
 
-table sex, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
-table race, c(mean redi_dV_hinc_shp_2017   mean hhincome mean hhincome_acs)
-table hispan, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
-table educ, c(mean redi_dV_hinc_shp_2017  mean hhincome mean hhincome_acs)
+table sex, 		c(mean redi_dV_hinc_shp_2017   	mean hhincome_asec mean hhincome_acs)
+table race, 	c(mean redi_dV_hinc_shp_2017   	mean hhincome_asec mean hhincome_acs)
+table hispan, 	c(mean redi_dV_hinc_shp_2017 	mean hhincome_asec mean hhincome_acs)
+table educ, 	c(mean redi_dV_hinc_shp_2017  	mean hhincome_asec mean hhincome_acs)
 		 
  
 ***--------------------------***
