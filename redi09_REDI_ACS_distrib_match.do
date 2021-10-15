@@ -73,6 +73,7 @@ graph export $redi/redi09_REDI_ACS_distrib_match-log.pdf, replace
 *Natural log plot
 
 distplot acs_hinc_shp_`conv_year'_ln redi_dV_hinc_shp_`conv_year'_ln, ///
+lp(1 solid 2 dots) /// different line types
 legend( ///
 		label(1 "REDI-calculated continuous household income") ///
 		label(2 "Original household income (ACS)") ///
@@ -82,6 +83,7 @@ legend( ///
 	xtitle("REDI-calculated Income (`conv_year' dollars)") //
 	*xscale(log) ///
 	*xlabel(0 200000 500000 1000000 2000000 3000000) //
+	
 	
 graph export $redi/redi09_REDI_ACS_distrib_match-ln.jpg, ///
 	replace quality(60) // quality between 0-100 allows for compression

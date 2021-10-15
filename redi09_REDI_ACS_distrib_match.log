@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi09_RE
 > DI_ACS_distrib_match.log
   log type:  text
- opened on:   2 Sep 2020, 15:09:31
+ opened on:  11 Sep 2021, 19:09:00
 
 . 
 . //      project:        REDI Methods Paper
@@ -17,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
- 2 Sep 2020  15:09:31
+11 Sep 2021  19:09:00
 
 . 
 . ***--------------------------***
@@ -111,6 +111,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_temp/redi09_REDI_ACS_distrib
 . *Natural log plot
 . 
 . distplot acs_hinc_shp_`conv_year'_ln redi_dV_hinc_shp_`conv_year'_ln, ///
+> lp(1 solid 2 dots) /// different line types
 > legend( ///
 >                 label(1 "REDI-calculated continuous household income") ///
 >                 label(2 "Original household income (ACS)") ///
@@ -122,9 +123,11 @@ file ~/Documents/SocResearch/Dissertation/data/data_temp/redi09_REDI_ACS_distrib
 .         *xscale(log) ///
 >         *xlabel(0 200000 500000 1000000 2000000 3000000) //
 .         
-. graph export $redi/redi09_REDI_ACS_distrib_match-ln.pdf, replace
+.         
+. graph export $redi/redi09_REDI_ACS_distrib_match-ln.jpg, ///
+>         replace quality(60) // quality between 0-100 allows for compression
 (file ~/Documents/SocResearch/Dissertation/redi/redi09_REDI_ACS_distrib_match-ln
-> .pdf written in PDF format)
+> .jpg written in JPG format)
 
 . 
 . rm  $temp/redi09_REDI_ACS_distrib_match.dta
@@ -210,7 +213,7 @@ Survey: Linear regression                     Number of obs     =    6,016,812
                                               Population size   =  630,095,272
                                               Replications      =           80
                                               Design df         =           79
-                                              F(   1,     79)   =      4742.73
+                                              F(   1,     79)   =      5463.27
                                               Prob > F          =       0.0000
                                               R-squared         =       0.0004
 
@@ -218,15 +221,15 @@ Survey: Linear regression                     Number of obs     =    6,016,812
              |                BRR *
     var_hinc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-    acs_redi |     3698.8   53.70897    68.87   0.000     3591.895    3805.705
-       _cons |   90126.47   109.7984   820.84   0.000     89907.92    90345.02
+    acs_redi |    3711.98   50.22029    73.91   0.000     3612.019    3811.941
+       _cons |   90113.29   110.0231   819.04   0.000      89894.3    90332.29
 ------------------------------------------------------------------------------
 
 Adjusted Wald test
 
  ( 1)  acs_redi = 0
 
-       F(  1,    79) = 4742.73
+       F(  1,    79) = 5463.27
             Prob > F =    0.0000
 (running regress on estimation sample)
 
@@ -239,7 +242,7 @@ Survey: Linear regression                     Number of obs     =    6,078,962
                                               Population size   =  635,263,882
                                               Replications      =           80
                                               Design df         =           79
-                                              F(   1,     79)   =      3320.04
+                                              F(   1,     79)   =      3882.59
                                               Prob > F          =       0.0000
                                               R-squared         =       0.0004
 
@@ -247,15 +250,15 @@ Survey: Linear regression                     Number of obs     =    6,078,962
              |                BRR *
     var_hinc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-    acs_redi |    3610.74   62.66493    57.62   0.000     3486.008    3735.471
-       _cons |   91831.74   101.3306   906.26   0.000     91630.05    92033.44
+    acs_redi |   3621.314   58.11733    62.31   0.000     3505.634    3736.994
+       _cons |   91821.17   106.6964   860.58   0.000     91608.79    92033.54
 ------------------------------------------------------------------------------
 
 Adjusted Wald test
 
  ( 1)  acs_redi = 0
 
-       F(  1,    79) = 3320.04
+       F(  1,    79) = 3882.59
             Prob > F =    0.0000
 
 . 
@@ -352,5 +355,5 @@ P-value                         0.00000
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi09_RE
 > DI_ACS_distrib_match.log
   log type:  text
- closed on:   2 Sep 2020, 15:42:28
+ closed on:  11 Sep 2021, 20:43:20
 --------------------------------------------------------------------------------
