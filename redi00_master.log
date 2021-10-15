@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi00_ma
 > ster.log
   log type:  text
- opened on:  11 Oct 2021, 10:45:50
+ opened on:  15 Oct 2021, 10:15:59
 
 . 
 . set more off
@@ -27,7 +27,7 @@
 . //  author:             Molly King
 . 
 . display "$S_DATE  $S_TIME"
-11 Oct 2021  10:45:50
+15 Oct 2021  10:15:59
 
 . ***--------------------------***
 . 
@@ -57,9 +57,9 @@
 > // 01 IMPORT, EXTRACTION, CLEAN 
 > ***--------------------------***
 > 
-> do $redi/redi01_CPI-U-RS.do                                     // Import and 
-> extract CPI-U-RS inflation index, calculate year adjustment
-> do $redi/redi01_ASEC_import.do                          // Import and extract 
+> *do $redi/redi01_CPI-U-RS.do                            // Import and extract 
+> CPI-U-RS inflation index, calculate year adjustment
+> *do $redi/redi01_ASEC_import.do                         // Import and extract 
 > CPS ASEC
 > do $redi/redi01_ACS_import.do                           // Import and extract 
 > ACS
@@ -108,11 +108,16 @@
 > C variables and new continuous REDI-created income
 > 
 > ***--------------------------***
-> // 13 ANOTHER EXAMPLE
+> // 13 REGRESSION EXAMPLE USING INDIVIDUAL STATES
 > ***--------------------------***
 > 
-> *do $redi/redi13_REDI_state_example.do          // Another example using 2019 
-> and a single state
+> do $redi/redi13_REDI_state_demvars.do           // Create demographic variable
+> s for state data
+> do $redi/redi13_REDI_state_dataprep.do          // Create REDI-generated incom
+> e and artificial ACS bins
+> do $redi/redi13_REDI_state_regressions.do       // Run regressions for another
+>  example using 2019 and a single state
+> 
 > 
 > ***--------------------------***
 > // 20-22 ALTERNATIVE METHODS
@@ -133,5 +138,5 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi00_ma
 > ster.log
   log type:  text
- closed on:  11 Oct 2021, 10:45:50
+ closed on:  15 Oct 2021, 10:15:59
 --------------------------------------------------------------------------------

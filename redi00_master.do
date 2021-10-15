@@ -40,8 +40,8 @@ global deriv	"~/Documents/SocResearch/Dissertation/data/data_derv"  	// derived 
 // 01 IMPORT, EXTRACTION, CLEAN 
 ***--------------------------***
 
-do $redi/redi01_CPI-U-RS.do					// Import and extract CPI-U-RS inflation index, calculate year adjustment
-do $redi/redi01_ASEC_import.do				// Import and extract CPS ASEC
+*do $redi/redi01_CPI-U-RS.do				// Import and extract CPI-U-RS inflation index, calculate year adjustment
+*do $redi/redi01_ASEC_import.do				// Import and extract CPS ASEC
 do $redi/redi01_ACS_import.do 				// Import and extract ACS
 
 ***--------------------------***
@@ -76,10 +76,13 @@ do $redi/redi11_ASEC_regressions.do 		// Regression of original continuous CPS A
 do $redi/redi12_REDI_regressions.do 		// Regressions of original ASEC variables and new continuous REDI-created income
 
 ***--------------------------***
-// 13 ANOTHER EXAMPLE
+// 13 REGRESSION EXAMPLE USING INDIVIDUAL STATES
 ***--------------------------***
 
-*do $redi/redi13_REDI_state_example.do		// Another example using 2019 and a single state
+do $redi/redi13_REDI_state_demvars.do 		// Create demographic variables for state data
+do $redi/redi13_REDI_state_dataprep.do 		// Create REDI-generated income and artificial ACS bins
+do $redi/redi13_REDI_state_regressions.do 	// Run regressions for another example using 2019 and a single state
+
 
 ***--------------------------***
 // 20-22 ALTERNATIVE METHODS
