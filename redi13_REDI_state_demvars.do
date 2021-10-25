@@ -43,19 +43,19 @@ include $redi/redi11a_include_female_from2W_1M.doi
 
 ***--------------------------***	
 
-// #2 RACE / ETHNICITY - with RACE variable only
+// #2 RACE / ETHNICITY - with RACE and HISP
 
 local race_var race
 tab `race_var'
 tab `race_var', m nolab
 
 gen hisp = .
-replace hisp = 1 if hispan >=1
+replace hisp = 1 if hispan >0
 replace hisp = 0 if hispan == 0
 
 replace race = 800 if race >=800
 
-local hisp_var hispan
+local hisp_var hisp
 
 if "`hisp_var'" != "none" {
 	tab `hisp_var', m
@@ -63,20 +63,32 @@ if "`hisp_var'" != "none" {
 	tab `race_var' `hisp_var'
 }
 
+
 *don't know/refused code(s) for `race_var'
 local race_missing_condition none
 
-local white_race_value = 	100 
-local black_race_value = 	200
-local asian_race_value =	651
+local white_race_value = 	1
+local black_race_value = 	2
+local asian_race_value =	4
 local hisp_value =			1
-local other_race_value = 	652
-local mult_race_value = 	800
-local amerInd_race_value  = 300
+local other_race_value = 	7
+local mult_race_value = 	8
+local amerInd_race_value  = 3
 
 include $redi/redi11b_racethnicity.doi
 
+// Japanese
+replace dB_rasian = 1 if `race_var' == 5 & `hisp_var' != `hisp_value'
+replace dG_race = 3   if `race_var' == 5 & `hisp_var' != `hisp_value'
+// Other Asian or Pacific Islander 
+replace dB_rasian = 1 if `race_var' == 6 & `hisp_var' != `hisp_value'
+replace dG_race = 3   if `race_var' == 6 & `hisp_var' != `hisp_value'
+// Three or more
+replace dB_rother = 1 if `race_var' == 9 & `hisp_var' != `hisp_value'
+replace dG_race = 5 if `race_var' == 9 & `hisp_var' != `hisp_value' 
+
 fvset base 1 dG_race		// ref: white_race_value
+tab `race_var' dG_race, m
 
 ***--------------------------***	
 
@@ -87,19 +99,19 @@ tab `edu_var'
 tab `edu_var', nolab m
 
 *don't know/refused code(s) for `edu_var'
-local edu_missing_condition `"`edu_var' == 8 | `edu_var' == 9"'
+local edu_missing_condition "none"
 
 * Conditions for each category
-local lHS_condition 	`"`edu_var' <= 71"'
-local HS_condition 		`"`edu_var' == 73"'
-local sCol_condition	`"`edu_var' == 81 | `edu_var' == 91 | `edu_var' == 92"'
-local col_condition		`"`edu_var' == 111"'
-local grad_condition	`"`edu_var' >= 123"'
+local lHS_condition 	`"`edu_var' <= 5"'
+local HS_condition 		`"`edu_var' == 6"'
+local sCol_condition	`"`edu_var' == 7 | `edu_var' == 8"'
+local col_condition		`"`edu_var' == 10"'
+local grad_condition	`"`edu_var' == 11"'
 
 include $redi/redi11c_education.doi
 
 fvset base 1 dG_edu  		// ref: less than HS
-
+tab `edu_var' dG_edu, m
 
 ***--------------------------***
 
@@ -169,8 +181,8 @@ tab ownershp
 tab ownershp, nolab
 
 generate ownhouse = .
-replace ownhouse = 1 if ownershp == 10
-replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+replace ownhouse = 1 if ownershp == 1
+replace ownhouse = 0 if ownershp == 2 
 
 tab ownershp ownhouse, m
 
@@ -184,7 +196,7 @@ tab migrate1
 tab migrate1, nolab
 
 generate migrate = .
-replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate1 == 5 | migrate1 == 6
+replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 
 replace migrate = 0 if migrate1	== 1
 
 ***--------------------------***
