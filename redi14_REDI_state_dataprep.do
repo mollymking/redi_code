@@ -28,10 +28,9 @@ set seed 1
 // # CREATE CPS-ASEC STATE SELECTIONS
 ***--------------------------***
 
-use $deriv/redi13_REDI_state_demvars.dta, clear
+use $deriv/redi01_ASEC-hhincome_all.dta, clear
 keep if year == 2019
-drop age nchild whymove union  month
-drop serial cpsid asecflag county cpsidp
+drop serial county
 label data "Streamlined CPS ASEC data, 2019"
 save $temp/redi14_cps_state_example.dta, replace
 
@@ -49,15 +48,14 @@ save $temp/redi14_cps_state_wy.dta, replace
 // # PREP ACS RESEARCH DATASET
 ***--------------------------***
 
-use $deriv/redi13_ACS2019.dta, clear
+use $deriv/redi13_REDI_state_demvars.dta, clear
 keep if year == 2019
 * Drop extraneous variables
-drop gq sample serial cbserial countyfip
 label data "Streamlined ACS data, 2019"
 datasignature set, reset 
 
 *arbitrary categories invented to demonstrate flexibility of method
-label define cat_inc	 				///
+label define cat_inc				///
 	1	"Less than $15000"	 			///
 	2	"15000 to less than 25000" 		///
 	3	"25000 to less than 35000" 		///
@@ -125,19 +123,24 @@ keep if year == 2019
 drop gq sample serial cbserial countyfip age nchild whymove union  month
 svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
 
-rename hhincome redi_hinc 
+rename hhincome_asec redi_hinc 
 rename acs_hinc_shp acs_hinc
-order acs_hinc redi_hinc hhincome_acs acs_hinc_shp_lb acs_hinc_shp_ub
+order acs_hinc redi_hinc hhincome_acs acs_hinc_shp_lb acs_hinc_shp_ub 
+
 
 // CREATE NATURAL LOG INCOME VARIABLES
 gen redi_hinc_ln = ln(redi_hinc)
-gen acs_hinc_ln = ln(acs_hinc)
+replace redi_hinc_ln = 0 if redi_hinc == 0
+
+gen acs_hinc_ln = ln(hhincome_acs)
+replace acs_hinc_ln = 0 if hhincome_acs == 0
 
 // Save Data 
 label data "Wyoming 2019 ACS data converted to continuous REDI-calculated values"
 notes: redi13_REDI_Wy2019.dta \ ///
 	ACS hinc_shp Data converted to continuous REDI \ /// 
 	redi13_REDI_state_example.do  $S_DATE
+
 compress
 datasignature set, reset  
 save $deriv/redi14_REDI_Wy2019.dta, replace
@@ -149,26 +152,31 @@ di in red "Completed REDI conversions for Wyoming 2019 data"
 ***--------------------------***
 * cps_reference "$temp/redi14_cps_state_ca"
 * change line 125 in redi03a_categ_distrib to "use $temp/redi13_cps_state_ca.dta, clear"
-/*
+
 *year of conversion factor
 local year "year"
 
 use $temp/redi14_ACS2019CA.dta, clear
 
 // Income Conversions
+rename acs_hhinc acs_hinc_shp
 include $redi/redi03a_categ_distrib.doi
 
 // Clean Up
 keep if year == 2019
+drop gq sample serial cbserial countyfip age nchild whymove union  month
 svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
 
-rename hhincome redi_hinc 
+rename  hhincome_asec redi_hinc 
 rename acs_hinc_shp acs_hinc
-order acs_hinc redi_hinc hhincome_acs acs_hinc_shp_lb acs_hinc_shp_ub
+order acs_hinc redi_hinc hhincome_acs acs_hinc_shp_lb acs_hinc_shp_ub 
 
 // CREATE NATURAL LOG INCOME VARIABLES
 gen redi_hinc_ln = ln(redi_hinc)
-gen acs_hinc_ln = ln(acs_hinc_shp)
+replace redi_hinc_ln = 0 if redi_hinc == 0
+
+gen acs_hinc_ln = ln(hhincome_acs)
+replace acs_hinc_ln = 0 if hhincome_acs <= 0
 
 // Save Data 
 label data "California 2019 ACS data converted to continuous REDI-calculated values"
@@ -180,9 +188,9 @@ datasignature set, reset
 save $deriv/redi14_REDI_Ca2019.dta, replace
 
 di in red "Completed REDI conversions for California 2019 data" 
-*/
+
 
 ***--------------------------***
 
-capture log close redi14_REDI_state_dataprepi
+capture log close redi14_REDI_state_dataprep
 exit

@@ -1,0 +1,2814 @@
+--------------------------------------------------------------------------------
+      name:  redi14_REDI_state_dataprep
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi14_RE
+> DI_state_dataprep.log
+  log type:  text
+ opened on:  25 Oct 2021, 16:06:21
+
+. 
+. //      project:        REDI Methods Paper
+. 
+. //  task:       Creating state samples and REDI income for state example
+. //  data:       CPS ASEC from IPUMS, available: https://cps.ipums.org/
+. //                              ACS from IPUMS, available: https://usa.ipums.o
+> rg/
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+25 Oct 2021  16:06:21
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. set seed 1
+
+. 
+. ***--------------------------***
+. // # CREATE CPS-ASEC STATE SELECTIONS
+. ***--------------------------***
+. 
+. use $deriv/redi01_ASEC-hhincome_all.dta, clear
+(CPS ASEC data - Household Income - 2016, 2017, 2019)
+
+. keep if year == 2019
+(139,441 observations deleted)
+
+. drop serial county
+
+. label data "Streamlined CPS ASEC data, 2019"
+
+. save $temp/redi14_cps_state_example.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi14_cps_state_exampl
+> e.dta saved
+
+. 
+. keep if statefip == 6 // California
+(62,085 observations deleted)
+
+. label data "Streamlined CPS ASEC data, CA 2019"
+
+. save $temp/redi14_cps_state_ca.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi14_cps_state_ca.dta
+>  saved
+
+. 
+. use $temp/redi14_cps_state_example.dta, clear
+(Streamlined CPS ASEC data, 2019)
+
+. keep if statefip == 56 // Wyoming
+(67,426 observations deleted)
+
+. label data "Streamlined CPS ASEC data, WY 2019"
+
+. save $temp/redi14_cps_state_wy.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi14_cps_state_wy.dta
+>  saved
+
+. 
+. 
+. ***--------------------------***
+. // # PREP ACS RESEARCH DATASET
+. ***--------------------------***
+. 
+. use $deriv/redi13_REDI_state_demvars.dta, clear
+(ACS data with DEMOGRAPHIC VARIABLES)
+
+. keep if year == 2019
+(6,346,527 observations deleted)
+
+. * Drop extraneous variables
+. label data "Streamlined ACS data, 2019"
+
+. datasignature set, reset 
+  3239553:210(82743):2102369238:2822434726       (data signature reset)
+
+. 
+. *arbitrary categories invented to demonstrate flexibility of method
+. label define cat_inc                            ///
+>         1       "Less than $15000"                              ///
+>         2       "15000 to less than 25000"              ///
+>         3       "25000 to less than 35000"              ///
+>         4       "35000 to less than 50000"              ///
+>         5       "50000 to less than 75000"              ///
+>         6       "75000 to less than 100000"     ///
+>         7       "100000 to less than 150000"    ///
+>         8       "150000 to less than 200000"    ///
+>         9       "200000 or more"                                //
+
+.         
+. gen     acs_hhinc = .
+(3,239,553 missing values generated)
+
+. replace acs_hhinc = 1 if hhincome_acs                                         
+>      <= 15000
+(190,626 real changes made)
+
+. replace acs_hhinc = 2 if hhincome_acs  > 15000  & hhincome_acs <= 25000
+(182,072 real changes made)
+
+. replace acs_hhinc = 3 if hhincome_acs  > 25000  & hhincome_acs <= 35000
+(205,123 real changes made)
+
+. replace acs_hhinc = 4 if hhincome_acs  > 35000  & hhincome_acs <= 50000 
+(332,557 real changes made)
+
+. replace acs_hhinc = 5 if hhincome_acs  > 50000  & hhincome_acs <= 75000 
+(522,013 real changes made)
+
+. replace acs_hhinc = 6 if hhincome_acs  > 75000  & hhincome_acs <= 100000
+(444,753 real changes made)
+
+. replace acs_hhinc = 7 if hhincome_acs  > 100000 & hhincome_acs <= 150000 
+(574,195 real changes made)
+
+. replace acs_hhinc = 8 if hhincome_acs  > 150000 & hhincome_acs <= 200000
+(280,282 real changes made)
+
+. replace acs_hhinc = 9 if hhincome_acs  > 200000 & hhincome_acs != 9999999 
+(356,611 real changes made)
+
+. replace acs_hhinc = . if hhincome_acs == 9999999 
+(0 real changes made)
+
+. replace acs_hhinc = . if hhincome_acs == .
+(0 real changes made)
+
+. 
+. label values acs_hhinc cat_inc
+
+. label var acs_hhinc "Household Income (ACS) arbitrary categories based on hhin
+> come_acs"
+
+. notes acs_hhinc: ACS Household Income Categories from hhincome_acs \ $S_DATE
+
+. 
+. tab acs_hhinc, m
+
+    Household Income (ACS) |
+arbitrary categories based |
+           on hhincome_acs |      Freq.     Percent        Cum.
+---------------------------+-----------------------------------
+          Less than $15000 |    190,626        5.88        5.88
+  15000 to less than 25000 |    182,072        5.62       11.50
+  25000 to less than 35000 |    205,123        6.33       17.84
+  35000 to less than 50000 |    332,557       10.27       28.10
+  50000 to less than 75000 |    522,013       16.11       44.22
+ 75000 to less than 100000 |    444,753       13.73       57.94
+100000 to less than 150000 |    574,195       17.72       75.67
+150000 to less than 200000 |    280,282        8.65       84.32
+            200000 or more |    356,611       11.01       95.33
+                         . |    151,321        4.67      100.00
+---------------------------+-----------------------------------
+                     Total |  3,239,553      100.00
+
+. *tab acs_hhinc, m nolab
+. 
+. save $temp/redi14_ACS2019.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi14_ACS2019.dta save
+> d
+
+. 
+. ***--------------------------***
+. // # CREATE ACS STATE SELECTIONS
+. ***--------------------------***
+. 
+. use $temp/redi14_ACS2019.dta, clear
+(Streamlined ACS data, 2019)
+
+. keep if statefip == 6 // California
+(2,859,462 observations deleted)
+
+. label data "ACS data with artificial bins, CA 2019"
+
+. save $temp/redi14_ACS2019CA.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi14_ACS2019CA.dta sa
+> ved
+
+. 
+. use $temp/redi14_ACS2019.dta, clear
+(Streamlined ACS data, 2019)
+
+. keep if statefip == 56 // Wyoming
+(3,233,586 observations deleted)
+
+. label data "ACS data with artificial bins, WY 2019"
+
+. save $temp/redi14_ACS2019WY.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_temp/redi14_ACS2019WY.dta sa
+> ved
+
+. 
+. 
+. ***--------------------------***
+. // # COMPLETE REDI CONVERSIONS ON 2019 Wyoming  DATA
+. ***--------------------------***
+. * cps_reference "$temp/redi14_cps_state_wy"
+. * change line 125 in redi03a_categ_distrib to "use $temp/redi13_cps_state_wy.d
+> ta, clear"
+. 
+. *year of conversion factor
+. local year "year"
+
+. 
+. use $temp/redi14_ACS2019WY.dta, clear
+(ACS data with artificial bins, WY 2019)
+
+. 
+. // Income Conversions
+. rename acs_hhinc acs_hinc_shp
+
+. include $redi/redi03a_categ_distrib.doi
+
+. *! Include file to convert categorical to continuous income values, independen
+> t of values of categories
+. *! creates numeric variables indicating edges of income categories,
+. *! and draws random continuous income from CPS-ASEC from between those edges
+. 
+. *! version 4.0 \ molly king 2020-08-25
+. 
+. ***--------------------------***
+. 
+. // #1 SETUP
+.         *noisily
+.         *set seed 1 // when commented out - selection from CPS-ASEC is random
+.         compress
+  variable countyfip was int now byte
+  variable dB_fem was float now byte
+  variable hisp was float now byte
+  variable dB_rwhite was float now byte
+  variable dB_rblack was float now byte
+  variable dB_rasian was float now byte
+  variable dB_rhisp was float now byte
+  variable dB_rother was float now byte
+  variable dG_race was float now byte
+  variable dG_edu was float now byte
+  variable dB_edu_lHS was float now byte
+  variable dB_edu_HS was float now byte
+  variable dB_edu_sCol was float now byte
+  variable dB_edu_col was float now byte
+  variable dB_edu_grad was float now byte
+  variable dB_edu_colp was float now byte
+  variable labor was float now byte
+  variable disability was float now byte
+  variable married was float now byte
+  variable ownhouse was float now byte
+  variable migrate was float now byte
+  variable acs_hinc_shp was float now byte
+  (381,888 bytes saved)
+
+. 
+.         cd $temp
+/Users/mollymking/Documents/SocResearch/Dissertation/data/data_temp
+
+.         
+.         //Create local for levels of income = e.g., levelsof year, local(years
+> )
+.         levelsof acs_hinc_shp, local("acs_hinc_shp_levels")
+1 2 3 4 5 6 7 8 9
+
+. 
+.         // sort for later join & create variable recording the original observ
+> ation order within the identifier
+.         *bysort year acs_hinc_shp: gen year_inc_id = _n
+.         bysort year acs_hinc_shp: gen id = _n
+
+. 
+. // #2 create numeric variables indicating edges of income categories //
+.         // Note: for more detail on if-command and Stata regular expressions u
+> sed to create this, see:
+.                 *http://www.stata.com/statalist/archive/2013-03/msg00654.html
+.                 *http://www.stata.com/support/faqs/programming/if-command-vers
+> us-if-qualifier/
+.                 *http://stats.idre.ucla.edu/stata/faq/how-can-i-extract-a-port
+> ion-of-a-string-variable-using-regular-expressions/
+. 
+.         // List income levels
+.         di in red "The income levels are: " "`acs_hinc_shp_levels'"
+The income levels are: 1 2 3 4 5 6 7 8 9
+
+. 
+.         * Decode converts labels to string variables for acs_hinc_shp
+.         decode acs_hinc_shp, gen(inc_decoded)
+
+. 
+.         tempfile working_regex
+
+.         save `working_regex', replace
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000001 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000001 saved
+
+. 
+.         
+.         //Levels of year variable to loop through years in dataset
+.         levelsof year, local(years)
+2019
+
+.         di in red  "Create local variable years to loop through within that in
+> come bracket - values:" `years'
+Create local variable years to loop through within that income bracket - values:
+> 2019
+
+. 
+.         foreach y of local years { // loop through all years
+  2. 
+.         
+.                 // loop through all values of income categories (`inc_level')
+.                 foreach inc_level of local acs_hinc_shp_levels {
+  3. 
+.                         use `working_regex', clear
+  4. 
+.                         // Keep the data if the income variable is equal to th
+> e current income level (of the loop)
+.                         keep if acs_hinc_shp == `inc_level'  // do this to mak
+> e sure not replacing things with wrong level later
+  5.                         di "The current inc_level is: " `inc_level'
+  6. 
+.                         // text at beginning of the string:
+.                                 if regexm(inc_decoded, "^[a-z/A-Z]+") == 1 {
+  7.                                         di "The inc_level " `inc_level' " i
+> s at the lowest end of the original ACS income range"
+  8.                                         // for lower-bound values, will mat
+> ch if text at beginning of line
+.                                         destring inc_decoded, ignore("Less tha
+> n LESS THAN Under,$ ") generate(acs_hinc_shp_ub) // parses out these words
+  9.                                         gen acs_hinc_shp_lb = -100000
+ 10.                                         di "Lower bound of -100,000 created
+>  for inc_level " `inc_level'
+ 11.                                 }
+ 12. 
+.                         // text at end of the string:
+.                                 else if regexm(inc_decoded, "[a-z/A-Z]+$") == 
+> 1 {
+ 13.                                         di "The inc_level " `inc_level' " i
+> s at the highest end of the original ACS income range"
+ 14.                                         // for upper-bound values, will mat
+> ch if text at end of line
+.                                         destring inc_decoded, ignore("and over
+>  or over,$ or more OR MORE") generate(acs_hinc_shp_lb) // parses out these wor
+> ds
+ 15.                                         gen acs_hinc_shp_ub = 999999  // my
+>  topcode for asec purposes
+ 16.                                         di "Upper bound of 999999 created f
+> or inc_level " `inc_level'
+ 17.                                 }
+ 18. 
+.                         // if acs_hinc_shp is missing, keep it missing for low
+> er_bound and upper_bound
+.                                 else if regexm(inc_decoded, "[.][a-z]") == 1 {
+ 19.                                         di "The inc_level " `inc_level' " i
+> s all missing"
+ 20.                                  // for missing values (a bit excessive, si
+> nce already missing, but good to be sure)
+.                                         gen acs_hinc_shp_lb = .
+ 21.                                         gen acs_hinc_shp_ub = .
+ 22.                                         di "Lower and upper bound of . crea
+> ted for inc_level " `inc_level'
+ 23.                                 }
+ 24. 
+.                         // for labels with 2 numbers in them
+.                                 else if regexm(inc_decoded, "[0-9]+$") == 1 {
+ 25.                                 // regex "[0-9]+$" will match anything of f
+> orm $0000 or 0000 at end of line -
+.                                 // since those at lowest and highest ranges ha
+> ve already been matched (using text), this leaves those with ranges
+.                                                 di "The inc_level " `inc_level
+> ' " has a lower and an upper level"
+ 26.                                                 split inc_decoded, ///
+>                                                         parse("-" "to" "-" "to
+>  under" "to less than" "UP TO" "but less than") ///
+>                                                         ignore(" ,$") destring
+ 27.                                                 gen acs_hinc_shp_lb = inc_d
+> ecoded1
+ 28.                                                 gen acs_hinc_shp_ub = inc_d
+> ecoded2
+ 29.                                                 di "Lower bound of acs_hinc
+> _shp_lb and upper bound of acs_hinc_shp_ub created for inc_level " `inc_level'
+>  "of the original ACS income range"
+ 30.                                 }
+ 31. 
+.                         // error - in case doesn't fit any existing category
+.                                 else {
+ 32.                                         di "The inc_level " `inc_level' " d
+> oes not fit any of the existing regular expressions designs."
+ 33.                                 }
+ 34. 
+.                         // create locals to use later for selecting appropriat
+> e ASEC bounds
+.                                 local upper_bound = acs_hinc_shp_ub
+ 35.                                 local lower_bound = acs_hinc_shp_lb
+ 36. 
+.                 // drop variables used in creating lower and upper bounds
+.                         capture drop inc_decoded1 inc_decoded2
+ 37. 
+.                 // #3A Now, still within the single-income-level loop in ACS d
+> ataset:
+. 
+.                         // summarize so can get count of how many individuals 
+> in that income level during year
+.                                 quietly summarize if year == `y' & acs_hinc_sh
+> p == `inc_level'
+ 38.                                 local sample_size = r(N) // count how many 
+> rows there are in survey dataset
+ 39.                                   // count N_B for each bin (# of observati
+> ons in ACS income category between L_bn and U_bn)
+.                                 
+.                                 // create count within each ACS income bin
+.                                 gen acs_hinc_shp_n = `sample_size' // contains
+>  size of bin in ACS dataset
+ 40.                                 label variable acs_hinc_shp_n "household (A
+> CS) shp count of respondents in each income bin in original (research) dataset
+> "
+ 41. 
+. 
+.                         // create temporary file of just this ACS income level
+>  and year can merge ASEC incomes back into later
+.                                 keep if year == `y' & acs_hinc_shp == `inc_lev
+> el'
+ 42.                                 tempfile premerge_`inc_level'_`y'
+ 43.                                 save `premerge_`inc_level'_`y'', replace
+ 44. 
+.                                 *use $deriv/redi01_ASEC-hhincome.dta, clear //
+>  use ASEC household dataset
+.                                 use $temp/redi14_cps_state_wy.dta, clear // $t
+> emp/redi14_cps_state_wy.dta
+ 45.                                 di "Calculating household income using hhin
+> come ASEC variable."
+ 46. 
+.                         // #3B) Takes a random draw of number of incomes w/in 
+> that income boundary and year from the CPS-ASEC
+.                         // Keep ASEC data if within income bounds and for give
+> n year
+. 
+.                                 keep if year == `y' & ///
+>                                         hhincome_asec >= `lower_bound' & ///
+>                                         hhincome_asec <= `upper_bound'
+ 47.                                 gen obs_no = _n
+ 48.                                 save "$deriv/redi01_ASEC-hhincome_year_inc`
+> inc_level'.dta", replace
+ 49.                                 di "Keep income between $`lower_bound' and 
+> $`upper_bound' for `y' year."
+ 50.                         
+.                         // #3C) Sample, with replacement, such that ASEC incom
+> e has an equal probability assigned to each observation in this artificial dat
+> a set (which will later be matched to ACS data set)
+.                         // Thanks to Clyde Schechter; https://www.statalist.or
+> g/forums/forum/general-stata-discussion/general/1475890-is-there-a-command-tha
+> t-is-equivalent-to-bsample-more-than-_n
+.                                 quietly des 
+ 51.                                 local N = r(N)
+ 52. 
+.                                 clear
+ 53.                                 set obs `sample_size'
+ 54.                                 *set seed 1
+. 
+.                                 gen obs_no = runiformint(1, `N')
+ 55.                                 merge m:1 obs_no using "$deriv/redi01_ASEC-
+> hhincome_year_inc`inc_level'.dta", keep(match) nogenerate 
+ 56.                                 // here, artificial data set is matched to 
+> ASEC data set for that incomebin for that year                                
+>                                
+.                                         
+.                                                                               
+>                           
+.                         // #3D) Add new columns for lower_bound and upper_boun
+> d of income bin
+.                                 gen acs_hinc_shp_lb = `lower_bound'
+ 57.                                 gen acs_hinc_shp_ub = `upper_bound'
+ 58.                         // Label new upper and lower income bound variables
+.                                 label variable acs_hinc_shp_lb "acs_hinc_shp L
+> ower Bound"
+ 59.                                 label variable acs_hinc_shp_ub "acs_hinc_sh
+> p Upper Bound"
+ 60. 
+.                                 save "$deriv/redi01_ASEC-hhincome_year_inc`inc
+> _level'.dta", replace
+ 61.                                 
+.                                 di "Merged ASEC values with original ACS datas
+> et for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
+ 62. 
+.                         // #4) Merge ACS and ASEC data
+.                         // here, ASEC artificial data set (from step 3C) is ma
+> tched to ACS for that incomebin for that year                                 
+>                             
+.                                 gen id = _n
+ 63.                                 merge 1:1 id using `premerge_`inc_level'_`y
+> ''
+ 64.                                                 
+.                         // #5) create count within each REDI income bin
+.                                 generate        redi_hinc_shp_n = .
+ 65.                                 replace         redi_hinc_shp_n = `N' // r(
+> N) from above
+ 66.                                 label var       redi_hinc_shp_n "household 
+> (REDI) shp count of respondents in each income bin in post-merge dataset'"
+ 67. 
+.                         // Save these new redi data (with yearly ASEC continuo
+> us data) in a tempfile we can use later for merging, etc.
+.                                 tempfile temp_`inc_level'_`y'
+ 68.                                 save `temp_`inc_level'_`y'', replace
+ 69.                                 di "Saved REDI data (with ASEC continuous d
+> ata) for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'
+>  in file"
+ 70.                 
+.                 }  //  close loop through all values of income categories (`in
+> c_level')
+ 71.                                 
+.                 di  in red "Moved outside loop of year income bracket " `inc_l
+> evel' " ($`lower_bound'-`upper_bound')."
+ 72.                 
+.                 // append all income brackets across all years
+.                         tokenize `acs_hinc_shp_levels'
+ 73.                         local first `1'
+ 74.                         use `temp_`1'_`y'', clear
+ 75.                         macro shift
+ 76.                         local rest `*'
+ 77. 
+.                 // now loop through and append each temp file created within i
+> ncome bracket loop
+.                         foreach bracket in `*' {
+ 78.                                 append using `temp_`bracket'_`y''
+ 79.                         }
+ 80. 
+.                 // create new tempfile to save each year's data for all income
+>  levels
+.                         tempfile temp_`y'
+ 81.                         save `temp_`y'', replace
+ 82.                         di "Saved new tempfile  for year `y' for all REDI i
+> ncome brackets."
+ 83. 
+.                                                 
+.         } //  end of loop through all years
+(ACS data with artificial bins, WY 2019)
+(5,640 observations deleted)
+The current inc_level is: 1
+The inc_level 1 is at the lowest end of the original ACS income range
+inc_decoded: characters L e s space t h a n $ removed; acs_hinc_shp_ub generated
+>  as int
+Lower bound of -100,000 created for inc_level 1
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000002 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000002 saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(845 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc1.dta saved
+Keep income between $-100000 and $15000 for 2019 year.
+number of observations (_N) was 0, now 327
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               327  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc1.dta saved
+Merged ASEC values with original ACS dataset for inc_level 1 ($-100000-15000) an
+> d year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               327  (_merge==3)
+    -----------------------------------------
+(327 missing values generated)
+(327 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000003 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000003 saved
+Saved REDI data (with ASEC continuous data) for inc_level 1 ($-100000-15000) and
+>  year 2019 in file
+(ACS data with artificial bins, WY 2019)
+(5,625 observations deleted)
+The current inc_level is: 2
+The inc_level 2 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as int
+inc_decoded2: character space removed; replaced as int
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 2of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000004 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000004 saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(840 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc2.dta saved
+Keep income between $15000 and $25000 for 2019 year.
+number of observations (_N) was 0, now 342
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               342  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc2.dta saved
+Merged ASEC values with original ACS dataset for inc_level 2 ($15000-25000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               342  (_merge==3)
+    -----------------------------------------
+(342 missing values generated)
+(342 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000005 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000005 saved
+Saved REDI data (with ASEC continuous data) for inc_level 2 ($15000-25000) and y
+> ear 2019 in file
+(ACS data with artificial bins, WY 2019)
+(5,597 observations deleted)
+The current inc_level is: 3
+The inc_level 3 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as int
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 3of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000006 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000006 saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(829 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc3.dta saved
+Keep income between $25000 and $35000 for 2019 year.
+number of observations (_N) was 0, now 370
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               370  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc3.dta saved
+Merged ASEC values with original ACS dataset for inc_level 3 ($25000-35000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               370  (_merge==3)
+    -----------------------------------------
+(370 missing values generated)
+(370 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000007 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000007 saved
+Saved REDI data (with ASEC continuous data) for inc_level 3 ($25000-35000) and y
+> ear 2019 in file
+(ACS data with artificial bins, WY 2019)
+(5,343 observations deleted)
+The current inc_level is: 4
+The inc_level 4 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 4of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000008 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000008 saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(808 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc4.dta saved
+Keep income between $35000 and $50000 for 2019 year.
+number of observations (_N) was 0, now 624
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               624  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc4.dta saved
+Merged ASEC values with original ACS dataset for inc_level 4 ($35000-50000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               624  (_merge==3)
+    -----------------------------------------
+(624 missing values generated)
+(624 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000009 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000009 saved
+Saved REDI data (with ASEC continuous data) for inc_level 4 ($35000-50000) and y
+> ear 2019 in file
+(ACS data with artificial bins, WY 2019)
+(4,839 observations deleted)
+The current inc_level is: 5
+The inc_level 5 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 5of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000a not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000a saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(742 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc5.dta saved
+Keep income between $50000 and $75000 for 2019 year.
+number of observations (_N) was 0, now 1,128
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             1,128  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc5.dta saved
+Merged ASEC values with original ACS dataset for inc_level 5 ($50000-75000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             1,128  (_merge==3)
+    -----------------------------------------
+(1,128 missing values generated)
+(1,128 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000b not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000b saved
+Saved REDI data (with ASEC continuous data) for inc_level 5 ($50000-75000) and y
+> ear 2019 in file
+(ACS data with artificial bins, WY 2019)
+(4,931 observations deleted)
+The current inc_level is: 6
+The inc_level 6 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 6of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000c not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000c saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(796 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc6.dta saved
+Keep income between $75000 and $100000 for 2019 year.
+number of observations (_N) was 0, now 1,036
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             1,036  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc6.dta saved
+Merged ASEC values with original ACS dataset for inc_level 6 ($75000-100000) and
+>  year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             1,036  (_merge==3)
+    -----------------------------------------
+(1,036 missing values generated)
+(1,036 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000d not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000d saved
+Saved REDI data (with ASEC continuous data) for inc_level 6 ($75000-100000) and 
+> year 2019 in file
+(ACS data with artificial bins, WY 2019)
+(4,829 observations deleted)
+The current inc_level is: 7
+The inc_level 7 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 7of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000e not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000e saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(756 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc7.dta saved
+Keep income between $100000 and $150000 for 2019 year.
+number of observations (_N) was 0, now 1,138
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             1,138  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc7.dta saved
+Merged ASEC values with original ACS dataset for inc_level 7 ($100000-150000) an
+> d year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                             1,138  (_merge==3)
+    -----------------------------------------
+(1,138 missing values generated)
+(1,138 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000f not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000f saved
+Saved REDI data (with ASEC continuous data) for inc_level 7 ($100000-150000) and
+>  year 2019 in file
+(ACS data with artificial bins, WY 2019)
+(5,496 observations deleted)
+The current inc_level is: 8
+The inc_level 8 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 8of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000g not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000g saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(857 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc8.dta saved
+Keep income between $150000 and $200000 for 2019 year.
+number of observations (_N) was 0, now 471
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               471  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc8.dta saved
+Merged ASEC values with original ACS dataset for inc_level 8 ($150000-200000) an
+> d year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               471  (_merge==3)
+    -----------------------------------------
+(471 missing values generated)
+(471 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000h not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000h saved
+Saved REDI data (with ASEC continuous data) for inc_level 8 ($150000-200000) and
+>  year 2019 in file
+(ACS data with artificial bins, WY 2019)
+(5,622 observations deleted)
+The current inc_level is: 9
+The inc_level 9 is at the highest end of the original ACS income range
+inc_decoded: characters space o e r m removed; acs_hinc_shp_lb generated as long
+Upper bound of 999999 created for inc_level 9
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000i not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000i saved
+(Streamlined CPS ASEC data, WY 2019)
+Calculating household income using hhincome ASEC variable.
+(869 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc9.dta saved
+Keep income between $200000 and $999999 for 2019 year.
+number of observations (_N) was 0, now 345
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               345  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc9.dta saved
+Merged ASEC values with original ACS dataset for inc_level 9 ($200000-999999) an
+> d year 2019.
+(note: variable acs_hinc_shp_lb was float, now double to accommodate using
+       data's values)
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                               345  (_merge==3)
+    -----------------------------------------
+(345 missing values generated)
+(345 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000j not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000j saved
+Saved REDI data (with ASEC continuous data) for inc_level 9 ($200000-999999) and
+>  year 2019 in file
+Moved outside loop of year income bracket  ($200000-999999).
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(note: variable acs_hinc_shp_lb was float, now double to accommodate using
+       data's values)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label union_lbl already defined)
+(label health_lbl already defined)
+(label migrate1_lbl already defined)
+(label whymove_lbl already defined)
+(label diffmob_lbl already defined)
+(label educ_lbl already defined)
+(label labforce_lbl already defined)
+(label hispan_lbl already defined)
+(label nchild_lbl already defined)
+(label marst_lbl already defined)
+(label race_lbl already defined)
+(label sex_lbl already defined)
+(label age_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+(label asecflag_lbl already defined)
+(label month_lbl already defined)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000k not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000k saved
+Saved new tempfile  for year 2019 for all REDI income brackets.
+
+.                                 
+.                 // append all years 
+.                         tokenize `years'
+
+.                         local first `1'
+
+.                         use `temp_`1'', clear
+
+.                         macro shift
+
+.                         local rest `*'
+
+. 
+.                 // now loop through and append each yearly temp file created e
+> arlier
+.                         foreach ytemp in `*' {
+  2.                                 append using `temp_`ytemp''
+  3.                         }
+
+.                         di "Appended all years "
+Appended all years 
+
+. 
+. // CLEAN UP
+. 
+. sort year acs_hinc_shp id
+
+. drop obs_no id inc_decoded
+
+. 
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |      5,781      100.00      100.00
+------------------------+-----------------------------------
+                  Total |      5,781      100.00
+
+. drop _merge
+
+. 
+. di in red "End of redi03a_categ_distrib.doi for household and shp variables" 
+End of redi03a_categ_distrib.doi for household and shp variables
+
+. 
+. 
+. // Clean Up
+. keep if year == 2019
+(0 observations deleted)
+
+. drop gq sample serial cbserial countyfip age nchild whymove union  month
+
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+. 
+. rename hhincome_asec redi_hinc 
+
+. rename acs_hinc_shp acs_hinc
+
+. order acs_hinc redi_hinc hhincome_acs acs_hinc_shp_lb acs_hinc_shp_ub 
+
+. 
+. 
+. // CREATE NATURAL LOG INCOME VARIABLES
+. gen redi_hinc_ln = ln(redi_hinc)
+(27 missing values generated)
+
+. replace redi_hinc_ln = 0 if redi_hinc == 0
+(27 real changes made)
+
+. 
+. gen acs_hinc_ln = ln(hhincome_acs)
+(30 missing values generated)
+
+. replace acs_hinc_ln = 0 if hhincome_acs == 0
+(29 real changes made)
+
+. 
+. // Save Data 
+. label data "Wyoming 2019 ACS data converted to continuous REDI-calculated valu
+> es"
+
+. notes: redi13_REDI_Wy2019.dta \ ///
+>         ACS hinc_shp Data converted to continuous REDI \ /// 
+>         redi13_REDI_state_example.do  $S_DATE
+
+. 
+. compress
+  variable acs_hinc_shp_n was float now int
+  variable redi_hinc_shp_n was float now int
+  variable acs_hinc_shp_lb was double now long
+  (46,248 bytes saved)
+
+. datasignature set, reset  
+  5781:219(59111):2934701901:1518442384       (data signature reset)
+
+. save $deriv/redi14_REDI_Wy2019.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi14_REDI_Wy2019.dta 
+> saved
+
+. 
+. di in red "Completed REDI conversions for Wyoming 2019 data" 
+Completed REDI conversions for Wyoming 2019 data
+
+. 
+end of do-file
+
+. do "/var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//SD16035.000000"
+
+. 
+. ***--------------------------***
+. // # COMPLETE REDI CONVERSIONS ON 2019 California  DATA
+. ***--------------------------***
+. * cps_reference "$temp/redi14_cps_state_ca"
+. * change line 125 in redi03a_categ_distrib to "use $temp/redi13_cps_state_ca.d
+> ta, clear"
+. 
+. *year of conversion factor
+. local year "year"
+
+. 
+. use $temp/redi14_ACS2019CA.dta, clear
+(ACS data with artificial bins, CA 2019)
+
+. 
+. // Income Conversions
+. rename acs_hhinc acs_hinc_shp
+
+. include $redi/redi03a_categ_distrib.doi
+
+. *! Include file to convert categorical to continuous income values, independen
+> t of values of categories
+. *! creates numeric variables indicating edges of income categories,
+. *! and draws random continuous income from CPS-ASEC from between those edges
+. 
+. *! version 4.0 \ molly king 2020-08-25
+. 
+. ***--------------------------***
+. 
+. // #1 SETUP
+.         *noisily
+.         *set seed 1 // when commented out - selection from CPS-ASEC is random
+.         compress
+  variable dB_fem was float now byte
+  variable hisp was float now byte
+  variable dB_rwhite was float now byte
+  variable dB_rblack was float now byte
+  variable dB_rasian was float now byte
+  variable dB_rhisp was float now byte
+  variable dB_rother was float now byte
+  variable dG_race was float now byte
+  variable dG_edu was float now byte
+  variable dB_edu_lHS was float now byte
+  variable dB_edu_HS was float now byte
+  variable dB_edu_sCol was float now byte
+  variable dB_edu_col was float now byte
+  variable dB_edu_grad was float now byte
+  variable dB_edu_colp was float now byte
+  variable labor was float now byte
+  variable disability was float now byte
+  variable married was float now byte
+  variable ownhouse was float now byte
+  variable migrate was float now byte
+  variable acs_hinc_shp was float now byte
+  (23,945,733 bytes saved)
+
+. 
+.         cd $temp
+/Users/mollymking/Documents/SocResearch/Dissertation/data/data_temp
+
+.         
+.         //Create local for levels of income = e.g., levelsof year, local(years
+> )
+.         levelsof acs_hinc_shp, local("acs_hinc_shp_levels")
+1 2 3 4 5 6 7 8 9
+
+. 
+.         // sort for later join & create variable recording the original observ
+> ation order within the identifier
+.         *bysort year acs_hinc_shp: gen year_inc_id = _n
+.         bysort year acs_hinc_shp: gen id = _n
+
+. 
+. // #2 create numeric variables indicating edges of income categories //
+.         // Note: for more detail on if-command and Stata regular expressions u
+> sed to create this, see:
+.                 *http://www.stata.com/statalist/archive/2013-03/msg00654.html
+.                 *http://www.stata.com/support/faqs/programming/if-command-vers
+> us-if-qualifier/
+.                 *http://stats.idre.ucla.edu/stata/faq/how-can-i-extract-a-port
+> ion-of-a-string-variable-using-regular-expressions/
+. 
+.         // List income levels
+.         di in red "The income levels are: " "`acs_hinc_shp_levels'"
+The income levels are: 1 2 3 4 5 6 7 8 9
+
+. 
+.         * Decode converts labels to string variables for acs_hinc_shp
+.         decode acs_hinc_shp, gen(inc_decoded)
+
+. 
+.         tempfile working_regex
+
+.         save `working_regex', replace
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000001 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000001 saved
+
+. 
+.         
+.         //Levels of year variable to loop through years in dataset
+.         levelsof year, local(years)
+2019
+
+.         di in red  "Create local variable years to loop through within that in
+> come bracket - values:" `years'
+Create local variable years to loop through within that income bracket - values:
+> 2019
+
+. 
+.         foreach y of local years { // loop through all years
+  2. 
+.         
+.                 // loop through all values of income categories (`inc_level')
+.                 foreach inc_level of local acs_hinc_shp_levels {
+  3. 
+.                         use `working_regex', clear
+  4. 
+.                         // Keep the data if the income variable is equal to th
+> e current income level (of the loop)
+.                         keep if acs_hinc_shp == `inc_level'  // do this to mak
+> e sure not replacing things with wrong level later
+  5.                         di "The current inc_level is: " `inc_level'
+  6. 
+.                         // text at beginning of the string:
+.                                 if regexm(inc_decoded, "^[a-z/A-Z]+") == 1 {
+  7.                                         di "The inc_level " `inc_level' " i
+> s at the lowest end of the original ACS income range"
+  8.                                         // for lower-bound values, will mat
+> ch if text at beginning of line
+.                                         destring inc_decoded, ignore("Less tha
+> n LESS THAN Under,$ ") generate(acs_hinc_shp_ub) // parses out these words
+  9.                                         gen acs_hinc_shp_lb = -100000
+ 10.                                         di "Lower bound of -100,000 created
+>  for inc_level " `inc_level'
+ 11.                                 }
+ 12. 
+.                         // text at end of the string:
+.                                 else if regexm(inc_decoded, "[a-z/A-Z]+$") == 
+> 1 {
+ 13.                                         di "The inc_level " `inc_level' " i
+> s at the highest end of the original ACS income range"
+ 14.                                         // for upper-bound values, will mat
+> ch if text at end of line
+.                                         destring inc_decoded, ignore("and over
+>  or over,$ or more OR MORE") generate(acs_hinc_shp_lb) // parses out these wor
+> ds
+ 15.                                         gen acs_hinc_shp_ub = 999999  // my
+>  topcode for asec purposes
+ 16.                                         di "Upper bound of 999999 created f
+> or inc_level " `inc_level'
+ 17.                                 }
+ 18. 
+.                         // if acs_hinc_shp is missing, keep it missing for low
+> er_bound and upper_bound
+.                                 else if regexm(inc_decoded, "[.][a-z]") == 1 {
+ 19.                                         di "The inc_level " `inc_level' " i
+> s all missing"
+ 20.                                  // for missing values (a bit excessive, si
+> nce already missing, but good to be sure)
+.                                         gen acs_hinc_shp_lb = .
+ 21.                                         gen acs_hinc_shp_ub = .
+ 22.                                         di "Lower and upper bound of . crea
+> ted for inc_level " `inc_level'
+ 23.                                 }
+ 24. 
+.                         // for labels with 2 numbers in them
+.                                 else if regexm(inc_decoded, "[0-9]+$") == 1 {
+ 25.                                 // regex "[0-9]+$" will match anything of f
+> orm $0000 or 0000 at end of line -
+.                                 // since those at lowest and highest ranges ha
+> ve already been matched (using text), this leaves those with ranges
+.                                                 di "The inc_level " `inc_level
+> ' " has a lower and an upper level"
+ 26.                                                 split inc_decoded, ///
+>                                                         parse("-" "to" "-" "to
+>  under" "to less than" "UP TO" "but less than") ///
+>                                                         ignore(" ,$") destring
+ 27.                                                 gen acs_hinc_shp_lb = inc_d
+> ecoded1
+ 28.                                                 gen acs_hinc_shp_ub = inc_d
+> ecoded2
+ 29.                                                 di "Lower bound of acs_hinc
+> _shp_lb and upper bound of acs_hinc_shp_ub created for inc_level " `inc_level'
+>  "of the original ACS income range"
+ 30.                                 }
+ 31. 
+.                         // error - in case doesn't fit any existing category
+.                                 else {
+ 32.                                         di "The inc_level " `inc_level' " d
+> oes not fit any of the existing regular expressions designs."
+ 33.                                 }
+ 34. 
+.                         // create locals to use later for selecting appropriat
+> e ASEC bounds
+.                                 local upper_bound = acs_hinc_shp_ub
+ 35.                                 local lower_bound = acs_hinc_shp_lb
+ 36. 
+.                 // drop variables used in creating lower and upper bounds
+.                         capture drop inc_decoded1 inc_decoded2
+ 37. 
+.                 // #3A Now, still within the single-income-level loop in ACS d
+> ataset:
+. 
+.                         // summarize so can get count of how many individuals 
+> in that income level during year
+.                                 quietly summarize if year == `y' & acs_hinc_sh
+> p == `inc_level'
+ 38.                                 local sample_size = r(N) // count how many 
+> rows there are in survey dataset
+ 39.                                   // count N_B for each bin (# of observati
+> ons in ACS income category between L_bn and U_bn)
+.                                 
+.                                 // create count within each ACS income bin
+.                                 gen acs_hinc_shp_n = `sample_size' // contains
+>  size of bin in ACS dataset
+ 40.                                 label variable acs_hinc_shp_n "household (A
+> CS) shp count of respondents in each income bin in original (research) dataset
+> "
+ 41. 
+. 
+.                         // create temporary file of just this ACS income level
+>  and year can merge ASEC incomes back into later
+.                                 keep if year == `y' & acs_hinc_shp == `inc_lev
+> el'
+ 42.                                 tempfile premerge_`inc_level'_`y'
+ 43.                                 save `premerge_`inc_level'_`y'', replace
+ 44. 
+.                                 *use $deriv/redi01_ASEC-hhincome.dta, clear //
+>  use ASEC household dataset
+.                                 use $temp/redi14_cps_state_ca.dta, clear // $t
+> emp/redi14_cps_state_wy.dta
+ 45.                                 di "Calculating household income using hhin
+> come ASEC variable."
+ 46. 
+.                         // #3B) Takes a random draw of number of incomes w/in 
+> that income boundary and year from the CPS-ASEC
+.                         // Keep ASEC data if within income bounds and for give
+> n year
+. 
+.                                 keep if year == `y' & ///
+>                                         hhincome_asec >= `lower_bound' & ///
+>                                         hhincome_asec <= `upper_bound'
+ 47.                                 gen obs_no = _n
+ 48.                                 save "$deriv/redi01_ASEC-hhincome_year_inc`
+> inc_level'.dta", replace
+ 49.                                 di "Keep income between $`lower_bound' and 
+> $`upper_bound' for `y' year."
+ 50.                         
+.                         // #3C) Sample, with replacement, such that ASEC incom
+> e has an equal probability assigned to each observation in this artificial dat
+> a set (which will later be matched to ACS data set)
+.                         // Thanks to Clyde Schechter; https://www.statalist.or
+> g/forums/forum/general-stata-discussion/general/1475890-is-there-a-command-tha
+> t-is-equivalent-to-bsample-more-than-_n
+.                                 quietly des 
+ 51.                                 local N = r(N)
+ 52. 
+.                                 clear
+ 53.                                 set obs `sample_size'
+ 54.                                 *set seed 1
+. 
+.                                 gen obs_no = runiformint(1, `N')
+ 55.                                 merge m:1 obs_no using "$deriv/redi01_ASEC-
+> hhincome_year_inc`inc_level'.dta", keep(match) nogenerate 
+ 56.                                 // here, artificial data set is matched to 
+> ASEC data set for that incomebin for that year                                
+>                                
+.                                         
+.                                                                               
+>                           
+.                         // #3D) Add new columns for lower_bound and upper_boun
+> d of income bin
+.                                 gen acs_hinc_shp_lb = `lower_bound'
+ 57.                                 gen acs_hinc_shp_ub = `upper_bound'
+ 58.                         // Label new upper and lower income bound variables
+.                                 label variable acs_hinc_shp_lb "acs_hinc_shp L
+> ower Bound"
+ 59.                                 label variable acs_hinc_shp_ub "acs_hinc_sh
+> p Upper Bound"
+ 60. 
+.                                 save "$deriv/redi01_ASEC-hhincome_year_inc`inc
+> _level'.dta", replace
+ 61.                                 
+.                                 di "Merged ASEC values with original ACS datas
+> et for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
+ 62. 
+.                         // #4) Merge ACS and ASEC data
+.                         // here, ASEC artificial data set (from step 3C) is ma
+> tched to ACS for that incomebin for that year                                 
+>                             
+.                                 gen id = _n
+ 63.                                 merge 1:1 id using `premerge_`inc_level'_`y
+> ''
+ 64.                                                 
+.                         // #5) create count within each REDI income bin
+.                                 generate        redi_hinc_shp_n = .
+ 65.                                 replace         redi_hinc_shp_n = `N' // r(
+> N) from above
+ 66.                                 label var       redi_hinc_shp_n "household 
+> (REDI) shp count of respondents in each income bin in post-merge dataset'"
+ 67. 
+.                         // Save these new redi data (with yearly ASEC continuo
+> us data) in a tempfile we can use later for merging, etc.
+.                                 tempfile temp_`inc_level'_`y'
+ 68.                                 save `temp_`inc_level'_`y'', replace
+ 69.                                 di "Saved REDI data (with ASEC continuous d
+> ata) for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'
+>  in file"
+ 70.                 
+.                 }  //  close loop through all values of income categories (`in
+> c_level')
+ 71.                                 
+.                 di  in red "Moved outside loop of year income bracket " `inc_l
+> evel' " ($`lower_bound'-`upper_bound')."
+ 72.                 
+.                 // append all income brackets across all years
+.                         tokenize `acs_hinc_shp_levels'
+ 73.                         local first `1'
+ 74.                         use `temp_`1'_`y'', clear
+ 75.                         macro shift
+ 76.                         local rest `*'
+ 77. 
+.                 // now loop through and append each temp file created within i
+> ncome bracket loop
+.                         foreach bracket in `*' {
+ 78.                                 append using `temp_`bracket'_`y''
+ 79.                         }
+ 80. 
+.                 // create new tempfile to save each year's data for all income
+>  levels
+.                         tempfile temp_`y'
+ 81.                         save `temp_`y'', replace
+ 82.                         di "Saved new tempfile  for year `y' for all REDI i
+> ncome brackets."
+ 83. 
+.                                                 
+.         } //  end of loop through all years
+(ACS data with artificial bins, CA 2019)
+(362,110 observations deleted)
+The current inc_level is: 1
+The inc_level 1 is at the lowest end of the original ACS income range
+inc_decoded: characters L e s space t h a n $ removed; acs_hinc_shp_ub generated
+>  as int
+Lower bound of -100,000 created for inc_level 1
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000002 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000002 saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,679 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc1.dta saved
+Keep income between $-100000 and $15000 for 2019 year.
+number of observations (_N) was 0, now 17,981
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            17,981  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc1.dta saved
+Merged ASEC values with original ACS dataset for inc_level 1 ($-100000-15000) an
+> d year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            17,981  (_merge==3)
+    -----------------------------------------
+(17,981 missing values generated)
+(17,981 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000003 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000003 saved
+Saved REDI data (with ASEC continuous data) for inc_level 1 ($-100000-15000) and
+>  year 2019 in file
+(ACS data with artificial bins, CA 2019)
+(362,779 observations deleted)
+The current inc_level is: 2
+The inc_level 2 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as int
+inc_decoded2: character space removed; replaced as int
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 2of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000004 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000004 saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,775 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc2.dta saved
+Keep income between $15000 and $25000 for 2019 year.
+number of observations (_N) was 0, now 17,312
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            17,312  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc2.dta saved
+Merged ASEC values with original ACS dataset for inc_level 2 ($15000-25000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            17,312  (_merge==3)
+    -----------------------------------------
+(17,312 missing values generated)
+(17,312 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000005 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000005 saved
+Saved REDI data (with ASEC continuous data) for inc_level 2 ($15000-25000) and y
+> ear 2019 in file
+(ACS data with artificial bins, CA 2019)
+(360,497 observations deleted)
+The current inc_level is: 3
+The inc_level 3 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as int
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 3of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000006 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000006 saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,714 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc3.dta saved
+Keep income between $25000 and $35000 for 2019 year.
+number of observations (_N) was 0, now 19,594
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            19,594  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc3.dta saved
+Merged ASEC values with original ACS dataset for inc_level 3 ($25000-35000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            19,594  (_merge==3)
+    -----------------------------------------
+(19,594 missing values generated)
+(19,594 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000007 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000007 saved
+Saved REDI data (with ASEC continuous data) for inc_level 3 ($25000-35000) and y
+> ear 2019 in file
+(ACS data with artificial bins, CA 2019)
+(347,770 observations deleted)
+The current inc_level is: 4
+The inc_level 4 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 4of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000008 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000008 saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,519 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc4.dta saved
+Keep income between $35000 and $50000 for 2019 year.
+number of observations (_N) was 0, now 32,321
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            32,321  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc4.dta saved
+Merged ASEC values with original ACS dataset for inc_level 4 ($35000-50000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            32,321  (_merge==3)
+    -----------------------------------------
+(32,321 missing values generated)
+(32,321 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000009 not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.000009 saved
+Saved REDI data (with ASEC continuous data) for inc_level 4 ($35000-50000) and y
+> ear 2019 in file
+(ACS data with artificial bins, CA 2019)
+(328,388 observations deleted)
+The current inc_level is: 5
+The inc_level 5 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 5of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000a not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000a saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,240 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc5.dta saved
+Keep income between $50000 and $75000 for 2019 year.
+number of observations (_N) was 0, now 51,703
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            51,703  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc5.dta saved
+Merged ASEC values with original ACS dataset for inc_level 5 ($50000-75000) and 
+> year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            51,703  (_merge==3)
+    -----------------------------------------
+(51,703 missing values generated)
+(51,703 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000b not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000b saved
+Saved REDI data (with ASEC continuous data) for inc_level 5 ($50000-75000) and y
+> ear 2019 in file
+(ACS data with artificial bins, CA 2019)
+(331,796 observations deleted)
+The current inc_level is: 6
+The inc_level 6 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 6of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000c not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000c saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,434 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc6.dta saved
+Keep income between $75000 and $100000 for 2019 year.
+number of observations (_N) was 0, now 48,295
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            48,295  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc6.dta saved
+Merged ASEC values with original ACS dataset for inc_level 6 ($75000-100000) and
+>  year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            48,295  (_merge==3)
+    -----------------------------------------
+(48,295 missing values generated)
+(48,295 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000d not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000d saved
+Saved REDI data (with ASEC continuous data) for inc_level 6 ($75000-100000) and 
+> year 2019 in file
+(ACS data with artificial bins, CA 2019)
+(309,228 observations deleted)
+The current inc_level is: 7
+The inc_level 7 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 7of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000e not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000e saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,295 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc7.dta saved
+Keep income between $100000 and $150000 for 2019 year.
+number of observations (_N) was 0, now 70,863
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            70,863  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc7.dta saved
+Merged ASEC values with original ACS dataset for inc_level 7 ($100000-150000) an
+> d year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            70,863  (_merge==3)
+    -----------------------------------------
+(70,863 missing values generated)
+(70,863 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000f not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000f saved
+Saved REDI data (with ASEC continuous data) for inc_level 7 ($100000-150000) and
+>  year 2019 in file
+(ACS data with artificial bins, CA 2019)
+(338,355 observations deleted)
+The current inc_level is: 8
+The inc_level 8 has a lower and an upper level
+variables born as string: 
+inc_decoded1  inc_decoded2
+inc_decoded1: character space removed; replaced as long
+inc_decoded2: character space removed; replaced as long
+Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
+> c_level 8of the original ACS income range
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000g not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000g saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,769 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc8.dta saved
+Keep income between $150000 and $200000 for 2019 year.
+number of observations (_N) was 0, now 41,736
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            41,736  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc8.dta saved
+Merged ASEC values with original ACS dataset for inc_level 8 ($150000-200000) an
+> d year 2019.
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            41,736  (_merge==3)
+    -----------------------------------------
+(41,736 missing values generated)
+(41,736 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000h not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000h saved
+Saved REDI data (with ASEC continuous data) for inc_level 8 ($150000-200000) and
+>  year 2019 in file
+(ACS data with artificial bins, CA 2019)
+(315,897 observations deleted)
+The current inc_level is: 9
+The inc_level 9 is at the highest end of the original ACS income range
+inc_decoded: characters space o e r m removed; acs_hinc_shp_lb generated as long
+Upper bound of 999999 created for inc_level 9
+note: label truncated to 80 characters
+(0 observations deleted)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000i not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000i saved
+(Streamlined CPS ASEC data, CA 2019)
+Calculating household income using hhincome ASEC variable.
+(5,528 observations deleted)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc9.dta saved
+Keep income between $200000 and $999999 for 2019 year.
+number of observations (_N) was 0, now 64,194
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            64,194  
+    -----------------------------------------
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_ye
+> ar_inc9.dta saved
+Merged ASEC values with original ACS dataset for inc_level 9 ($200000-999999) an
+> d year 2019.
+(note: variable acs_hinc_shp_lb was float, now double to accommodate using
+       data's values)
+(label diffmob_lbl already defined)
+(label migrate1_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label hispan_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label sex_lbl already defined)
+(label ownershp_lbl already defined)
+(label statefip_lbl already defined)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                            64,194  (_merge==3)
+    -----------------------------------------
+(64,194 missing values generated)
+(64,194 real changes made)
+note: label truncated to 80 characters
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000j not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000j saved
+Saved REDI data (with ASEC continuous data) for inc_level 9 ($200000-999999) and
+>  year 2019 in file
+Moved outside loop of year income bracket  ($200000-999999).
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(note: variable acs_hinc_shp_lb was float, now double to accommodate using
+       data's values)
+(label _merge already defined)
+(label dB_edu_colp already defined)
+(label dB_edu_grad already defined)
+(label dB_edu_col already defined)
+(label dB_edu_sCol already defined)
+(label dB_edu_HS already defined)
+(label dB_edu_lHS already defined)
+(label edu_5categ already defined)
+(label race_5categ already defined)
+(label dB_rother already defined)
+(label dB_rhisp already defined)
+(label dB_rasian already defined)
+(label dB_rblack already defined)
+(label dB_rwhite already defined)
+(label dB_fem already defined)
+(label sample_lbl already defined)
+(label repwt_lbl already defined)
+(label gq_lbl already defined)
+(label ownershpd_lbl already defined)
+(label repwtp_lbl already defined)
+(label raced_lbl already defined)
+(label hispand_lbl already defined)
+(label educd_lbl already defined)
+(label migrate1d_lbl already defined)
+(label cat_inc already defined)
+(label month_lbl already defined)
+(label asecflag_lbl already defined)
+(label statefip_lbl already defined)
+(label ownershp_lbl already defined)
+(label age_lbl already defined)
+(label sex_lbl already defined)
+(label race_lbl already defined)
+(label marst_lbl already defined)
+(label nchild_lbl already defined)
+(label hispan_lbl already defined)
+(label labforce_lbl already defined)
+(label educ_lbl already defined)
+(label diffmob_lbl already defined)
+(label whymove_lbl already defined)
+(label migrate1_lbl already defined)
+(label health_lbl already defined)
+(label union_lbl already defined)
+(note: file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000k not
+>  found)
+file /var/folders/rp/96l526kj7ybdjr5vs5bqqjw80000gn/T//S_16035.00000k saved
+Saved new tempfile  for year 2019 for all REDI income brackets.
+
+.                                 
+.                 // append all years 
+.                         tokenize `years'
+
+.                         local first `1'
+
+.                         use `temp_`1'', clear
+
+.                         macro shift
+
+.                         local rest `*'
+
+. 
+.                 // now loop through and append each yearly temp file created e
+> arlier
+.                         foreach ytemp in `*' {
+  2.                                 append using `temp_`ytemp''
+  3.                         }
+
+.                         di "Appended all years "
+Appended all years 
+
+. 
+. // CLEAN UP
+. 
+. sort year acs_hinc_shp id
+
+. drop obs_no id inc_decoded
+
+. 
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            matched (3) |    363,999      100.00      100.00
+------------------------+-----------------------------------
+                  Total |    363,999      100.00
+
+. drop _merge
+
+. 
+. di in red "End of redi03a_categ_distrib.doi for household and shp variables" 
+End of redi03a_categ_distrib.doi for household and shp variables
+
+. 
+. 
+. // Clean Up
+. keep if year == 2019
+(0 observations deleted)
+
+. drop gq sample serial cbserial countyfip age nchild whymove union  month
+
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+. 
+. rename  hhincome_asec redi_hinc 
+
+. rename acs_hinc_shp acs_hinc
+
+. order acs_hinc redi_hinc hhincome_acs acs_hinc_shp_lb acs_hinc_shp_ub 
+
+. 
+. // CREATE NATURAL LOG INCOME VARIABLES
+. gen redi_hinc_ln = ln(redi_hinc)
+(2,701 missing values generated)
+
+. replace redi_hinc_ln = 0 if redi_hinc == 0
+(2,591 real changes made)
+
+. 
+. gen acs_hinc_ln = ln(hhincome_acs)
+(2,542 missing values generated)
+
+. replace acs_hinc_ln = 0 if hhincome_acs <= 0
+(2,542 real changes made)
+
+. 
+. // Save Data 
+. label data "California 2019 ACS data converted to continuous REDI-calculated v
+> alues"
+
+. notes: redi13_REDI_Ca2019.dta \ ///
+>         ACS hinc_shp Data converted to continuous REDI \ /// 
+>         redi13_REDI_state_example.do  $S_DATE
+
+. compress
+  variable redi_hinc_shp_n was float now int
+  variable acs_hinc_shp_lb was double now long
+  (2,183,994 bytes saved)
+
+. datasignature set, reset  
+  363999:219(59111):332153017:3658388756       (data signature reset)
+
+. save $deriv/redi14_REDI_Ca2019.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi14_REDI_Ca2019.dta 
+> saved
+
+. 
+. di in red "Completed REDI conversions for California 2019 data" 
+Completed REDI conversions for California 2019 data
+
+. 
+. 
+. ***--------------------------***
+. 
+. capture log close redi14_REDI_state_dataprep
