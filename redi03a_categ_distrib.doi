@@ -122,6 +122,7 @@
 				save `premerge_`inc_level'_`y'', replace
 
 				use $deriv/redi01_ASEC-hhincome.dta, clear // use ASEC household dataset
+				*use $temp/redi14_cps_state_ca.dta, clear // $temp/redi14_cps_state_wy.dta
 				di "Calculating household income using hhincome ASEC variable."
 
 			// #3B) Takes a random draw of number of incomes w/in that income boundary and year from the CPS-ASEC
