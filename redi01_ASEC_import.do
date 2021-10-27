@@ -63,6 +63,14 @@ compress
 
 // RENAME to avoid confusion with ACS
 rename hhincome hhincome_asec
+rename race race_asec
+rename hispan hispan_asec
+rename educ educ_asec
+rename sex sex_asec
+rename marst marst_asec
+rename migrate1  migrate1_asec
+rename diffmob diffmob_asec
+rename ownershp ownershp_asec
 
 // SAVE ALL YEARS
 

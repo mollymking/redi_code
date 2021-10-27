@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
 > EC_import.log
   log type:  text
- opened on:  15 Oct 2021, 11:46:10
+ opened on:  27 Oct 2021, 14:31:11
 
 . 
 . 
@@ -19,7 +19,7 @@
 . 
 . 
 . display "$S_DATE  $S_TIME"
-15 Oct 2021  11:46:10
+27 Oct 2021  14:31:11
 
 . 
 . ***--------------------------***
@@ -954,6 +954,22 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
 . // RENAME to avoid confusion with ACS
 . rename hhincome hhincome_asec
 
+. rename race race_asec
+
+. rename hispan hispan_asec
+
+. rename educ educ_asec
+
+. rename sex sex_asec
+
+. rename marst marst_asec
+
+. rename migrate1  migrate1_asec
+
+. rename diffmob diffmob_asec
+
+. rename ownershp ownershp_asec
+
 . 
 . // SAVE ALL YEARS
 . 
@@ -963,7 +979,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
 > 17, 2019 \ redi01_ASEC.do
 
 . datasignature set, reset
-  207786:26(97515):1175710109:781505746       (data signature reset)
+  207786:26(25444):1175710109:781505746       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome_all.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
@@ -983,7 +999,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
 >  redi01_ASEC.do
 
 . datasignature set, reset
-  139441:26(97515):4164444312:2333080517       (data signature reset)
+  139441:26(25444):4164444312:2333080517       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
@@ -996,5 +1012,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
 > EC_import.log
   log type:  text
- closed on:  15 Oct 2021, 11:46:15
+ closed on:  27 Oct 2021, 14:31:21
 --------------------------------------------------------------------------------

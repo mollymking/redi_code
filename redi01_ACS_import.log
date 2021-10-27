@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AC
 > S_import.log
   log type:  text
- opened on:  15 Oct 2021, 10:16:09
+ opened on:  27 Oct 2021, 14:44:27
 
 . 
 . //      project:        REDI Methodology Paper
@@ -17,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-15 Oct 2021  10:16:09
+27 Oct 2021  14:44:27
 
 . 
 . ***--------------------------***
@@ -2068,6 +2068,23 @@ end of do-file
 . // RENAME to avoid confusion with CPS ASEC
 . rename hhincome hhincome_acs
 
+. rename race race_acs
+
+. rename hispan hispan_acs
+
+. rename educ educ_acs
+
+. rename sex sex_acs
+
+. rename marst marst_acs
+
+. rename migrate1  migrate1_acs
+
+. rename diffmob diffmob_acs
+
+. rename ownershp ownershp_acs
+
+. 
 . 
 . ***--------------------------***
 . // SAVE DATA
@@ -2245,11 +2262,11 @@ end of do-file
 . label data "Imported original ACS data, 2016, 2017, 2019"
 
 . datasignature set, reset
-  9586080:190(59666):2970176134:1486287731       (data signature set)
+  9586080:190(41250):2970176134:1486287731       (data signature set)
 
 . save $deriv/redi01_ACS_all.dta, replace
-file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta sa
-> ved
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta save
+> d
 
 . 
 . 
@@ -2260,7 +2277,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta sa
 . label data "Imported original ACS data, 2016-2017"
 
 . datasignature set, reset
-  6346527:190(59666):867391705:3151051987       (data signature reset)
+  6346527:190(41250):867391705:3151051987       (data signature reset)
 
 . 
 . save $deriv/redi01_ACS.dta, replace
@@ -2271,8 +2288,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS.dta saved
 . 
 . log close  redi01_ACS_import
       name:  redi01_ACS_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_
-> ACS_import.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AC
+> S_import.log
   log type:  text
- closed on:  15 Oct 2021, 10:34:28
-------------------------------------------------------------------------------
+ closed on:  27 Oct 2021, 15:01:45
+--------------------------------------------------------------------------------
