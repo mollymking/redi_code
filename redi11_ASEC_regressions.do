@@ -219,73 +219,38 @@ use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
 // REGRESSION: CPS ASEC Income as DV
 ***--------------------------***	
 
-di in red "Predict ASEC income as function of race/ethnicity, education, gender"
-
-svy: reg asec_hinc_shp_`conv_year' /// 
-	dB_fem /// men comparison
-	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
-
-
-di in red "Predict ASEC income as function of race/ethnicity, education, gender, marital status, disability, labor force"
+di in red "Predict ASEC income as a function of gender of householder, " ///
+		  "race/ethnicity, education, married, disability"	
 
 svy: reg asec_hinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	married disability labor
+	married disability
 
-
-***--------------------------***
-// REGRESSION: CPS ASEC Income as IV: Predict Home Ownership
-***--------------------------***	
-di in red "Predict home ownership as function of ASEC ln(income)"
-svy: logistic ownhouse ///
-	asec_lnhinc_shp_2017 //
-
-di in red "Predict home ownership as function of ASEC ln(income), race/ethnicity, education, gender"
-svy: logistic ownhouse ///
-	asec_lnhinc_shp_2017 ///	
-	dB_fem /// men comparison
-	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
-	*, gradient trace difficult
-
-di in red "Predict home ownership as function of ASEC ln(income), race/ethnicity, education, gender, marital status, disability, labor force"
-svy: logistic ownhouse ///
-	asec_lnhinc_shp_2017 /// 
-	dB_fem /// men comparison
-	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	married disability labor //
-	*, gradient trace difficult
-		
+	
 
 ***--------------------------***
 // REGRESSION: REDI Income as IV: Predict Migration
 ***--------------------------***	
 
-di in red "Predict migration as function of ASEC ln(income)"
+di in red "Predict migration as function of ASEC ln(income), " ///
+		  "gender, race/ethnicity, education, married, disability"
 svy: logistic migrate ///
-	asec_lnhinc_shp_2017 //
-
-di in red "Predict migration as function of ASEC ln(income), race/ethnicity, education, gender"
-svy: logistic migrate ///
-	asec_lnhinc_shp_2017 ///	
-	dB_fem /// men comparison
-	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
-	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
-	*, gradient trace difficult
-
-di in red "Predict migration as function of ASEC ln(income), race/ethnicity, education, gender, disability, labor force, home ownership"
-svy: logistic migrate ///
-	asec_lnhinc_shp_2017 /// 
+	asec_lnhinc_shp_`conv_year' ///	
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
-	disability labor ownhouse //
-	*, gradient trace difficult
+	married disability  //
 
+di in red "Predict migration as function of ASEC ln(income), add home ownership"
+svy: logistic migrate ///
+	asec_lnhinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married disability ownhouse //
+	
 
 ***--------------------------***
 
