@@ -116,11 +116,11 @@
 				label variable acs_hinc_shp_n "household (ACS) shp count of respondents in each income bin in original (research) dataset"
 
 
-			// create temporary file of just this ACS income level and year can merge ASEC incomes back into later
+			// create temporary file of just this ACS income level and year
 				keep if year == `y' & acs_hinc_shp == `inc_level'
 				tempfile premerge_`inc_level'_`y'
 				save `premerge_`inc_level'_`y'', replace
-
+				
 				use $deriv/redi01_ASEC-hhincome.dta, clear // use ASEC household dataset
 				*use $temp/redi14_cps_state_ca.dta, clear // $temp/redi14_cps_state_wy.dta
 				di "Calculating household income using hhincome ASEC variable."
@@ -135,7 +135,9 @@
 				save "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", replace
 				di "Keep income between $`lower_bound' and $`upper_bound' for `y' year."
 			
-			// #3C) Sample, with replacement, such that ASEC income has an equal probability assigned to each observation in this artificial data set (which will later be matched to ACS data set)
+			// #3C) Sample, with replacement, such that ASEC income has an equal 
+			// probability assigned to each observation in this artificial data set 
+			// (which will later be matched to ACS data set)
 			// Thanks to Clyde Schechter; https://www.statalist.org/forums/forum/general-stata-discussion/general/1475890-is-there-a-command-that-is-equivalent-to-bsample-more-than-_n
 				quietly des 
 				local N = r(N)
@@ -146,8 +148,6 @@
 
 				gen obs_no = runiformint(1, `N')
 				merge m:1 obs_no using "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", keep(match) nogenerate 
-				// here, artificial data set is matched to ASEC data set for that incomebin for that year 								
-					
 													
 			// #3D) Add new columns for lower_bound and upper_bound of income bin
 				gen acs_hinc_shp_lb = `lower_bound'
@@ -158,12 +158,15 @@
 
 				save "$deriv/redi01_ASEC-hhincome_year_inc`inc_level'.dta", replace
 				
-				di "Merged ASEC values with original ACS dataset for inc_level " `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
 
-			// #4) Merge ACS and ASEC data
-			// here, ASEC artificial data set (from step 3C) is matched to ACS for that incomebin for that year 								
+			// #4) Merge ACS (using=premerge) and ASEC data (master) 
+			// here, ASEC artificial datase (from step 3A) is matched 
+			// to ACS for that incomebin for that year 								
 				gen id = _n
 				merge 1:1 id using `premerge_`inc_level'_`y''
+				
+				di "Merged ASEC values with original ACS dataset for inc_level " `inc_level' ///
+				   " ($`lower_bound'-`upper_bound') and year `y'."
 						
 			// #5) create count within each REDI income bin
 				generate 	redi_hinc_shp_n = .
