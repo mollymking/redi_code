@@ -1,9 +1,8 @@
---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
       name:  redi02_ACS_bins
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_AC
-> S_bins.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_ACS_bins.log
   log type:  text
- opened on:   9 Sep 2021, 09:41:00
+ opened on:  27 Oct 2021, 23:06:10
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
- 9 Sep 2021  09:41:00
+27 Oct 2021  23:06:10
 
 . 
 . ***--------------------------***
@@ -35,7 +34,7 @@
 
 . 
 . use $deriv/redi01_ACS.dta, clear
-(Imported original ACS data)
+(Imported original ACS data, 2016-2017)
 
 . save $deriv/redi02_ACS_bins.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
@@ -121,5 +120,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_AC
 > S_bins.log
   log type:  text
- closed on:   9 Sep 2021, 09:44:02
+ closed on:  27 Oct 2021, 23:10:16
 --------------------------------------------------------------------------------

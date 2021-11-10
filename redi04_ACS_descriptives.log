@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
 > S_descriptives.log
   log type:  text
- opened on:   9 Sep 2021, 10:37:35
+ opened on:  27 Oct 2021, 23:54:05
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
- 9 Sep 2021  10:37:35
+27 Oct 2021  23:54:05
 
 . 
 . ***--------------------------***
@@ -85,7 +85,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
 Calculate grand mean for hinc shp for year 2016
 
 . svy: mean acs_hinc_shp_`conv_year' if year == 2016 // this is original variabl
-> e: hhincome
+> e: hhincome_asec
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -122,7 +122,7 @@ acs_hinc_shp_2017 |   93825.27   121.8422      93582.75    94067.79
 Calculate grand mean for hinc shp for year 2016
 
 . svy: mean acs_hinc_shp_`conv_year' if year == 2017 // this is original variabl
-> e: hhincome
+> e: hhincome_asec
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -230,5 +230,5 @@ Gini coefficient = 0.4536296
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
 > S_descriptives.log
   log type:  text
- closed on:   9 Sep 2021, 11:01:19
+ closed on:  28 Oct 2021, 00:15:06
 --------------------------------------------------------------------------------

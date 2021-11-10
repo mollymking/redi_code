@@ -63,7 +63,7 @@ save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
 		
 // #1 GENDER
  
-local gender_var sex // gender variable in ASEC is "sex"
+local gender_var sex_asec // gender variable in ASEC is "sex"
 tab `gender_var', m
 tab `gender_var', nolab m
 
@@ -73,15 +73,15 @@ include $redi/redi11a_include_female_from2W_1M.doi
 
 // #2 RACE / ETHNICITY - with RACE variable only
 
-local race_var race
+local race_var race_asec
 tab `race_var'
 tab `race_var', m nolab
 
 gen hisp = .
-replace hisp = 1 if hispan >=1
-replace hisp = 0 if hispan == 0
+replace hisp = 1 if hispan_asec >=1
+replace hisp = 0 if hispan_asec == 0
 
-replace race = 800 if race >=800
+replace race_asec = 800 if race_asec >=800
 
 local hisp_var hisp
 
@@ -110,7 +110,7 @@ fvset base 1 dG_race		// ref: white
 
 // #3 EDUCATION
 
-local edu_var educ
+local edu_var educ_asec
 tab `edu_var'
 tab `edu_var', nolab m
 
@@ -127,6 +127,39 @@ local grad_condition	`"`edu_var' >= 123"'
 include $redi/redi11c_education.doi
 
 fvset base 1 dG_edu  		// ref: less than HS
+
+
+***--------------------------***
+
+// # INDEPENDENT LIVING DIFFICULTY
+
+/*DIFFMOB indicates whether the respondent has any physical, mental, or 
+emotional condition lasting six months or more that makes it difficult or 
+impossible to perform basic activities outside the home alone. 
+This does not include temporary health problems, such as broken bones.*/
+
+tab diffmob_asec
+tab diffmob_asec, nolab
+
+generate disability = .
+replace disability = 1 if diffmob_asec == 2
+replace disability = 0 if diffmob_asec == 1
+
+tab diffmob_asec disability, m
+
+
+***--------------------------***
+
+// # MARITAL STATUS
+
+tab marst_asec
+tab marst_asec, nolab
+
+generate married = .
+replace married = 1 if marst_asec == 1 | marst_asec == 2
+replace married = 0 if marst_asec == 3 | marst_asec == 4 |  marst_asec == 5 | marst_asec == 6
+
+tab marst_asec married, m
 
 ***--------------------------***
 
@@ -149,67 +182,35 @@ tab labforce labor, m
 
 ***--------------------------***
 
-// # INDEPENDENT LIVING DIFFICULTY
-
-/*DIFFMOB indicates whether the respondent has any physical, mental, or 
-emotional condition lasting six months or more that makes it difficult or 
-impossible to perform basic activities outside the home alone. 
-This does not include temporary health problems, such as broken bones.*/
-
-tab diffmob 
-tab diffmob, nolab
-
-generate disability = .
-replace disability = 1 if diffmob == 2
-replace disability = 0 if diffmob == 1
-
-tab diffmob disability, m
-
-
-***--------------------------***
-
-// # MARITAL STATUS
-
-tab marst
-tab marst, nolab
-
-generate married = .
-replace married = 1 if marst == 1 | marst == 2
-replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
-
-tab marst married, m
-
-***--------------------------***
-
 // # OWNERSHIP OF HOUSING
 
 /*OWNERSHP indicates whether the housing unit was rented or owned by its inhabitants. 
 Housing units acquired with a mortgage or other lending arrangement(s) are 
 classified as "owned," even if repayment was not yet completed.*/
 
-tab ownershp
-tab ownershp, nolab
+tab ownershp_asec
+tab ownershp_asec, nolab
 
 generate ownhouse = .
-replace ownhouse = 1 if ownershp == 10
-replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+replace ownhouse = 1 if ownershp_asec == 10
+replace ownhouse = 0 if ownershp_asec == 21 | ownershp_asec == 22
 
-tab ownershp ownhouse, m
+tab ownershp_asec ownhouse, m
 
 ***--------------------------***
-
+/*
 // # MIGRATION STATUS
 
 /*MIGRATE1 indicates whether the respondent had changed residence in the past year. Those who were living in the same house as one year ago were considered non-movers and were asked no further questions about migration over the past year. Movers were asked about the city, county and state and/or the U.S. territory or foreign country where they resided one year ago.*/
 
-tab migrate1
-tab migrate1, nolab
+tab migrate1_asec
+tab migrate1_asec, nolab
 
 generate migrate = .
-replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate1 == 5 | migrate1 == 6
-replace migrate = 0 if migrate1	== 1
+replace migrate = 1 if migrate1_asec == 2 | migrate1_asec == 3 | migrate1_asec == 4 | migrate1_asec == 5 | migrate1_asec == 6
+replace migrate = 0 if migrate1_asec	== 1
 
-
+*/
 ***--------------------------***
 
 save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
@@ -220,16 +221,33 @@ use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
 ***--------------------------***	
 
 di in red "Predict ASEC income as a function of gender of householder, " ///
-		  "race/ethnicity, education, married, disability"	
+		  "race/ethnicity, education"	
+svy: reg asec_hinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
 
+
+di in red "Predict ASEC income as a function of gender of householder, " ///
+		  "race/ethnicity, education, married, disability"	
 svy: reg asec_hinc_shp_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
 	married disability
 
-	
 
+di in red "Predict ASEC income as a function of gender of householder, " ///
+		  "race/ethnicity, education, married, disability, labor force"	
+
+svy: reg asec_hinc_shp_`conv_year' /// 
+	dB_fem /// men comparison
+	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
+	married disability labor
+
+	
+/*
 ***--------------------------***
 // REGRESSION: REDI Income as IV: Predict Migration
 ***--------------------------***	
@@ -251,6 +269,17 @@ svy: logistic migrate ///
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
 	married disability ownhouse //
 	
+*/
+***-----
+// Check if systematically different values between REDI and ACS Research Dataset
+*use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
+
+
+*inflation-adjusted
+table dB_fem , 	c(mean asec_hinc_shp_`conv_year')
+table dG_race, 	c(mean asec_hinc_shp_`conv_year')
+table dG_edu, 	c(mean asec_hinc_shp_`conv_year')
+
 
 ***--------------------------***
 

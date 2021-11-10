@@ -3,7 +3,7 @@
        log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi11_AS
 > EC_regressions.log
   log type:  text
- opened on:  27 Oct 2021, 11:05:49
+ opened on:   2 Nov 2021, 13:23:00
 
 . 
 . //      project:        REDI Methods Paper
@@ -17,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-27 Oct 2021  11:05:49
+ 2 Nov 2021  13:23:00
 
 . 
 . ***--------------------------***
@@ -115,7 +115,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi11_ASEC_regressions
 .                 
 . // #1 GENDER
 .  
-. local gender_var sex // gender variable in ASEC is "sex"
+. local gender_var sex_asec // gender variable in ASEC is "sex"
 
 . tab `gender_var', m
 
@@ -168,7 +168,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi11_ASEC_regressions
 . 
 . // #2 RACE / ETHNICITY - with RACE variable only
 . 
-. local race_var race
+. local race_var race_asec
 
 . tab `race_var'
 
@@ -238,14 +238,14 @@ White-American Indian-Asian-Hawaiian/Pa |          3        0.00       99.99
 . gen hisp = .
 (139,441 missing values generated)
 
-. replace hisp = 1 if hispan >=1
+. replace hisp = 1 if hispan_asec >=1
 (22,253 real changes made)
 
-. replace hisp = 0 if hispan == 0
+. replace hisp = 0 if hispan_asec == 0
 (117,188 real changes made)
 
 . 
-. replace race = 800 if race >=800
+. replace race_asec = 800 if race_asec >=800
 (2,535 real changes made)
 
 . 
@@ -744,7 +744,7 @@ Other/mixed |     4,401          0 |     4,401
 . 
 . // #3 EDUCATION
 . 
-. local edu_var educ
+. local edu_var educ_asec
 
 . tab `edu_var'
 
@@ -1245,6 +1245,121 @@ Professional school d |     2,027 |     2,027
 . fvset base 1 dG_edu             // ref: less than HS
 
 . 
+. 
+. ***--------------------------***
+. 
+. // # INDEPENDENT LIVING DIFFICULTY
+. 
+. /*DIFFMOB indicates whether the respondent has any physical, mental, or 
+> emotional condition lasting six months or more that makes it difficult or 
+> impossible to perform basic activities outside the home alone. 
+> This does not include temporary health problems, such as broken bones.*/
+. 
+. tab diffmob_asec
+
+    Disability limiting |
+               mobility |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+                    NIU |        684        0.49        0.49
+ No mobility limitation |    132,292       94.87       95.36
+Has mobility limitation |      6,465        4.64      100.00
+------------------------+-----------------------------------
+                  Total |    139,441      100.00
+
+. tab diffmob_asec, nolab
+
+ Disability |
+   limiting |
+   mobility |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        684        0.49        0.49
+          1 |    132,292       94.87       95.36
+          2 |      6,465        4.64      100.00
+------------+-----------------------------------
+      Total |    139,441      100.00
+
+. 
+. generate disability = .
+(139,441 missing values generated)
+
+. replace disability = 1 if diffmob_asec == 2
+(6,465 real changes made)
+
+. replace disability = 0 if diffmob_asec == 1
+(132,292 real changes made)
+
+. 
+. tab diffmob_asec disability, m
+
+  Disability limiting |            disability
+             mobility |         0          1          . |     Total
+----------------------+---------------------------------+----------
+                  NIU |         0          0        684 |       684 
+No mobility limitatio |   132,292          0          0 |   132,292 
+Has mobility limitati |         0      6,465          0 |     6,465 
+----------------------+---------------------------------+----------
+                Total |   132,292      6,465        684 |   139,441 
+
+. 
+. 
+. ***--------------------------***
+. 
+. // # MARITAL STATUS
+. 
+. tab marst_asec
+
+         Marital status |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+Married, spouse present |     70,203       50.35       50.35
+ Married, spouse absent |      2,457        1.76       52.11
+              Separated |      3,993        2.86       54.97
+               Divorced |     20,847       14.95       69.92
+                Widowed |     12,237        8.78       78.70
+   Never married/single |     29,704       21.30      100.00
+------------------------+-----------------------------------
+                  Total |    139,441      100.00
+
+. tab marst_asec, nolab
+
+    Marital |
+     status |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |     70,203       50.35       50.35
+          2 |      2,457        1.76       52.11
+          3 |      3,993        2.86       54.97
+          4 |     20,847       14.95       69.92
+          5 |     12,237        8.78       78.70
+          6 |     29,704       21.30      100.00
+------------+-----------------------------------
+      Total |    139,441      100.00
+
+. 
+. generate married = .
+(139,441 missing values generated)
+
+. replace married = 1 if marst_asec == 1 | marst_asec == 2
+(72,660 real changes made)
+
+. replace married = 0 if marst_asec == 3 | marst_asec == 4 |  marst_asec == 5 | 
+> marst_asec == 6
+(66,781 real changes made)
+
+. 
+. tab marst_asec married, m
+
+                      |        married
+       Marital status |         0          1 |     Total
+----------------------+----------------------+----------
+Married, spouse prese |         0     70,203 |    70,203 
+Married, spouse absen |         0      2,457 |     2,457 
+            Separated |     3,993          0 |     3,993 
+             Divorced |    20,847          0 |    20,847 
+              Widowed |    12,237          0 |    12,237 
+ Never married/single |    29,704          0 |    29,704 
+----------------------+----------------------+----------
+                Total |    66,781     72,660 |   139,441 
+
+. 
 . ***--------------------------***
 . 
 . // # LABOR FORCE
@@ -1301,119 +1416,6 @@ Yes, in the labor for |         0     90,846          0 |    90,846
 . 
 . ***--------------------------***
 . 
-. // # INDEPENDENT LIVING DIFFICULTY
-. 
-. /*DIFFMOB indicates whether the respondent has any physical, mental, or 
-> emotional condition lasting six months or more that makes it difficult or 
-> impossible to perform basic activities outside the home alone. 
-> This does not include temporary health problems, such as broken bones.*/
-. 
-. tab diffmob 
-
-    Disability limiting |
-               mobility |      Freq.     Percent        Cum.
-------------------------+-----------------------------------
-                    NIU |        684        0.49        0.49
- No mobility limitation |    132,292       94.87       95.36
-Has mobility limitation |      6,465        4.64      100.00
-------------------------+-----------------------------------
-                  Total |    139,441      100.00
-
-. tab diffmob, nolab
-
- Disability |
-   limiting |
-   mobility |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          0 |        684        0.49        0.49
-          1 |    132,292       94.87       95.36
-          2 |      6,465        4.64      100.00
-------------+-----------------------------------
-      Total |    139,441      100.00
-
-. 
-. generate disability = .
-(139,441 missing values generated)
-
-. replace disability = 1 if diffmob == 2
-(6,465 real changes made)
-
-. replace disability = 0 if diffmob == 1
-(132,292 real changes made)
-
-. 
-. tab diffmob disability, m
-
-  Disability limiting |            disability
-             mobility |         0          1          . |     Total
-----------------------+---------------------------------+----------
-                  NIU |         0          0        684 |       684 
-No mobility limitatio |   132,292          0          0 |   132,292 
-Has mobility limitati |         0      6,465          0 |     6,465 
-----------------------+---------------------------------+----------
-                Total |   132,292      6,465        684 |   139,441 
-
-. 
-. 
-. ***--------------------------***
-. 
-. // # MARITAL STATUS
-. 
-. tab marst
-
-         Marital status |      Freq.     Percent        Cum.
-------------------------+-----------------------------------
-Married, spouse present |     70,203       50.35       50.35
- Married, spouse absent |      2,457        1.76       52.11
-              Separated |      3,993        2.86       54.97
-               Divorced |     20,847       14.95       69.92
-                Widowed |     12,237        8.78       78.70
-   Never married/single |     29,704       21.30      100.00
-------------------------+-----------------------------------
-                  Total |    139,441      100.00
-
-. tab marst, nolab
-
-    Marital |
-     status |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |     70,203       50.35       50.35
-          2 |      2,457        1.76       52.11
-          3 |      3,993        2.86       54.97
-          4 |     20,847       14.95       69.92
-          5 |     12,237        8.78       78.70
-          6 |     29,704       21.30      100.00
-------------+-----------------------------------
-      Total |    139,441      100.00
-
-. 
-. generate married = .
-(139,441 missing values generated)
-
-. replace married = 1 if marst == 1 | marst == 2
-(72,660 real changes made)
-
-. replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
-(66,781 real changes made)
-
-. 
-. tab marst married, m
-
-                      |        married
-       Marital status |         0          1 |     Total
-----------------------+----------------------+----------
-Married, spouse prese |         0     70,203 |    70,203 
-Married, spouse absen |         0      2,457 |     2,457 
-            Separated |     3,993          0 |     3,993 
-             Divorced |    20,847          0 |    20,847 
-              Widowed |    12,237          0 |    12,237 
- Never married/single |    29,704          0 |    29,704 
-----------------------+----------------------+----------
-                Total |    66,781     72,660 |   139,441 
-
-. 
-. ***--------------------------***
-. 
 . // # OWNERSHIP OF HOUSING
 . 
 . /*OWNERSHP indicates whether the housing unit was rented or owned by its inhab
@@ -1421,7 +1423,7 @@ Married, spouse absen |         0      2,457 |     2,457
 > Housing units acquired with a mortgage or other lending arrangement(s) are 
 > classified as "owned," even if repayment was not yet completed.*/
 . 
-. tab ownershp
+. tab ownershp_asec
 
 Ownership of dwelling |      Freq.     Percent        Cum.
 ----------------------+-----------------------------------
@@ -1431,7 +1433,7 @@ Owned or being bought |     89,370       64.09       64.09
 ----------------------+-----------------------------------
                 Total |    139,441      100.00
 
-. tab ownershp, nolab
+. tab ownershp_asec, nolab
 
   Ownership |
 of dwelling |      Freq.     Percent        Cum.
@@ -1446,14 +1448,14 @@ of dwelling |      Freq.     Percent        Cum.
 . generate ownhouse = .
 (139,441 missing values generated)
 
-. replace ownhouse = 1 if ownershp == 10
+. replace ownhouse = 1 if ownershp_asec == 10
 (89,370 real changes made)
 
-. replace ownhouse = 0 if ownershp == 21 | ownershp == 22
+. replace ownhouse = 0 if ownershp_asec == 21 | ownershp_asec == 22
 (50,071 real changes made)
 
 . 
-. tab ownershp ownhouse, m
+. tab ownershp_asec ownhouse, m
 
                       |       ownhouse
 Ownership of dwelling |         0          1 |     Total
@@ -1466,54 +1468,24 @@ Owned or being bought |         0     89,370 |    89,370
 
 . 
 . ***--------------------------***
-. 
-. // # MIGRATION STATUS
-. 
-. /*MIGRATE1 indicates whether the respondent had changed residence in the past 
+. /*
+> // # MIGRATION STATUS
+> 
+> /*MIGRATE1 indicates whether the respondent had changed residence in the past 
 > year. Those who were living in the same house as one year ago were considered 
 > non-movers and were asked no further questions about migration over the past y
 > ear. Movers were asked about the city, county and state and/or the U.S. territ
 > ory or foreign country where they resided one year ago.*/
-. 
-. tab migrate1
-
-            Migration status, 1 year |      Freq.     Percent        Cum.
--------------------------------------+-----------------------------------
-                          Same house |    125,953       90.33       90.33
-                 Moved within county |      8,312        5.96       96.29
-Moved within state, different county |      2,573        1.85       98.13
-                Moved between states |      2,187        1.57       99.70
-                              Abroad |        416        0.30      100.00
--------------------------------------+-----------------------------------
-                               Total |    139,441      100.00
-
-. tab migrate1, nolab
-
-  Migration |
-  status, 1 |
-       year |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |    125,953       90.33       90.33
-          3 |      8,312        5.96       96.29
-          4 |      2,573        1.85       98.13
-          5 |      2,187        1.57       99.70
-          6 |        416        0.30      100.00
-------------+-----------------------------------
-      Total |    139,441      100.00
-
-. 
-. generate migrate = .
-(139,441 missing values generated)
-
-. replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 | migrate
-> 1 == 5 | migrate1 == 6
-(13,488 real changes made)
-
-. replace migrate = 0 if migrate1 == 1
-(125,953 real changes made)
-
-. 
-. 
+> 
+> tab migrate1_asec
+> tab migrate1_asec, nolab
+> 
+> generate migrate = .
+> replace migrate = 1 if migrate1_asec == 2 | migrate1_asec == 3 | migrate1_asec
+>  == 4 | migrate1_asec == 5 | migrate1_asec == 6
+> replace migrate = 0 if migrate1_asec    == 1
+> 
+> */
 . ***--------------------------***
 . 
 . save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
@@ -1529,11 +1501,49 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi11_ASEC_regressions
 . ***--------------------------***        
 . 
 . di in red "Predict ASEC income as a function of gender of householder, " ///
+>                   "race/ethnicity, education"   
+Predict ASEC income as a function of gender of householder, race/ethnicity, educ
+> ation
+
+. svy: reg asec_hinc_shp_`conv_year' /// 
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison cate
+> gory
+(running regress on estimation sample)
+
+Survey: Linear regression
+
+Number of strata   =         1                Number of obs     =      139,441
+Number of PSUs     =   139,441                Population size   =  252,586,892
+                                              Design df         =      139,440
+                                              F(   9, 139432)   =      1438.52
+                                              Prob > F          =       0.0000
+                                              R-squared         =       0.1229
+
+------------------------------------------------------------------------------
+             |             Linearized
+asec_hi~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      dB_fem |  -16227.93    552.018   -29.40   0.000    -17309.87   -15145.98
+   dB_rblack |  -21199.14   665.0722   -31.87   0.000    -22502.67   -19895.61
+   dB_rasian |   5860.212   1476.912     3.97   0.000     2965.493    8754.931
+    dB_rhisp |  -4996.733   721.4411    -6.93   0.000    -6410.744   -3582.722
+   dB_rother |  -11336.17   1574.543    -7.20   0.000    -14422.24   -8250.093
+   dB_edu_HS |   15851.56    671.709    23.60   0.000     14535.03     17168.1
+ dB_edu_sCol |   30222.01   694.8007    43.50   0.000     28860.21     31583.8
+  dB_edu_col |   65715.94   900.6998    72.96   0.000     63950.58    67481.29
+ dB_edu_grad |   96653.27    1306.64    73.97   0.000     94092.28    99214.26
+       _cons |   53946.31   687.6419    78.45   0.000     52598.54    55294.07
+------------------------------------------------------------------------------
+
+. 
+. 
+. di in red "Predict ASEC income as a function of gender of householder, " ///
 >                   "race/ethnicity, education, married, disability"      
 Predict ASEC income as a function of gender of householder, race/ethnicity, educ
 > ation, married, disability
 
-. 
 . svy: reg asec_hinc_shp_`conv_year' /// 
 >         dB_fem /// men comparison
 >         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
@@ -1570,98 +1580,126 @@ asec_hi~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 ------------------------------------------------------------------------------
 
 . 
-.         
 . 
-. ***--------------------------***
-. // REGRESSION: REDI Income as IV: Predict Migration
-. ***--------------------------***        
-. 
-. di in red "Predict migration as function of ASEC ln(income), " ///
->                   "gender, race/ethnicity, education, married, disability"
-Predict migration as function of ASEC ln(income), gender, race/ethnicity, educat
-> ion, married, disability
+. di in red "Predict ASEC income as a function of gender of householder, " ///
+>                   "race/ethnicity, education, married, disability, labor force
+> " 
+Predict ASEC income as a function of gender of householder, race/ethnicity, educ
+> ation, married, disability, labor force
 
-. svy: logistic migrate ///
+. 
+. svy: reg asec_hinc_shp_`conv_year' /// 
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability labor
+(running regress on estimation sample)
+
+Survey: Linear regression
+
+Number of strata   =         1                Number of obs     =      138,757
+Number of PSUs     =   138,757                Population size   =  251,607,554
+                                              Design df         =      138,756
+                                              F(  12, 138745)   =      2011.39
+                                              Prob > F          =       0.0000
+                                              R-squared         =       0.2045
+
+------------------------------------------------------------------------------
+             |             Linearized
+asec_hi~2017 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      dB_fem |  -4154.211   544.4834    -7.63   0.000    -5221.388   -3087.034
+   dB_rblack |  -14921.26    639.924   -23.32   0.000     -16175.5   -13667.02
+   dB_rasian |   258.5174   1435.049     0.18   0.857    -2554.152    3071.187
+    dB_rhisp |  -11612.45   720.7876   -16.11   0.000    -13025.18   -10199.72
+   dB_rother |  -8246.664   1511.645    -5.46   0.000    -11209.46   -5283.869
+   dB_edu_HS |   7992.628   668.7226    11.95   0.000     6681.944    9303.311
+ dB_edu_sCol |   18934.11   697.1926    27.16   0.000     17567.63     20300.6
+  dB_edu_col |   47844.02   889.7651    53.77   0.000      46100.1    49587.94
+ dB_edu_grad |   76222.77   1258.109    60.59   0.000      73756.9    78688.64
+     married |   44024.94   543.8315    80.95   0.000     42959.05    45090.84
+  disability |  -5033.953   654.1854    -7.69   0.000    -6316.144   -3751.762
+       labor |   34805.15   523.5509    66.48   0.000        33779     35831.3
+       _cons |    16233.5   742.3575    21.87   0.000      14778.5    17688.51
+------------------------------------------------------------------------------
+
+. 
+.         
+. /*
+> ***--------------------------***
+> // REGRESSION: REDI Income as IV: Predict Migration
+> ***--------------------------***        
+> 
+> di in red "Predict migration as function of ASEC ln(income), " ///
+>                   "gender, race/ethnicity, education, married, disability"
+> svy: logistic migrate ///
 >         asec_lnhinc_shp_`conv_year' /// 
 >         dB_fem /// men comparison
 >         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 >         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
 > egory
 >         married disability  //
-(running logistic on estimation sample)
-
-Survey: Logistic regression
-
-Number of strata   =         1                Number of obs     =      136,715
-Number of PSUs     =   136,715                Population size   =  247,937,719
-                                              Design df         =      136,714
-                                              F(  12, 136703)   =       129.70
-                                              Prob > F          =       0.0000
-
--------------------------------------------------------------------------------
-              |             Linearized
-      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-asec_lnh~2017 |   .9006567    .008508   -11.08   0.000     .8841347    .9174875
-       dB_fem |    .927798   .0209531    -3.32   0.001     .8876259    .9697882
-    dB_rblack |   1.276707   .0417977     7.46   0.000     1.197357    1.361315
-    dB_rasian |   1.615808   .0723745    10.71   0.000     1.480004    1.764074
-     dB_rhisp |   1.375262   .0437047    10.03   0.000     1.292215    1.463646
-    dB_rother |   1.623903   .1022853     7.70   0.000     1.435306     1.83728
-    dB_edu_HS |    1.10237   .0464852     2.31   0.021     1.014924    1.197351
-  dB_edu_sCol |   1.370141   .0569714     7.57   0.000     1.262907     1.48648
-   dB_edu_col |   1.429937   .0637061     8.03   0.000     1.310371    1.560414
-  dB_edu_grad |   1.332273   .0664151     5.75   0.000     1.208258    1.469017
-      married |   .5101633   .0125984   -27.25   0.000     .4860587    .5354634
-   disability |   .5949029   .0343012    -9.01   0.000     .5313329    .6660786
-        _cons |   .3725067   .0384161    -9.58   0.000     .3043337     .455951
--------------------------------------------------------------------------------
-Note: _cons estimates baseline odds.
-
-. 
-. di in red "Predict migration as function of ASEC ln(income), add home ownershi
+> 
+> di in red "Predict migration as function of ASEC ln(income), add home ownershi
 > p"
-Predict migration as function of ASEC ln(income), add home ownership
-
-. svy: logistic migrate ///
+> svy: logistic migrate ///
 >         asec_lnhinc_shp_`conv_year' /// 
 >         dB_fem /// men comparison
 >         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 >         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
 > egory
 >         married disability ownhouse //
-(running logistic on estimation sample)
+>         
+> */
+. ***-----
+. // Check if systematically different values between REDI and ACS Research Data
+> set
+. *use $deriv/redi11_ASEC_regressions-hinc_shp.dta, clear
+. 
+. 
+. *inflation-adjusted
+. table dB_fem ,  c(mean asec_hinc_shp_`conv_year')
 
-Survey: Logistic regression
+--------------------------
+Responden |
+t's sex   |
+(=1 if    |
+female)   | mean(ase~2017)
+----------+---------------
+   0_Male |         92,292
+ 1_Female |         72,913
+--------------------------
 
-Number of strata   =         1                Number of obs     =      136,715
-Number of PSUs     =   136,715                Population size   =  247,937,719
-                                              Design df         =      136,714
-                                              F(  13, 136702)   =       469.19
-                                              Prob > F          =       0.0000
+. table dG_race,  c(mean asec_hinc_shp_`conv_year')
 
--------------------------------------------------------------------------------
-              |             Linearized
-      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-asec_lnh~2017 |   .9847682   .0110329    -1.37   0.171     .9633796    1.006632
-       dB_fem |   .9473839   .0218744    -2.34   0.019     .9054661    .9912422
-    dB_rblack |   .9000123   .0304473    -3.11   0.002     .8422715    .9617113
-    dB_rasian |   1.147902   .0542864     2.92   0.004     1.046284    1.259389
-     dB_rhisp |   .9149694   .0305668    -2.66   0.008     .8569783    .9768847
-    dB_rother |   1.214148   .0789962     2.98   0.003     1.068783    1.379285
-    dB_edu_HS |   1.206189   .0514328     4.40   0.000     1.109479    1.311328
-  dB_edu_sCol |   1.478121   .0624725     9.25   0.000      1.36061     1.60578
-   dB_edu_col |   1.559543   .0711787     9.74   0.000     1.426092    1.705482
-  dB_edu_grad |   1.542811   .0793818     8.43   0.000     1.394812    1.706514
-      married |   .8078052   .0209599    -8.23   0.000     .7677512    .8499488
-   disability |   .5478396   .0320592   -10.28   0.000     .4884738    .6144203
-     ownhouse |   .1641215   .0043373   -68.38   0.000     .1558369    .1728464
-        _cons |    .284376   .0341215   -10.48   0.000     .2247805     .359772
--------------------------------------------------------------------------------
-Note: _cons estimates baseline odds.
+----------------------------
+Categorical |
+race        |
+variable    | mean(ase~2017)
+------------+---------------
+      White |         91,308
+      Black |         55,051
+      Asian |         107312
+   Hispanic |         66,722
+Other/mixed |         68,257
+----------------------------
 
-.         
+. table dG_edu,   c(mean asec_hinc_shp_`conv_year')
+
+-----------------------------
+Categorical  |
+education    |
+variable     | mean(ase~2017)
+-------------+---------------
+        < HS |         40,984
+          HS |         58,857
+some college |         72,973
+     college |         112201
+ grad school |         145256
+-----------------------------
+
+. 
 . 
 . ***--------------------------***
 . 
