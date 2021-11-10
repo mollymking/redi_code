@@ -202,18 +202,18 @@
 						
 	} //  end of loop through all years
 				
-		// append all years 
-			tokenize `years'
-			local first `1'
-			use `temp_`1'', clear
-			macro shift
-			local rest `*'
+	// append all years 
+		tokenize `years'
+		local first `1'
+		use `temp_`1'', clear
+		macro shift
+		local rest `*'
 
-		// now loop through and append each yearly temp file created earlier
-			foreach ytemp in `*' {
-				append using `temp_`ytemp''
-			}
-			di "Appended all years "
+	// now loop through and append each yearly temp file created earlier
+		foreach ytemp in `*' {
+			append using `temp_`ytemp''
+		}
+		di "Appended all years "
 
 // CLEAN UP
 
