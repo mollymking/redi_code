@@ -35,7 +35,7 @@ save $deriv/redi13_REDI_state_demvars.dta, replace
 		
 // #1 GENDER
  
-local gender_var sex
+local gender_var sex_acs
 tab `gender_var', m
 tab `gender_var', nolab m
 
@@ -45,15 +45,13 @@ include $redi/redi11a_include_female_from2W_1M.doi
 
 // #2 RACE / ETHNICITY - with RACE and HISP
 
-local race_var race
+local race_var race_acs
 tab `race_var'
 tab `race_var', m nolab
 
 gen hisp = .
-replace hisp = 1 if hispan >0
-replace hisp = 0 if hispan == 0
-
-replace race = 800 if race >=800
+replace hisp = 1 if hispan_acs >0
+replace hisp = 0 if hispan_acs == 0
 
 local hisp_var hisp
 
@@ -62,7 +60,6 @@ if "`hisp_var'" != "none" {
 	tab `hisp_var', m nolab
 	tab `race_var' `hisp_var'
 }
-
 
 *don't know/refused code(s) for `race_var'
 local race_missing_condition none
@@ -94,7 +91,7 @@ tab `race_var' dG_race, m
 
 // #3 EDUCATION
 
-local edu_var educ
+local edu_var educ_acs
 tab `edu_var'
 tab `edu_var', nolab m
 
@@ -113,24 +110,6 @@ include $redi/redi11c_education.doi
 fvset base 1 dG_edu  		// ref: less than HS
 tab `edu_var' dG_edu, m
 
-***--------------------------***
-
-// # LABOR FORCE
-
-/*LABFORCE is a dichotomous variable indicating whether a person participated 
-in the labor force. See EMPSTAT for a non-dichotomous variable that indicates 
-whether the respondent was part of the labor force -- working or seeking work 
--- and, if so, whether the person was currently unemployed.*/
-
-tab labforce
-tab labforce, nolab m
-
-generate labor = .
-replace labor = 1 if labforce == 2  // yes in labor force
-replace labor = 0 if labforce == 1  // not in labor force
-
-tab labforce labor, m
-
 
 ***--------------------------***
 
@@ -141,14 +120,15 @@ emotional condition lasting six months or more that makes it difficult or
 impossible to perform basic activities outside the home alone. 
 This does not include temporary health problems, such as broken bones.*/
 
-tab diffmob 
-tab diffmob, nolab
+local disab diffmob_acs
+tab `disab'
+tab `disab', nolab
 
 generate disability = .
-replace disability = 1 if diffmob == 2 	// has mobility limitation
-replace disability = 0 if diffmob == 1  // no mobility limitation
+replace disability = 1 if `disab' == 2 	// has mobility limitation
+replace disability = 0 if `disab' == 1  // no mobility limitation
 
-tab diffmob disability, m
+tab `disab' disability, m
 
 
 ***--------------------------***
@@ -158,14 +138,15 @@ tab diffmob disability, m
 /*MARST gives each person's current marital status,
  including whether the spouse was currently living in the same household.*/
 
-tab marst
-tab marst, nolab
+local mar_var  marst_acs
+tab `mar_var'
+tab `mar_var', nolab
 
 generate married = .
-replace married = 1 if marst == 1 | marst == 2
-replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
+replace married = 1 if `mar_var' == 1 | `mar_var' == 2
+replace married = 0 if `mar_var' == 3 | `mar_var' == 4 | `mar_var' == 5 | `mar_var' == 6
 
-tab marst married, m
+tab `mar_var' married, m
 
 ***--------------------------***
 
@@ -177,14 +158,15 @@ Households that acquired their unit with a mortgage or other lending arrangement
 Two types of renters were identified: those who paid cash rent and those who 
 paid no cash rent. The latter category included occupants who paid only for their utilities.*/
 
-tab ownershp
-tab ownershp, nolab
+local owner  ownershp_acs
+tab `owner'
+tab `owner', nolab
 
 generate ownhouse = .
-replace ownhouse = 1 if ownershp == 1
-replace ownhouse = 0 if ownershp == 2 
+replace ownhouse = 1 if `owner' == 1
+replace ownhouse = 0 if `owner' == 2 
 
-tab ownershp ownhouse, m
+tab `owner' ownhouse, m
 
 ***--------------------------***
 
@@ -192,12 +174,13 @@ tab ownershp ownhouse, m
 
 /*MIGRATE1 indicates whether the respondent had changed residence in the past year. Those who were living in the same house as one year ago were considered non-movers and were asked no further questions about migration over the past year. Movers were asked about the city, county and state and/or the U.S. territory or foreign country where they resided one year ago.*/
 
-tab migrate1
-tab migrate1, nolab
+local mig_status migrate1_acs
+tab `mig_status'
+tab `mig_status', nolab
 
 generate migrate = .
-replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 
-replace migrate = 0 if migrate1	== 1
+replace migrate = 1 if `mig_status' == 2 | `mig_status' == 3 | `mig_status' == 4 
+replace migrate = 0 if `mig_status'	== 1
 
 ***--------------------------***
 

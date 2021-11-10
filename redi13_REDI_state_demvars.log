@@ -1,17 +1,15 @@
---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
       name:  redi13_REDI_state_demvars
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi13_RE
-> DI_state_demvars.log
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi13_REDI_state_demvars.log
   log type:  text
- opened on:  25 Oct 2021, 15:51:38
+ opened on:   9 Nov 2021, 19:18:33
 
 . 
 . //      project:        REDI Methods Paper
 . 
 . //  task:       Creating variables for regressions for state example
 . //  data:       CPS ASEC from IPUMS, available: https://cps.ipums.org/
-. //                              ACS from IPUMS, available: https://usa.ipums.o
-> rg/
+. //                              ACS from IPUMS, available: https://usa.ipums.org/
 . 
 . //  github:     redi
 . //  OSF:                https://osf.io/qmhe8/
@@ -19,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-25 Oct 2021  15:51:38
+ 9 Nov 2021  19:18:33
 
 . 
 . ***--------------------------***
@@ -53,7 +51,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi13_REDI_state_demva
 .                 
 . // #1 GENDER
 .  
-. local gender_var sex
+. local gender_var sex_acs
 
 . tab `gender_var', m
 
@@ -106,7 +104,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi13_REDI_state_demva
 . 
 . // #2 RACE / ETHNICITY - with RACE and HISP
 . 
-. local race_var race
+. local race_var race_acs
 
 . tab `race_var'
 
@@ -146,15 +144,11 @@ American Indian or Alaska Native |    105,114        1.10       87.65
 . gen hisp = .
 (9,586,080 missing values generated)
 
-. replace hisp = 1 if hispan >0
+. replace hisp = 1 if hispan_acs >0
 (1,377,108 real changes made)
 
-. replace hisp = 0 if hispan == 0
+. replace hisp = 0 if hispan_acs == 0
 (8,208,972 real changes made)
-
-. 
-. replace race = 800 if race >=800
-(0 real changes made)
 
 . 
 . local hisp_var hisp
@@ -195,7 +189,6 @@ Three or more major r |    24,812     10,689 |    35,501
                 Total | 8,208,972  1,377,108 | 9,586,080 
 . }
 
-. 
 . 
 . *don't know/refused code(s) for `race_var'
 . local race_missing_condition none
@@ -736,7 +729,7 @@ Three or more major r |    24,812 |    35,501
 . 
 . // #3 EDUCATION
 . 
-. local edu_var educ
+. local edu_var educ_acs
 
 . tab `edu_var'
 
@@ -1224,59 +1217,6 @@ Nursery school to gra |         0 |   723,135
                 Total |   901,319 | 9,586,080 
 
 . 
-. ***--------------------------***
-. 
-. // # LABOR FORCE
-. 
-. /*LABFORCE is a dichotomous variable indicating whether a person participated 
-> in the labor force. See EMPSTAT for a non-dichotomous variable that indicates 
-> whether the respondent was part of the labor force -- working or seeking work 
-> -- and, if so, whether the person was currently unemployed.*/
-. 
-. tab labforce
-
-        Labor force status |      Freq.     Percent        Cum.
----------------------------+-----------------------------------
-                       N/A |  1,712,067       17.86       17.86
-No, not in the labor force |  3,167,751       33.05       50.91
-   Yes, in the labor force |  4,706,262       49.09      100.00
----------------------------+-----------------------------------
-                     Total |  9,586,080      100.00
-
-. tab labforce, nolab m
-
-Labor force |
-     status |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          0 |  1,712,067       17.86       17.86
-          1 |  3,167,751       33.05       50.91
-          2 |  4,706,262       49.09      100.00
-------------+-----------------------------------
-      Total |  9,586,080      100.00
-
-. 
-. generate labor = .
-(9,586,080 missing values generated)
-
-. replace labor = 1 if labforce == 2  // yes in labor force
-(4,706,262 real changes made)
-
-. replace labor = 0 if labforce == 1  // not in labor force
-(3,167,751 real changes made)
-
-. 
-. tab labforce labor, m
-
-                      |              labor
-   Labor force status |         0          1          . |     Total
-----------------------+---------------------------------+----------
-                  N/A |         0          0  1,712,067 | 1,712,067 
-No, not in the labor  | 3,167,751          0          0 | 3,167,751 
-Yes, in the labor for |         0  4,706,262          0 | 4,706,262 
-----------------------+---------------------------------+----------
-                Total | 3,167,751  4,706,262  1,712,067 | 9,586,080 
-
-. 
 . 
 . ***--------------------------***
 . 
@@ -1287,7 +1227,9 @@ Yes, in the labor for |         0  4,706,262          0 | 4,706,262
 > impossible to perform basic activities outside the home alone. 
 > This does not include temporary health problems, such as broken bones.*/
 . 
-. tab diffmob 
+. local disab diffmob_acs
+
+. tab `disab'
 
     Independent living difficulty |      Freq.     Percent        Cum.
 ----------------------------------+-----------------------------------
@@ -1297,7 +1239,7 @@ Has independent living difficulty |    560,709        5.85      100.00
 ----------------------------------+-----------------------------------
                             Total |  9,586,080      100.00
 
-. tab diffmob, nolab
+. tab `disab', nolab
 
 Independent |
      living |
@@ -1313,14 +1255,14 @@ Independent |
 . generate disability = .
 (9,586,080 missing values generated)
 
-. replace disability = 1 if diffmob == 2  // has mobility limitation
+. replace disability = 1 if `disab' == 2  // has mobility limitation
 (560,709 real changes made)
 
-. replace disability = 0 if diffmob == 1  // no mobility limitation
+. replace disability = 0 if `disab' == 1  // no mobility limitation
 (7,431,055 real changes made)
 
 . 
-. tab diffmob disability, m
+. tab `disab' disability, m
 
    Independent living |            disability
            difficulty |         0          1          . |     Total
@@ -1340,7 +1282,9 @@ Has independent livin |         0    560,709          0 |   560,709
 . /*MARST gives each person's current marital status,
 >  including whether the spouse was currently living in the same household.*/
 . 
-. tab marst
+. local mar_var  marst_acs
+
+. tab `mar_var'
 
          Marital status |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
@@ -1353,7 +1297,7 @@ Married, spouse present |  3,929,604       40.99       40.99
 ------------------------+-----------------------------------
                   Total |  9,586,080      100.00
 
-. tab marst, nolab
+. tab `mar_var', nolab
 
     Marital |
      status |      Freq.     Percent        Cum.
@@ -1371,14 +1315,15 @@ Married, spouse present |  3,929,604       40.99       40.99
 . generate married = .
 (9,586,080 missing values generated)
 
-. replace married = 1 if marst == 1 | marst == 2
+. replace married = 1 if `mar_var' == 1 | `mar_var' == 2
 (4,106,283 real changes made)
 
-. replace married = 0 if marst == 3 | marst == 4 |  marst == 5 | marst == 6
+. replace married = 0 if `mar_var' == 3 | `mar_var' == 4 | `mar_var' == 5 | `mar
+> _var' == 6
 (5,479,797 real changes made)
 
 . 
-. tab marst married, m
+. tab `mar_var' married, m
 
                       |        married
        Marital status |         0          1 |     Total
@@ -1406,7 +1351,9 @@ Married, spouse absen |         0    176,679 |   176,679
 > paid no cash rent. The latter category included occupants who paid only for th
 > eir utilities.*/
 . 
-. tab ownershp
+. local owner  ownershp_acs
+
+. tab `owner'
 
        Ownership of dwelling |
   (tenure) [general version] |      Freq.     Percent        Cum.
@@ -1417,7 +1364,7 @@ Owned or being bought (loan) |  6,592,261       68.77       73.46
 -----------------------------+-----------------------------------
                        Total |  9,586,080      100.00
 
-. tab ownershp, nolab
+. tab `owner', nolab
 
   Ownership |
 of dwelling |
@@ -1435,14 +1382,14 @@ of dwelling |
 . generate ownhouse = .
 (9,586,080 missing values generated)
 
-. replace ownhouse = 1 if ownershp == 1
+. replace ownhouse = 1 if `owner' == 1
 (6,592,261 real changes made)
 
-. replace ownhouse = 0 if ownershp == 2 
+. replace ownhouse = 0 if `owner' == 2 
 (2,543,858 real changes made)
 
 . 
-. tab ownershp ownhouse, m
+. tab `owner' ownhouse, m
 
 Ownership of dwelling |
     (tenure) [general |             ownhouse
@@ -1465,7 +1412,9 @@ Owned or being bought |         0  6,592,261          0 | 6,592,261
 > ear. Movers were asked about the city, county and state and/or the U.S. territ
 > ory or foreign country where they resided one year ago.*/
 . 
-. tab migrate1
+. local mig_status migrate1_acs
+
+. tab `mig_status'
 
  Migration status, 1 |
        year [general |
@@ -1479,7 +1428,7 @@ Moved between states |    215,897        2.25       99.45
 ---------------------+-----------------------------------
                Total |  9,586,080      100.00
 
-. tab migrate1, nolab
+. tab `mig_status', nolab
 
   Migration |
   status, 1 |
@@ -1499,10 +1448,11 @@ Moved between states |    215,897        2.25       99.45
 . generate migrate = .
 (9,586,080 missing values generated)
 
-. replace migrate = 1 if migrate1 == 2 | migrate1 == 3 | migrate1 == 4 
+. replace migrate = 1 if `mig_status' == 2 | `mig_status' == 3 | `mig_status' ==
+>  4 
 (1,261,746 real changes made)
 
-. replace migrate = 0 if migrate1 == 1
+. replace migrate = 0 if `mig_status'     == 1
 (8,232,779 real changes made)
 
 . 
@@ -1513,7 +1463,7 @@ Moved between states |    215,897        2.25       99.45
 . label data "ACS data with DEMOGRAPHIC VARIABLES"
 
 . datasignature set, reset 
-  9586080:210(82743):1098210520:2142592039       (data signature reset)
+  9586080:209(55251):1593420004:2559228185       (data signature reset)
 
 . save $deriv/redi13_REDI_state_demvars.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi13_REDI_state_demva
