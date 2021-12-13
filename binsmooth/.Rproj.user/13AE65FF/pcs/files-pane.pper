@@ -1,9 +1,9 @@
 {
-    "path" : "~/Documents/SocResearch/Dissertation/text/incomeBins/binsmooth",
-    "sortOrder" : [
+    "path": "~/Documents/SocResearch/Dissertation/text/incomeBins/binsmooth",
+    "sortOrder": [
         {
-            "ascending" : true,
-            "columnIndex" : 2
+            "ascending": true,
+            "columnIndex": 2
         }
     ]
 }

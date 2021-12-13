@@ -50,7 +50,9 @@ invCDF <- inverse(fCDF, 0, splb$E)  #https://www.rdocumentation.org/packages/GoF
 median <- invCDF(.5)
 print(median)
 
-
+#Random Sample
+tableSample <- sb_sample(splb, n = 500)
+print(tableSample)
 
 ##Step function PDF and CDF fitted to binned data (polygonal) ##
 sb <- stepbins(bEdges, bCounts, m)
@@ -107,6 +109,9 @@ print(gini)
 invCDF <- inverse(fCDF, 0, splb$E)  #https://www.rdocumentation.org/packages/GoFKernel/versions/2.1-1/topics/inverse
 median <- invCDF(.5)
 print(median)
+
+#Random Sample
+tableSample <- sb_sample(splb, n = 500)
 
 
 ## Step function PDF and CDF fitted to binned data (POLYGONAL) ##
