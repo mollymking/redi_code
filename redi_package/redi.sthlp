@@ -11,8 +11,8 @@
 
 {p 8 17 2}
 {cmd: redi}
-{help numlist: inc_var(long)}
-{help numlist: year(int)}
+{help varlist: inc_var(string)}
+{help varlist: year(string)}
 using
 {help dta: filename}
 [
@@ -20,10 +20,11 @@ using
 {newvar}
 {help options: inc_type(string)}
 {help options: inflation_year(int)}
+{help options: refvars(namelist)}
 ]
 
 {p 4 4 2}
-where {it:inc_var} is
+where {it:inc_var(string)} is
 
 {p 8 17 2}
 the name of the categorical income variable in the original research dataset, where
@@ -31,7 +32,7 @@ the name of the categorical income variable in the original research dataset, wh
 (with the categories storied as value labels);
 
 {p 4 4 2}
-{it:year} is
+{it:year(string)} is
 
 {p 8 17 2}
 the name of the year variable in the original research dataset;
@@ -69,8 +70,8 @@ limitations, see the "REDI for Binned Data" paper, listed under the references.
 {dlgtab:Main}
 
 {phang}
-{it:newvar} specifies a name for the new continuous income variable calculated using the {cmd:redi} method.
-If no name is specified, the default variable name is redi_inc.
+{gen(string)} specifies a name for the new continuous income variable calculated using the {cmd:redi} method.
+
 
 {phang}
 {opt inc_type(string)} specifies the type of income reference variable to use from the CPS ASEC reference dataset.
@@ -79,6 +80,12 @@ Options are "household", "family", or "respondent"-level income.
 {phang}
 {opt inflation_year(int)} specifies the year to which the data should be inflated using the R-CPI-U-RS (see remarks).
 The year should be specified as a 4-digit number. If no inflation adjustment is desired, do not specify.
+
+{phang}
+{opt refvars(namelist)} allows the user to specify two variables,
+the names of the continuous income variable and the year variable in the reference data set.
+This option is required when the user supplies a reference dataset.
+The program supplies these options automatically for the default CPS ASEC reference dataset.
 
 
 {title:Remarks}
@@ -95,7 +102,6 @@ To use the CPS ASEC as the reference dataset, the researcher must download this
 dataset for the year(s) of interest before using the CPS ASEC as a reference
 dataset with this command. The variables needed are: YEAR, ASECWTH, HHINCOME,
 and PERNUM. Place this dataset in your current working directory and name the file "cps_reference.dta".
-Alternatively, you may use a local to indicate the location and name of the reference dataset.
 These {browse
 "https://www.census.gov/topics/population/foreign-born/guidance/cps-guidance/using-cps-asec-microdata.html":details
 on using the CPS ASEC Public Use Microdata}, including technical documentation
@@ -129,15 +135,19 @@ Using the {opt inflation_year} option for automatically downloads this dataset f
 {title:Examples}
 
 {p 4 4 2}
-// Calculate a new continuous income variable named ca_redi_inc19 from categorical household income variable hhincome_acs using CPS ASEC reference dataset {p_end}
+// Calculate a new continuous income variable named newvar_name from categorical household income variable income_categorical using CPS ASEC reference dataset. Since the CPS is the default reference dataset, it does not need to be specified as a using dataset, but the income type does need to be specified as an option.{p_end}
 {p 4 4 2}
-{help cmd: redi} {help var: hhincome_acs} {help var: year} {help dta: cps}, {help newvar: ca_redi_inc19} {help options: household}
+{help cmd: redi} {help var: income_categorical} {help var: year}, gen(newvar_name) cps(household)
 
 {p 4 4 2}
 // Inflate the resulting continuous household income values to 2020 dollars using the R-CPI-U-RS {p_end}
 {p 4 4 2}
-{help cmd: redi} {help var: hhincome_acs} {help var: year} {help dta: cps}, {help newvar: ca_redi_inc19} {help options: household} {help options: 2020}
+{help cmd: redi} {help var: income_categorical} {help var: year}, gen(newvar_name) cps(household) {help options: inf(2020)}
 
+{p 4 4 2}
+// Use an external reference dataset to compute a new continuous income variable named newvar_name.{p_end}
+{p 4 4 2}
+{help cmd: redi} {help var: income_categorical} {help var: year} using {help dta: myreferencedata.dta}, gen(newvar_name) ref(income_continuous_ref year_in_ref_data)
 
 {title:Author}
 
@@ -150,6 +160,7 @@ Using the {opt inflation_year} option for automatically downloads this dataset f
 {title:Acknowledgments}
 
 {p 4 4 2}
+I am grateful to Jeremy Freese for his significant help with the syntax and implementation of this program.
 I thank Christof Brandtner, Jeremy Freese, and David Grusky for their feedback on the methodological paper underlying this program.
 I also thank Nicholas J. Cox for his useful Stata programs and help files, which have served as a model for this help file.
 
