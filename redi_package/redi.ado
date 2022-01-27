@@ -27,7 +27,6 @@ save `research_data'
 ***-----------------------------***
 
 *TO DO	
-* Output of REDI income value is not accurate
 * convert  $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta
 * and tempfiles to frames
 * add in inflation years
@@ -260,7 +259,7 @@ foreach y of local years { // loop through all years
 		use `reference_dataset', clear
 		di "Reference data open - Income type set as `inc_cat_var' income" 
 		
-		keep if `ref_year' == `y' | `"`ref_year'"' == "nys" & ///
+		keep if `ref_year' == `y' & ///  
 			`ref_income_var' >= `lower_bound' & ///
 			`ref_income_var' <= `upper_bound'
 		gen obs_no = _n
@@ -367,7 +366,7 @@ drop _merge
 gen `new_inc_var' = `ref_income_var'
 format `new_inc_var' %6.0fc
 label var `new_inc_var' "REDI continuous `inc_cat_var' income"
-	
+
 
 ***-----------------------------***
 
