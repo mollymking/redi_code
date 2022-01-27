@@ -1,4 +1,4 @@
-*! 1.1 Molly M. King 11 October 2021
+*! 1.1 Molly M. King 27 January 2022
 
 ***-----------------------------***
 
@@ -45,29 +45,13 @@ save `research_data'
 	
 	
 // new variable	created for continuous income for research dataset
-local new_variable "`generate'"
+local new_inc_var "`generate'"
 
 
-** using filename
-if `"`using'"' == "" {
-	local reference_dataset $temp/redi13_cps_state_ca.dta
-}
-else {
-	local reference_dataset `"`using'"'
-}
+** using CPS-ASEC
+local reference_dataset $temp/redi13_cps_state_ca.dta
+local ref_year "year" // name of variable in CPS-ASEC, default reference  
 
-
-** reference variables
-if `"`using'"' == "" {  // default to CPS-ASEC, if none specified
-	local ref_year "year" // name of variable in CPS-ASEC, default reference    
-}
-else { // user specified file
-	local ref_income_var : word 1 of `refvars'
-	local ref_year : word 2 of `refvars'
-	if "`ref_year'" == "" { // year variable not specified
-		local ref_year "nys" // no year specified
-	}
-}
 
 ** income_type for CPS-ASEC reference
 if "`cpstype'" == "family" & `"`using'"' == "" {
@@ -380,9 +364,9 @@ drop _merge
 ***-----------------------------***
 
 // PROGRAM TO RENAME FINAL VARIABLES if inflation not specified
-gen `new_variable' = `ref_income_var'
-format `new_variable' %6.0fc
-label var `new_variable' "REDI continuous `inc_cat_var' income"
+gen `new_inc_var' = `ref_income_var'
+format `new_inc_var' %6.0fc
+label var `new_inc_var' "REDI continuous `inc_cat_var' income"
 	
 
 ***-----------------------------***
