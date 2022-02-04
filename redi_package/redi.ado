@@ -28,8 +28,7 @@ save `research_data'
 ***-----------------------------***
 
 *TO DO	
-* convert  $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta and tempfiles to frames
-* add in inflation years
+* convert tempfiles to frames to speed up program
 * change reference data to 	local reference_dataset "cps_reference.dta"
 	
 ***-----------------------------***
@@ -263,13 +262,8 @@ foreach y of local years { // loop through all years
 		gen obs_no = _n
 		di "Observation number generated"
 	
-		**** TO DO: convert  $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta to tempfile - currently not working
-		*tempfile ref_`ref_data'_`ref_year'_`inc_level'
-		*di "tempfile created"
-		*save `ref_`ref_data'_`ref_year'_`inc_level'', replace
-		save $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta, replace
-		//use frames here
-		//or use tempname - for the frames* then drop the tempname at the end
+		tempfile ref_`y'_`inc_level'
+		save `ref_`y'_`inc_level'', replace
 	
 		di "Ref to keep income between $`lower_bound' and $`upper_bound' for `y' year."
 			
@@ -285,12 +279,8 @@ foreach y of local years { // loop through all years
 		clear
 		set obs `sample_size'
 		gen obs_no = runiformint(1, `N')
-		*merge m:1 obs_no using `temp_`ref_data'_`ref_year'_inc`inc_level'', keep(match) nogenerate 
-		merge m:1 obs_no using  $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta, ///
-		keep(match) nogenerate 
-
-		*save `temp_`ref_data'_`ref_year'_inc`inc_level'', replace
-		save $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta, replace
+		merge m:1 obs_no using `ref_`y'_`inc_level'', keep(match) nogenerate 
+		save `ref_`y'_`inc_level'', replace
 			
 		// #4) Merge Research and random sample of reference (ASEC) data
 		// within incomebin, year
