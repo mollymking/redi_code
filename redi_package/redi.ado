@@ -15,7 +15,8 @@ capture program drop redi
 program define redi
 
 syntax varlist(min=2 max=2), ///
-	Generate(name) [cpstype(string)]
+	Generate(name) [CPStype(string)] ///
+	[INFlationyear(numlist integer >=1978 max=1)]
 /*
 syntax varlist(min=2 max=2) [using/], ///
 	Generate(name) [INFlation(integer 0)] [CPStype(string)] ///
@@ -27,11 +28,9 @@ save `research_data'
 ***-----------------------------***
 
 *TO DO	
-* convert  $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta
-* and tempfiles to frames
+* convert  $temp/`ASECdata'_`ref_year'_inc`inc_level'.dta and tempfiles to frames
 * add in inflation years
 * change reference data to 	local reference_dataset "cps_reference.dta"
-* cannot yet specify name of new continuous income variable
 	
 ***-----------------------------***
 // #0 Define all locals
@@ -47,10 +46,9 @@ save `research_data'
 local new_inc_var "`generate'"
 
 
-** using CPS-ASEC
+** using CPS-ASEC as reference dataset
 local reference_dataset $temp/redi13_cps_state_ca.dta
 local ref_year "year" // name of variable in CPS-ASEC, default reference  
-
 
 ** income_type for CPS-ASEC reference
 if "`cpstype'" == "family" & `"`using'"' == "" {
@@ -90,41 +88,41 @@ else if `"`cpstype'"' != "household" & `"`cpstype'"' != "family" & `"`csstype'"'
 	error 999
 }
 
-	/*
-** inflation year
-if `inflation' == 0 | `"`inflation'"' == "" {
+
+*inflation
+*check if empty
+local inflation_year `inflationyear'
+di in red "Inflation year is `inflation_year'"
+capture assert `inflation_year' !=. // verifies expression is true
+if _rc { // if return code, expression false (no inflation)
 	local inflate = "no"
-}
-else if `inflation' < 1978 | `inflation' > 4000 {
-	di as error "Inflation using CPI-U-RS data only works for years 1978 and later."
-	error 999
-}
-else {
-	local inflate = "yes"
-	local inflation_year = `inflation'
-	
-	// import CPI-U-RS data from 
+} 
+else if _rc == 0 { // if rc, expression true --> inflationyear empty/missing
+	local inflate = "yes"	
+	di in red "Get data: Inflation year is " `inflation_year'
 	import excel "https://www.bls.gov/cpi/research-series/r-cpi-u-rs-allitems.xlsx", ///
 		clear cellrange(A6:N49) firstrow
-
 	*rename columns
-	drop if YEAR == 1977
+	//keep if YEAR == `inflation_year'
 	keep YEAR AVG
 	rename YEAR year
-	rename AVG cpi_avg
-	label var cpi_avg "CPI-R-US all items average cost price inflator"
+	rename AVG cpi_avg  // "CPI-R-US all items average cost price inflator"
+	tempfile temp_cpi
+	save `temp_cpi', replace
 
-	tempfile temp_cpiurs
-	save `temp_cpiurs', replace
-	*save "r-cpi-u-rs-allitems.dta", replace // save as dta
+	keep if year == `inflation_year' // now keep only CPI data from year inflating to
+	local avg_`inflation_year' = cpi_avg
+	di `avg_`inflation_year''	
 
-	* Merge with CPI-U-RS Inflation Data
-	merge m:1 year using `temp_cpiurs'
-
-	drop _merge	
+	use `temp_cpi', clear
+	gen conv_factor_`inflation_year' = .
+	*divide year inflating from / year inflating to
+	replace conv_factor_`inflation_year' = cpi_avg / `avg_`inflation_year''
+	label var conv_factor_`inflation_year' "Conversion factor - to convert to $`inf_year, divide by conv_factor"
+	save `temp_cpi', replace
 }
-	
-*/
+
+
 ***-----------------------------***
 
 // convert categorical to continuous income values, independent of values of categories
@@ -361,12 +359,26 @@ drop obs_no id inc_decoded
 drop _merge
 
 ***-----------------------------***
-
-// PROGRAM TO RENAME FINAL VARIABLES if inflation not specified
+// PROGRAM TO RENAME FINAL VARIABLES
 gen `new_inc_var' = `ref_income_var'
 format `new_inc_var' %6.0fc
 label var `new_inc_var' "REDI continuous `inc_cat_var' income"
 
+***-----------------------------***
+
+// INFLATE based on specified inflation_year
+if "`inflate'" == "yes" { // if inflation year is not empty	
+di in red "INFLATE: Inflation year is " `inflation_year'
+	merge m:1 year using `temp_cpi'
+	drop _merge	
+	
+	* INFLATION-ADJUSTED INCOME = divide continuous income variable by conversion factor
+	*original income variable, adjusted for inflation
+	gen `new_inc_var'_inf`inflation_year' = `new_inc_var' / conv_factor
+	format `new_inc_var'_inf`inflation_year' %6.0fc
+	label var `new_inc_var'_inf`inflation_year' "REDI continuous inflation-adjusted `inc_var' income, `inflation_year' dollars"
+	//drop `inc_var_name'
+}
 
 ***-----------------------------***
 
