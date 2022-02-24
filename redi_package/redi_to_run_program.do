@@ -28,26 +28,19 @@ save $deriv/redi13_ACS2019sample.dta, replace
 // # RUN REDI.ADO PROGRAM ON 2019 California DATA
 ***--------------------------***
 
-use $deriv/redi13_ACS2019sample.dta, clear
-
 *for debugging:
 noisily
-set trace on 
+*set trace on 
 program drop _all
 discard
 
-use $deriv/redi13_ACS2019sample.dta, clear
-cd $redi/redi_package/
+use "~/Documents/SocResearch/Dissertation/data/data_derv/redi13_ACS2019sample.dta", clear
+drop repwt* cluster strata perwt hhwt   pernum // for debugging, simplify
+*health migrate labforce hispan marst race sex  asecwt  asecwth  ownershp
 
-redi acs_hhinc year, generate(ca_redi_inc19) cpstype(household)
-
-*redi inc_research_dataset year, gen(newvarname) inflation
-*if inflation is not specified, it will be 0, so then
-
-* want to look something like:
-* redi inc_var(acs_hhinc) year(year), newvar = ca_redi_inc19 inflate(2020)
-* or simply:
-* redi acs_hhinc year, ca_redi_inc19 2020.
+cd "~/Documents/SocResearch/redi/redi_code/redi_package/" // location of redi ado file
+redi acs_hhinc year, ///
+	generate(ca_redi_inc19) cpstype(household)  inflationyear(1997)
 
 ***--------------------------***
 
