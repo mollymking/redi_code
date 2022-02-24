@@ -13,21 +13,18 @@
 {cmd: redi}
 {help varlist: inc_var(string)}
 {help varlist: year(string)}
-using
-{help dta: filename}
-[
 {cmd:,}
-{newvar}
-{help options: inc_type(string)}
-{help options: inflation_year(int)}
-{help options: refvars(namelist)}
+Generate({newvar})
+[
+{help options: CPStype(string)}
+{help options: INFlationyear(int)}
 ]
 
 {p 4 4 2}
 where {it:inc_var(string)} is
 
 {p 8 17 2}
-the name of the categorical income variable in the original research dataset, where
+the name of the categorical income variable in the original research dataset, and
 {it:inc_var} may be either a string variable (with the categories as text) or a numeric variable
 (with the categories storied as value labels);
 
@@ -35,23 +32,20 @@ the name of the categorical income variable in the original research dataset, wh
 {it:year(string)} is
 
 {p 8 17 2}
-the name of the year variable in the original research dataset;
+the name of the year variable in the original research dataset; and
 
 {p 4 4 2}
-and {it:filename}
+{it:Generate(string)} specifies
 
 {p 8 17 2}
-specifies the filename of the reference dataset the researcher wishes to use for income data (see remarks).
-Using cps (or specifying ref_data without a dataset option) tells the program to
-use the CPS ASEC as the reference distribution for income.
-If cps is used as the reference distribution, the {opt inc_type} must be specified.
+a name for the new continuous income variable calculated using the {cmd:redi} method.
 
 
 {title:Description}
 
 {p 8 17 2}
 {cmd:redi} is a method for cold-deck imputation of a continuous distribution
-from binned incomes, using a real-world reference dataset.
+from binned incomes, using a real-world reference dataset (in this case, the CPS ASEC).
 
 {p 4 4 2}
 The Random Empirical Distribution Imputation ({cmd:redi}) method imputes
@@ -70,22 +64,13 @@ limitations, see the "REDI for Binned Data" paper, listed under the references.
 {dlgtab:Main}
 
 {phang}
-{gen(string)} specifies a name for the new continuous income variable calculated using the {cmd:redi} method.
-
-
-{phang}
-{opt inc_type(string)} specifies the type of income reference variable to use from the CPS ASEC reference dataset.
+{opt CPStype(string)} specifies the type of income reference variable to use from the CPS ASEC reference dataset.
 Options are "household", "family", or "respondent"-level income.
 
 {phang}
-{opt inflation_year(int)} specifies the year to which the data should be inflated using the R-CPI-U-RS (see remarks).
+{opt INFlationyear(int)} specifies the year to which the data should be inflated using the R-CPI-U-RS (see remarks).
 The year should be specified as a 4-digit number. If no inflation adjustment is desired, do not specify.
 
-{phang}
-{opt refvars(namelist)} allows the user to specify two variables,
-the names of the continuous income variable and the year variable in the reference data set.
-This option is required when the user supplies a reference dataset.
-The program supplies these options automatically for the default CPS ASEC reference dataset.
 
 
 {title:Remarks}
@@ -102,52 +87,52 @@ To use the CPS ASEC as the reference dataset, the researcher must download this
 dataset for the year(s) of interest before using the CPS ASEC as a reference
 dataset with this command. The variables needed are: YEAR, ASECWTH, HHINCOME,
 and PERNUM. Place this dataset in your current working directory and name the file "cps_reference.dta".
-These {browse
-"https://www.census.gov/topics/population/foreign-born/guidance/cps-guidance/using-cps-asec-microdata.html":details
-on using the CPS ASEC Public Use Microdata}, including technical documentation
-and details about weights, may also be useful.
-
-{p 4 4 2}
-Otherwise, if you do not wish to use the CPS ASEC, you may specify your own .dta file as the reference here,
-using the format ref_data = "ReferenceDataName.dta", optionally with directory, i.e. "~/Desktop/ReferenceDataName.dta".
-
+Additional
+{browse "https://www.census.gov/topics/population/foreign-born/guidance/cps-guidance/using-cps-asec-microdata.html":details on using the CPS ASEC Public Use Microdata},
+including technical documentation and details about analysis using survey weights, may also be useful.
 
 {p 4 4 2}
 {it:Program Output}
 
 {p 4 4 2}
-Without specifying an inflation year, the {cmd:redi} command produces the continuous income variable {newvar} calculated in the dollar value of the original research dataset.
-With the inflation option, the {cmd:redi} command produces the continuous income variable {newvar} calculated using the redi method, adjusted for inflation using the specified inflation dataset and year.
+Without specifying an inflation year, the {cmd:redi} command produces the
+continuous income variable {newvar} calculated in the dollar value corresponding to the year of the
+original research dataset. With the inflation option, the {cmd:redi} command
+produces both this same continuous income variable {newvar} calculated using the {cmd:redi}
+method, and another new variable adjusted for inflation using the specified inflation dataset and year.
 
 
 {p 4 4 2}
 {it:Inflation}
 
 {p 4 4 2}
-The Consumer Price Index retroactive series using current methods with all
-items (R-CPI-U-RS) is available from the U.S. Bureau of
-Labor Statistics website ({browse "http://www.bls.gov/cpi/research-series/r-cpi-u-rs-home.htm":http://www.bls.gov/cpi/research-series/r-cpi-u-rs-home.htm}).
-The Retroactive Series (R-CPI-U-RS) estimates the Consumer Price Index for Urban Consumers from 1978, using current methods that incorporate these improvements over the entire time span.
-Using the {opt inflation_year} option for automatically downloads this dataset for use in inflation adjustment. The year specified indicates the year that should be used for inflation-adjusted dollars.
+The Consumer Price Index retroactive series using current methods with all items
+(R-CPI-U-RS) is available from the U.S. Bureau of Labor Statistics website
+({browse "http://www.bls.gov/cpi/research-series/r-cpi-u-rs-home.htm":http://www.bls.gov/cpi/research-series/r-cpi-u-rs-home.htm}).
+The Retroactive Series (R-CPI-U-RS) estimates the Consumer Price Index for Urban
+Consumers from 1978, using current methods that incorporate these improvements
+over the entire time span. Using the {opt inflation_year} option for
+automatically downloads this dataset for use in inflation adjustment. The year
+specified indicates the year that should be used for inflation-adjusted dollars.
+Using this option produces a variable named ({newvar})_inf({it:inflationyear})
 
 
 
 {title:Examples}
 
 {p 4 4 2}
-// Calculate a new continuous income variable named newvar_name from categorical household income variable income_categorical using CPS ASEC reference dataset. Since the CPS is the default reference dataset, it does not need to be specified as a using dataset, but the income type does need to be specified as an option.{p_end}
-{p 4 4 2}
-{help cmd: redi} {help var: income_categorical} {help var: year}, gen(newvar_name) cps(household)
+// Calculate a new continuous income variable named household_cont from categorical
+household income variable inchousehold and year variable yr.
+The household income type needs to be specified as an option.{p_end}
+{p 8 17 2}
+{help cmd: redi} {help var: inchousehold} {help var: yr}, gen(household_cont) cps(household)
 
 {p 4 4 2}
-// Inflate the resulting continuous household income values to 2020 dollars using the R-CPI-U-RS {p_end}
-{p 4 4 2}
-{help cmd: redi} {help var: income_categorical} {help var: year}, gen(newvar_name) cps(household) {help options: inf(2020)}
+// Inflate the resulting continuous household income values to 2020 dollars using the R-CPI-U-RS. This example will produce not only household_cont but also household_cont_inf2020,
+a version of the continuous variable inflated to 2020 dollars. {p_end}
+{p 8 17 2}
+{help cmd: redi} {help var: inchousehold} {help var: yr}, g(household_cont) cps(household) {help options: inf(2020)}
 
-{p 4 4 2}
-// Use an external reference dataset to compute a new continuous income variable named newvar_name.{p_end}
-{p 4 4 2}
-{help cmd: redi} {help var: income_categorical} {help var: year} using {help dta: myreferencedata.dta}, gen(newvar_name) ref(income_continuous_ref year_in_ref_data)
 
 {title:Author}
 
@@ -170,6 +155,7 @@ I also thank Nicholas J. Cox for his useful Stata programs and help files, which
 Baum, C.F. 2020. {browse "http://repec.org/bocode/s/sscsubmit.html":Submitting and retrieving materials from the SSC Archive}.
 
 {p 4 8 2}
-King, Molly M. 2020. {browse "https://doi.org/10.31235/osf.io/eswm8":REDI for Binned Data: A Random Empirical Distribution Imputation method for estimating continuous incomes}. SocArXiv Pre-print server.
+King, Molly M. 2022. "REDI for Binned Data: A Random Empirical Distribution Imputation method for estimating continuous incomes."
+Forthcoming in {it:Sociological Methodology.} {browse "https://doi.org/10.31235/osf.io/eswm8":Available on the SocArXiv Pre-print server.}
 
 {break}
