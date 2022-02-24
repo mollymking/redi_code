@@ -25,9 +25,6 @@ syntax varlist(min=2 max=2) [using/], ///
 
 tempfile research_data
 save `research_data'
-***-----------------------------***
-
-* change reference data to 	local reference_dataset "cps_reference.dta"
 	
 ***-----------------------------***
 // #0 Define all locals
@@ -44,7 +41,7 @@ local new_inc_var "`generate'"
 
 
 ** using CPS-ASEC as reference dataset
-local reference_dataset $temp/redi13_cps_state_ca.dta
+local reference_dataset "cps_reference.dta"
 local ref_year "year" // name of variable in CPS-ASEC, default reference  
 
 ** income_type for CPS-ASEC reference
