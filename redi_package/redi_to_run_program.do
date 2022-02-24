@@ -40,7 +40,7 @@ drop repwt* cluster strata perwt hhwt   pernum // for debugging, simplify
 
 cd "~/Documents/SocResearch/redi/redi_code/redi_package/" // location of redi ado file
 redi acs_hhinc year, ///
-	generate(ca_redi_inc19) cpstype(household)  inflationyear(1997)
+	generate(ca_redi_inc19) cpstype(household) 
 
 ***--------------------------***
 
