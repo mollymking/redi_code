@@ -27,8 +27,6 @@ tempfile research_data
 save `research_data'
 ***-----------------------------***
 
-*TO DO	
-* convert tempfiles to frames to speed up program
 * change reference data to 	local reference_dataset "cps_reference.dta"
 	
 ***-----------------------------***
