@@ -57,6 +57,7 @@ reconciles bins between datasets or across years and handles top incomes.
 nonparametric, bin consistent, area- and variance-preserving, continuous, and
 computationally fast. For a complete discussion of the method's features and
 limitations, see the "REDI for Binned Data" paper, listed under the references.
+If you find this method useful for your research, please consider citing this reference.
 
 
 {title:Options}
@@ -101,6 +102,7 @@ original research dataset. With the inflation option, the {cmd:redi} command
 produces both this same continuous income variable {newvar} calculated using the {cmd:redi}
 method, and another new variable adjusted for inflation using the specified inflation dataset and year.
 
+{p 4 4 2}
 In the process of producing the continuous value, the {cmd:redi} command will also
 generate a lower-bound variable ({it:inc_var}_lb) and an upper-bound variable
 ({it:inc_var}_ub) for the continuous income variable drawn from the reference dataset.
