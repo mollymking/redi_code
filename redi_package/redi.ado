@@ -95,9 +95,9 @@ else if _rc == 0 { // if rc, expression true --> inflationyear empty/missing
 	local inflate = "yes"	
 	di "Get data: Inflation year is " `inflation_year'
 	import excel "https://www.bls.gov/cpi/research-series/r-cpi-u-rs-allitems.xlsx", ///
-		clear cellrange(A6:N49) firstrow
+		clear  cellrange(A6) firstrow
+		
 	*rename columns
-	//keep if YEAR == `inflation_year'
 	keep YEAR AVG
 	rename YEAR year
 	rename AVG cpi_avg  // "CPI-R-US all items average cost price inflator"
@@ -241,7 +241,7 @@ foreach y of local years { // loop through all years
 		label variable `inc_cat_var'_n "N in income level in research dataset"
 
 		// create temporary file of just this Research dataset income level and year 
-		// can merge reference/CPS-ASEC incomes back into later
+		// can merge reference/CPS-ASEC incomes back into later (in step #4)
 		keep if `research_year' == `y' & `inc_cat_var' == `inc_level'
 		gen id = _n
 		tempfile premerge_`inc_level'_`y'
@@ -274,12 +274,12 @@ foreach y of local years { // loop through all years
 		local N = r(N)
 		clear
 		set obs `sample_size'
+		di "number of observations is " `obs' " observations"
 		gen obs_no = runiformint(1, `N')
 		merge m:1 obs_no using `ref_`y'_`inc_level'', keep(match) nogenerate 
 		save `ref_`y'_`inc_level'', replace
 			
-		// #4) Merge Research and random sample of reference (ASEC) data
-		// within incomebin, year
+		// #4) Merge Research and random sample of reference (ASEC) data within incomebin, year
 		
 		gen id = _n
 		merge 1:1 id using `premerge_`inc_level'_`y'', ///
