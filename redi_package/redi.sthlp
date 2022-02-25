@@ -101,6 +101,11 @@ original research dataset. With the inflation option, the {cmd:redi} command
 produces both this same continuous income variable {newvar} calculated using the {cmd:redi}
 method, and another new variable adjusted for inflation using the specified inflation dataset and year.
 
+In the process of producing the continuous value, the {cmd:redi} command will also
+generate a lower-bound variable ({it:inc_var}_lb) and an upper-bound variable
+({it:inc_var}_ub) for the continuous income variable drawn from the reference dataset.
+These can be used to verify the new continuous variable or dropped at the researcher's
+convenience.
 
 {p 4 4 2}
 {it:Inflation}

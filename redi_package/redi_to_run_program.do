@@ -25,7 +25,7 @@ drop random group
 save $deriv/redi13_ACS2019sample.dta, replace
 */
 ***--------------------------***
-// # RUN REDI.ADO PROGRAM ON 2019 California DATA
+// # RUN REDI.ADO PROGRAM ON 2016-2017 ACS data (artificially binned)
 ***--------------------------***
 
 *for debugging:
@@ -34,13 +34,11 @@ noisily
 program drop _all
 discard
 
-use "~/Documents/SocResearch/Dissertation/data/data_derv/redi13_ACS2019sample.dta", clear
-drop repwt* cluster strata perwt hhwt   pernum // for debugging, simplify
-*health migrate labforce hispan marst race sex  asecwt  asecwth  ownershp
+use "~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.dta", clear
 
 cd "~/Documents/SocResearch/redi/redi_code/redi_package/" // location of redi ado file
-redi acs_hhinc year, ///
-	generate(ca_redi_inc19) cpstype(household) 
+redi acs_hinc_shp year, ///
+	generate(hhinccont) cpstype(household)  //inflationyear(2020)
 
 ***--------------------------***
 
