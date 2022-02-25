@@ -126,7 +126,7 @@ use `research_data', clear
 levelsof `inc_cat_var', local("`inc_cat_var'_levels")
 
 // sort for later join & create variable recording original observation order within the identifier
-bysort `research_year' `inc_cat_var': gen id = _n
+sort `research_year' `inc_cat_var'
 
 // #2 create numeric variables indicating edges of income categories //
 // Note: for more detail on if-command and Stata regular expressions used to create this, see:
@@ -243,6 +243,7 @@ foreach y of local years { // loop through all years
 		// create temporary file of just this Research dataset income level and year 
 		// can merge reference/CPS-ASEC incomes back into later
 		keep if `research_year' == `y' & `inc_cat_var' == `inc_level'
+		gen id = _n
 		tempfile premerge_`inc_level'_`y'
 		save `premerge_`inc_level'_`y'', replace
 		di "Saved tempfile with upper and lower bounds of research data income levels"
