@@ -38,7 +38,7 @@ use "~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.d
 
 cd "~/Documents/SocResearch/redi/redi_code/redi_package/" // location of redi ado file
 redi acs_hinc_shp year, ///
-	generate(hhinccont) cpstype(household)  //inflationyear(2020)
+	generate(hhinccont) cpstype(household)  inflationyear(2020)
 
 ***--------------------------***
 

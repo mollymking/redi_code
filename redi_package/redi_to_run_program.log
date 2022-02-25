@@ -3,10 +3,10 @@
        log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi_package/red
 > i_to_run_program.log
   log type:  text
- opened on:  25 Feb 2022, 12:44:15
+ opened on:  25 Feb 2022, 13:35:47
 
 . display "$S_DATE  $S_TIME"
-25 Feb 2022  12:44:15
+25 Feb 2022  13:35:47
 
 . 
 . ***--------------------------***
@@ -59,7 +59,7 @@
 /Users/mmking/Documents/SocResearch/redi/redi_code/redi_package
 
 . redi acs_hinc_shp year, ///
->         generate(hhinccont) cpstype(household)  //inflationyear(2020)
+>         generate(hhinccont) cpstype(household)  inflationyear(2020)
 file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000001 saved
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 (0 observations deleted)
@@ -74,13 +74,23 @@ file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000001 saved
 file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000002 saved
 Income type set as household income; Calculating household income using hhincome
 >  CPS-ASEC variable.
-Inflation year is 
-(Imported original ACS data, 2016-2017)
-1 2 3 4 5 6 7 8 9
-The income levels are: 1 2 3 4 5 6 7 8 9
+Inflation year is 2020
+Get data: Inflation year is 2020
+(15 vars, 44 obs)
 (note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000003 not
 >  found)
 file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000003 saved
+(43 observations deleted)
+381.2
+(44 missing values generated)
+(43 real changes made)
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000003 saved
+(Imported original ACS data, 2016-2017)
+1 2 3 4 5 6 7 8 9
+The income levels are: 1 2 3 4 5 6 7 8 9
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000004 not
+>  found)
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000004 saved
 2016 2017
 Create local variable years to loop within that income level - values:20162017
 (Imported original ACS data, 2016-2017)
@@ -92,17 +102,17 @@ inc_decoded: characters L e s space t h a n $ removed; acs_hinc_shp_ub generated
 >  as int
 Lower bound of -100,000 created for inc_level 1
 (222,379 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000004 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000005 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000004 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000005 saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (199,519 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000005 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000006 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000005 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000006 saved
 Ref to keep income between $-100000 and $15000 for 2016 year.
 number of observations (_N) was 0, now 233,027
 number of observations is  observations
@@ -112,7 +122,7 @@ number of observations is  observations
     not matched                             0
     matched                           233,027  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000005 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000006 saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -127,9 +137,9 @@ Merged ASEC values with original Research dataset for inc_level 1 ($-100000-1500
 > 0) and year 2016.
 (233,027 missing values generated)
 (233,027 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000006 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000007 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000006 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000007 saved
 Saved REDI data (with continuous data) for inc_level 1 ($-100000-15000) and year
 >  2016 in file
 (Imported original ACS data, 2016-2017)
@@ -143,17 +153,17 @@ inc_decoded2: character space removed; replaced as int
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 2 of the original Research dataset income range
 (214,506 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000007 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000008 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000007 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000008 saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (200,446 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000008 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000009 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000008 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000009 saved
 Ref to keep income between $15000 and $25000 for 2016 year.
 number of observations (_N) was 0, now 223,238
 number of observations is  observations
@@ -163,7 +173,7 @@ number of observations is  observations
     not matched                             0
     matched                           223,238  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000008 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000009 saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -178,9 +188,9 @@ Merged ASEC values with original Research dataset for inc_level 2 ($15000-25000)
 >  and year 2016.
 (223,238 missing values generated)
 (223,238 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000009 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000a not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000009 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000a saved
 Saved REDI data (with continuous data) for inc_level 2 ($15000-25000) and year 2
 > 016 in file
 (Imported original ACS data, 2016-2017)
@@ -194,17 +204,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 3 of the original Research dataset income range
 (232,186 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000a not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000b not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000a saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000b saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (200,714 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000b not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000c not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000b saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000c saved
 Ref to keep income between $25000 and $35000 for 2016 year.
 number of observations (_N) was 0, now 241,735
 number of observations is  observations
@@ -214,7 +224,7 @@ number of observations is  observations
     not matched                             0
     matched                           241,735  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000b saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000c saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -229,9 +239,9 @@ Merged ASEC values with original Research dataset for inc_level 3 ($25000-35000)
 >  and year 2016.
 (241,735 missing values generated)
 (241,735 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000c not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000d not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000c saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000d saved
 Saved REDI data (with continuous data) for inc_level 3 ($25000-35000) and year 2
 > 016 in file
 (Imported original ACS data, 2016-2017)
@@ -245,17 +255,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 4 of the original Research dataset income range
 (361,132 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000d not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000e not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000d saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000e saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (198,730 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000e not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000f not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000e saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000f saved
 Ref to keep income between $35000 and $50000 for 2016 year.
 number of observations (_N) was 0, now 368,384
 number of observations is  observations
@@ -265,7 +275,7 @@ number of observations is  observations
     not matched                             0
     matched                           368,384  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000e saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000f saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -280,9 +290,9 @@ Merged ASEC values with original Research dataset for inc_level 4 ($35000-50000)
 >  and year 2016.
 (368,384 missing values generated)
 (368,384 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000f not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000g not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000f saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000g saved
 Saved REDI data (with continuous data) for inc_level 4 ($35000-50000) and year 2
 > 016 in file
 (Imported original ACS data, 2016-2017)
@@ -296,17 +306,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 5 of the original Research dataset income range
 (534,663 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000g not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000h not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000g saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000h saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (196,006 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000h not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000i not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000h saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000i saved
 Ref to keep income between $50000 and $75000 for 2016 year.
 number of observations (_N) was 0, now 536,467
 number of observations is  observations
@@ -316,7 +326,7 @@ number of observations is  observations
     not matched                             0
     matched                           536,467  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000h saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000i saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -331,9 +341,9 @@ Merged ASEC values with original Research dataset for inc_level 5 ($50000-75000)
 >  and year 2016.
 (536,467 missing values generated)
 (536,467 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000i not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000j not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000i saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000j saved
 Saved REDI data (with continuous data) for inc_level 5 ($50000-75000) and year 2
 > 016 in file
 (Imported original ACS data, 2016-2017)
@@ -347,17 +357,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 6 of the original Research dataset income range
 (434,733 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000j not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000k not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000j saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000k saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (199,182 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000k not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000l not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000k saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000l saved
 Ref to keep income between $75000 and $100000 for 2016 year.
 number of observations (_N) was 0, now 427,167
 number of observations is  observations
@@ -367,7 +377,7 @@ number of observations is  observations
     not matched                             0
     matched                           427,167  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000k saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000l saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -382,9 +392,9 @@ Merged ASEC values with original Research dataset for inc_level 6 ($75000-100000
 > ) and year 2016.
 (427,167 missing values generated)
 (427,167 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000l not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000m not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000l saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000m saved
 Saved REDI data (with continuous data) for inc_level 6 ($75000-100000) and year 
 > 2016 in file
 (Imported original ACS data, 2016-2017)
@@ -398,17 +408,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 7 of the original Research dataset income range
 (522,665 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000m not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000n not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000m saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000n saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (197,690 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000n not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000o not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000n saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000o saved
 Ref to keep income between $100000 and $150000 for 2016 year.
 number of observations (_N) was 0, now 500,917
 number of observations is  observations
@@ -418,7 +428,7 @@ number of observations is  observations
     not matched                             0
     matched                           500,917  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000n saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000o saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -433,9 +443,9 @@ Merged ASEC values with original Research dataset for inc_level 7 ($100000-15000
 > 0) and year 2016.
 (500,917 missing values generated)
 (500,917 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000o not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000p not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000o saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000p saved
 Saved REDI data (with continuous data) for inc_level 7 ($100000-150000) and year
 >  2016 in file
 (Imported original ACS data, 2016-2017)
@@ -449,17 +459,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 8 of the original Research dataset income range
 (237,220 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000p not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000q not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000p saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000q saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (203,390 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000q not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000r not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000q saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000r saved
 Ref to keep income between $150000 and $200000 for 2016 year.
 number of observations (_N) was 0, now 219,987
 number of observations is  observations
@@ -469,7 +479,7 @@ number of observations is  observations
     not matched                             0
     matched                           219,987  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000q saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000r saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -484,9 +494,9 @@ Merged ASEC values with original Research dataset for inc_level 8 ($150000-20000
 > 0) and year 2016.
 (219,987 missing values generated)
 (219,987 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000r not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000s not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000r saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000s saved
 Saved REDI data (with continuous data) for inc_level 8 ($150000-200000) and year
 >  2016 in file
 (Imported original ACS data, 2016-2017)
@@ -497,17 +507,17 @@ The inc_level 9 is at the highest end of the original Research dataset income ra
 inc_decoded: characters space o e r m removed; acs_hinc_shp_lb generated as long
 Upper bound of 999999 created for inc_level 9
 (279,997 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000s not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000t not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000s saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000t saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (203,747 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000t not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000u not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000t saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000u saved
 Ref to keep income between $200000 and $999999 for 2016 year.
 number of observations (_N) was 0, now 257,484
 number of observations is  observations
@@ -517,7 +527,7 @@ number of observations is  observations
     not matched                             0
     matched                           257,484  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000t saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000u saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -532,9 +542,9 @@ Merged ASEC values with original Research dataset for inc_level 9 ($200000-99999
 > 9) and year 2016.
 (257,484 missing values generated)
 (257,484 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000u not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000v not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000u saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000v saved
 Saved REDI data (with continuous data) for inc_level 9 ($200000-999999) and year
 >  2016 in file
 (note: variable acs_hinc_shp_ub was int, now float to accommodate using data's
@@ -565,9 +575,9 @@ Saved REDI data (with continuous data) for inc_level 9 ($200000-999999) and year
 (label _merge already defined)
 (label year_lbl already defined)
 (label cat_inc already defined)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000v not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000w not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000v saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000w saved
 Saved new tempfile for year 2016 for all REDI  income levels.
 (Imported original ACS data, 2016-2017)
 (5,891,121 observations deleted)
@@ -578,17 +588,17 @@ inc_decoded: characters L e s space t h a n $ removed; acs_hinc_shp_ub generated
 >  as int
 Lower bound of -100,000 created for inc_level 1
 (233,027 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000w not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000x not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000w saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000x saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (199,668 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000x not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000010 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000x saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000010 saved
 Ref to keep income between $-100000 and $15000 for 2017 year.
 number of observations (_N) was 0, now 222,379
 number of observations is  observations
@@ -598,7 +608,7 @@ number of observations is  observations
     not matched                             0
     matched                           222,379  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00000x saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000010 saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -613,9 +623,9 @@ Merged ASEC values with original Research dataset for inc_level 1 ($-100000-1500
 > 0) and year 2017.
 (222,379 missing values generated)
 (222,379 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000010 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000011 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000010 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000011 saved
 Saved REDI data (with continuous data) for inc_level 1 ($-100000-15000) and year
 >  2017 in file
 (Imported original ACS data, 2016-2017)
@@ -629,17 +639,17 @@ inc_decoded2: character space removed; replaced as int
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 2 of the original Research dataset income range
 (223,238 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000011 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000012 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000011 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000012 saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (200,929 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000012 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000013 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000012 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000013 saved
 Ref to keep income between $15000 and $25000 for 2017 year.
 number of observations (_N) was 0, now 214,506
 number of observations is  observations
@@ -649,7 +659,7 @@ number of observations is  observations
     not matched                             0
     matched                           214,506  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000012 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000013 saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -664,9 +674,9 @@ Merged ASEC values with original Research dataset for inc_level 2 ($15000-25000)
 >  and year 2017.
 (214,506 missing values generated)
 (214,506 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000013 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000014 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000013 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000014 saved
 Saved REDI data (with continuous data) for inc_level 2 ($15000-25000) and year 2
 > 017 in file
 (Imported original ACS data, 2016-2017)
@@ -680,17 +690,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 3 of the original Research dataset income range
 (241,735 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000014 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000015 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000014 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000015 saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (201,060 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000015 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000016 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000015 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000016 saved
 Ref to keep income between $25000 and $35000 for 2017 year.
 number of observations (_N) was 0, now 232,186
 number of observations is  observations
@@ -700,7 +710,7 @@ number of observations is  observations
     not matched                             0
     matched                           232,186  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000015 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000016 saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -715,9 +725,9 @@ Merged ASEC values with original Research dataset for inc_level 3 ($25000-35000)
 >  and year 2017.
 (232,186 missing values generated)
 (232,186 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000016 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000017 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000016 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000017 saved
 Saved REDI data (with continuous data) for inc_level 3 ($25000-35000) and year 2
 > 017 in file
 (Imported original ACS data, 2016-2017)
@@ -731,17 +741,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 4 of the original Research dataset income range
 (368,384 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000017 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000018 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000017 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000018 saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (198,677 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000018 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000019 not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000018 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000019 saved
 Ref to keep income between $35000 and $50000 for 2017 year.
 number of observations (_N) was 0, now 361,132
 number of observations is  observations
@@ -751,7 +761,7 @@ number of observations is  observations
     not matched                             0
     matched                           361,132  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000018 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000019 saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -766,9 +776,9 @@ Merged ASEC values with original Research dataset for inc_level 4 ($35000-50000)
 >  and year 2017.
 (361,132 missing values generated)
 (361,132 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000019 not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001a not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.000019 saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001a saved
 Saved REDI data (with continuous data) for inc_level 4 ($35000-50000) and year 2
 > 017 in file
 (Imported original ACS data, 2016-2017)
@@ -782,17 +792,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 5 of the original Research dataset income range
 (536,467 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001a not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001b not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001a saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001b saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (195,809 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001b not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001c not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001b saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001c saved
 Ref to keep income between $50000 and $75000 for 2017 year.
 number of observations (_N) was 0, now 534,663
 number of observations is  observations
@@ -802,7 +812,7 @@ number of observations is  observations
     not matched                             0
     matched                           534,663  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001b saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001c saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -817,9 +827,9 @@ Merged ASEC values with original Research dataset for inc_level 5 ($50000-75000)
 >  and year 2017.
 (534,663 missing values generated)
 (534,663 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001c not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001d not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001c saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001d saved
 Saved REDI data (with continuous data) for inc_level 5 ($50000-75000) and year 2
 > 017 in file
 (Imported original ACS data, 2016-2017)
@@ -833,17 +843,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 6 of the original Research dataset income range
 (427,167 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001d not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001e not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001d saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001e saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (199,017 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001e not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001f not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001e saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001f saved
 Ref to keep income between $75000 and $100000 for 2017 year.
 number of observations (_N) was 0, now 434,733
 number of observations is  observations
@@ -853,7 +863,7 @@ number of observations is  observations
     not matched                             0
     matched                           434,733  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001e saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001f saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -868,9 +878,9 @@ Merged ASEC values with original Research dataset for inc_level 6 ($75000-100000
 > ) and year 2017.
 (434,733 missing values generated)
 (434,733 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001f not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001g not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001f saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001g saved
 Saved REDI data (with continuous data) for inc_level 6 ($75000-100000) and year 
 > 2017 in file
 (Imported original ACS data, 2016-2017)
@@ -884,17 +894,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 7 of the original Research dataset income range
 (500,917 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001g not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001h not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001g saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001h saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (197,534 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001h not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001i not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001h saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001i saved
 Ref to keep income between $100000 and $150000 for 2017 year.
 number of observations (_N) was 0, now 522,665
 number of observations is  observations
@@ -904,7 +914,7 @@ number of observations is  observations
     not matched                             0
     matched                           522,665  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001h saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001i saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -919,9 +929,9 @@ Merged ASEC values with original Research dataset for inc_level 7 ($100000-15000
 > 0) and year 2017.
 (522,665 missing values generated)
 (522,665 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001i not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001j not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001i saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001j saved
 Saved REDI data (with continuous data) for inc_level 7 ($100000-150000) and year
 >  2017 in file
 (Imported original ACS data, 2016-2017)
@@ -935,17 +945,17 @@ inc_decoded2: character space removed; replaced as long
 Lower bound of acs_hinc_shp_lb and upper bound of acs_hinc_shp_ub created for in
 > c_level 8 of the original Research dataset income range
 (219,987 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001j not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001k not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001j saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001k saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (203,121 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001k not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001l not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001k saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001l saved
 Ref to keep income between $150000 and $200000 for 2017 year.
 number of observations (_N) was 0, now 237,220
 number of observations is  observations
@@ -955,7 +965,7 @@ number of observations is  observations
     not matched                             0
     matched                           237,220  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001k saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001l saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -970,9 +980,9 @@ Merged ASEC values with original Research dataset for inc_level 8 ($150000-20000
 > 0) and year 2017.
 (237,220 missing values generated)
 (237,220 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001l not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001m not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001l saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001m saved
 Saved REDI data (with continuous data) for inc_level 8 ($150000-200000) and year
 >  2017 in file
 (Imported original ACS data, 2016-2017)
@@ -983,17 +993,17 @@ The inc_level 9 is at the highest end of the original Research dataset income ra
 inc_decoded: characters space o e r m removed; acs_hinc_shp_lb generated as long
 Upper bound of 999999 created for inc_level 9
 (257,484 observations deleted)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001m not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001n not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001m saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001n saved
 Saved tempfile with upper and lower bounds of research data income levels
 (CPS ASEC data - Household Income - 2016, 2017, 2019)
 Reference data open - Income type set as household income
 (203,155 observations deleted)
 Observation number generated
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001n not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001o not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001n saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001o saved
 Ref to keep income between $200000 and $999999 for 2017 year.
 number of observations (_N) was 0, now 279,997
 number of observations is  observations
@@ -1003,7 +1013,7 @@ number of observations is  observations
     not matched                             0
     matched                           279,997  
     -----------------------------------------
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001n saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001o saved
 
     Result                           # of obs.
     -----------------------------------------
@@ -1018,9 +1028,9 @@ Merged ASEC values with original Research dataset for inc_level 9 ($200000-99999
 > 9) and year 2017.
 (279,997 missing values generated)
 (279,997 real changes made)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001o not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001p not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001o saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001p saved
 Saved REDI data (with continuous data) for inc_level 9 ($200000-999999) and year
 >  2017 in file
 (note: variable acs_hinc_shp_ub was int, now float to accommodate using data's
@@ -1051,14 +1061,25 @@ Saved REDI data (with continuous data) for inc_level 9 ($200000-999999) and year
 (label _merge already defined)
 (label year_lbl already defined)
 (label cat_inc already defined)
-(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001p not
+(note: file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001q not
 >  found)
-file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001p saved
+file /var/folders/p5/4pbm3kvx22d9qc1mqdft2symrmksfh/T//S_46007.00001q saved
 Saved new tempfile for year 2017 for all REDI  income levels.
 (label cat_inc already defined)
 (label year_lbl already defined)
 (label _merge already defined)
 Appended all years 
+INFLATE: Inflation year is 2020
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                            42
+        from master                         0  (_merge==1)
+        from using                         42  (_merge==2)
+
+    matched                         6,047,887  (_merge==3)
+    -----------------------------------------
+(42 missing values generated)
 
 . 
 . ***--------------------------***
