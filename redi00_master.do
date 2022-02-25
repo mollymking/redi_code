@@ -1,4 +1,4 @@
-cd "~/Documents/SocResearch/Dissertation/redi/"
+cd "~/Documents/SocResearch/redi/redi_code/"
 
 capture log close master
 log using "redi00_master.log", name(master) replace text
@@ -26,7 +26,7 @@ display "$S_DATE  $S_TIME"
 
 // CHANGE DIRECTORIES to local files to run replication code:
 
-global redi  	"~/Documents/SocResearch/Dissertation/redi"				// where all replication .do files stored	
+global redi  	"~/Documents/SocResearch/redi/redi_code/"							// where all replication .do files stored	
 
 *Data
 global source	"~/Documents/SocResearch/Dissertation/data/data_sorc"  	// original datasets (ACS, CPS ASEC)
@@ -81,7 +81,7 @@ global deriv	"~/Documents/SocResearch/Dissertation/data/data_derv"  	// derived 
 
 *do $redi/redi13_REDI_state_demvars.do 		// Create demographic variables for state data
 *do $redi/redi14_REDI_state_dataprep.do 		// Create REDI-generated income and artificial ACS bins
-do $redi/redi15_REDI_state_regressions.do 	// Run regressions for another example using 2019 and a single state
+*do $redi/redi15_REDI_state_regressions.do 	// Run regressions for another example using 2019 and a single state
 
 
 ***--------------------------***
