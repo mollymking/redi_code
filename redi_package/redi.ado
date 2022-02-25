@@ -53,7 +53,7 @@ if "`cpstype'" == "family" & `"`using'"' == "" {
 	tempfile ref_data
 	save `ref_data'
 	local ref_income_var "ftotval" // name in reference (CPS-ASEC) dataset
-	di "Income type set as `inc_var' income; " ///
+	di "Income type set as `cpstype' income; " ///
 	   "Calculating family income using ftotval CPS-ASEC variable."
 }
 else if "`cpstype'" == "household" & `"`using'"' == ""  {
@@ -64,7 +64,7 @@ else if "`cpstype'" == "household" & `"`using'"' == ""  {
 	tempfile ref_data
 	save `ref_data'
 	local ref_income_var "hhincome" // name in reference (CPS-ASEC) dataset
-	di "Income type set as `inc_var' income; " ///
+	di "Income type set as `cpstype' income; " ///
 	   "Calculating household income using hhincome CPS-ASEC variable."
 }
 else if "`cpstype'" == "respondent" & `"`using'"' == "" {
@@ -74,7 +74,7 @@ else if "`cpstype'" == "respondent" & `"`using'"' == "" {
 	tempfile ref_data
 	save `ref_data'
 	local ref_income_var "inctot" // name in reference (ASEC) dataset
-	di "Income type set as `inc_var' income; " ///
+	di "Income type set as `cpstype' income; " ///
 	   "Calculating respondent income using inctot ASEC variable."
 }	
 else if `"`cpstype'"' != "household" & `"`cpstype'"' != "family" & `"`csstype'"' != "respondent" {
@@ -86,14 +86,14 @@ else if `"`cpstype'"' != "household" & `"`cpstype'"' != "family" & `"`csstype'"'
 *inflation
 *check if empty
 local inflation_year `inflationyear'
-di in red "Inflation year is `inflation_year'"
+di "Inflation year is `inflation_year'"
 capture assert `inflation_year' !=. // verifies expression is true
 if _rc { // if return code, expression false (no inflation)
 	local inflate = "no"
 } 
 else if _rc == 0 { // if rc, expression true --> inflationyear empty/missing
 	local inflate = "yes"	
-	di in red "Get data: Inflation year is " `inflation_year'
+	di "Get data: Inflation year is " `inflation_year'
 	import excel "https://www.bls.gov/cpi/research-series/r-cpi-u-rs-allitems.xlsx", ///
 		clear cellrange(A6:N49) firstrow
 	*rename columns
@@ -207,7 +207,7 @@ foreach y of local years { // loop through all years
 			gen `inc_cat_var'_lb = inc_decoded1
 			gen `inc_cat_var'_ub = inc_decoded2
 			di "Lower bound of `inc_cat_var'_lb and upper bound of `inc_cat_var'_ub " ///
-			   "created for inc_level " `inc_level' "of the original Research " ///
+			   "created for inc_level " `inc_level' " of the original Research " ///
 			   "dataset income range"
 		}
 		
@@ -249,9 +249,9 @@ foreach y of local years { // loop through all years
 		
 		// #3B) Keep reference/CPS-ASEC data if within income bounds and for given year
 		use `reference_dataset', clear
-		di "Reference data open - Income type set as `inc_cat_var' income" 
+		di "Reference data open - Income type set as `cpstype' income" 
 		
-		keep if `ref_year' == `y' & ///  
+		keep if `ref_year' == `y' & ///
 			`ref_income_var' >= `lower_bound' & ///
 			`ref_income_var' <= `upper_bound'
 		gen obs_no = _n
@@ -261,7 +261,7 @@ foreach y of local years { // loop through all years
 		save `ref_`y'_`inc_level'', replace
 	
 		di "Ref to keep income between $`lower_bound' and $`upper_bound' for `y' year."
-			
+		
 		// #3C) Take random draw of number of incomes w/in income boundary, year
 		// Sample, with replacement, such that ASEC income has an equal probability 
 		// of being assigned to each observation, creting sample of size equal
@@ -353,7 +353,7 @@ label var `new_inc_var' "REDI continuous `inc_cat_var' income"
 
 // INFLATE based on specified inflation_year
 if "`inflate'" == "yes" { // if inflation year is not empty	
-di in red "INFLATE: Inflation year is " `inflation_year'
+di "INFLATE: Inflation year is " `inflation_year'
 	merge m:1 year using `temp_cpi'
 	drop _merge	
 	
