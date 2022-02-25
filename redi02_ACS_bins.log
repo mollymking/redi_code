@@ -1,8 +1,9 @@
------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
       name:  redi02_ACS_bins
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_ACS_bins.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi02_ACS_bins
+> .log
   log type:  text
- opened on:  27 Oct 2021, 23:06:10
+ opened on:  25 Feb 2022, 12:33:32
 
 . 
 . //      project:        REDI Methodology Paper
@@ -17,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-27 Oct 2021  23:06:10
+25 Feb 2022  12:33:32
 
 . 
 . ***--------------------------***
@@ -61,38 +62,44 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
 . gen     acs_hinc_shp = .
 (6,346,527 missing values generated)
 
-. replace acs_hinc_shp = 1 if hhincome                                          
->      <= 15000
+. replace acs_hinc_shp = 1 if hhincome_acs                                      
+>              <= 15000
 (455,406 real changes made)
 
-. replace acs_hinc_shp = 2 if hhincome  > 15000   & hhincome <= 25000
+. replace acs_hinc_shp = 2 if hhincome_acs  > 15000       & hhincome_acs <= 2500
+> 0
 (437,744 real changes made)
 
-. replace acs_hinc_shp = 3 if hhincome  > 25000   & hhincome <= 35000
+. replace acs_hinc_shp = 3 if hhincome_acs  > 25000       & hhincome_acs <= 3500
+> 0
 (473,921 real changes made)
 
-. replace acs_hinc_shp = 4 if hhincome  > 35000   & hhincome <= 50000     
+. replace acs_hinc_shp = 4 if hhincome_acs  > 35000       & hhincome_acs <= 5000
+> 0 
 (729,516 real changes made)
 
-. replace acs_hinc_shp = 5 if hhincome  > 50000   & hhincome <= 75000     
+. replace acs_hinc_shp = 5 if hhincome_acs  > 50000       & hhincome_acs <= 7500
+> 0 
 (1,071,130 real changes made)
 
-. replace acs_hinc_shp = 6 if hhincome  > 75000   & hhincome <= 100000
+. replace acs_hinc_shp = 6 if hhincome_acs  > 75000       & hhincome_acs <= 1000
+> 00
 (861,900 real changes made)
 
-. replace acs_hinc_shp = 7 if hhincome  > 100000 & hhincome <= 150000 
+. replace acs_hinc_shp = 7 if hhincome_acs  > 100000 & hhincome_acs <= 150000 
 (1,023,582 real changes made)
 
-. replace acs_hinc_shp = 8 if hhincome  > 150000 & hhincome <= 200000
+. replace acs_hinc_shp = 8 if hhincome_acs  > 150000 & hhincome_acs <= 200000
 (457,207 real changes made)
 
-. replace acs_hinc_shp = 9 if hhincome  > 200000 & hhincome != 9999999 
+. replace acs_hinc_shp = 9 if hhincome_acs  > 200000 & hhincome_acs != 9999999 
 (537,481 real changes made)
 
-. replace acs_hinc_shp = . if hhincome == 9999999 
+. replace acs_hinc_shp = . if hhincome_acs == 9999999 // dataset of new incomes 
+> will now be smaller as a result
 (0 real changes made)
 
-. replace acs_hinc_shp = . if hhincome == .
+. replace acs_hinc_shp = . if hhincome_acs == .
 (0 real changes made)
 
 . 
@@ -113,12 +120,27 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
 > ed
 
 . 
+. * version for troubleshooting ado program
+. drop repwt* cluster strata perwt hhwt   pernum  adjust // for debugging, simpl
+> ify
+
+. drop migrate1* labforce hispan* marst_acs race* sex_acs diffmob_acs  owner* co
+> untyfip statefip cbserial serial sample gq educ*
+
+. 
+. save $deriv/redi02_ACS_bins_clean.dta, replace
+(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
+> 02_ACS_bins_clean.dta not found)
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.d
+> ta saved
+
+. 
 . ***--------------------------***
 . 
 . log close redi02_ACS_bins
       name:  redi02_ACS_bins
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi02_AC
-> S_bins.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi02_ACS_bins
+> .log
   log type:  text
- closed on:  27 Oct 2021, 23:10:16
+ closed on:  25 Feb 2022, 12:33:37
 --------------------------------------------------------------------------------

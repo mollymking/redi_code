@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
       name:  redi01_ASEC_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
-> EC_import.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi01_ASEC_imp
+> ort.log
   log type:  text
- opened on:  27 Oct 2021, 14:31:11
+ opened on:  25 Feb 2022, 12:39:18
 
 . 
 . 
@@ -19,7 +19,7 @@
 . 
 . 
 . display "$S_DATE  $S_TIME"
-27 Oct 2021  14:31:11
+25 Feb 2022  12:39:18
 
 . 
 . ***--------------------------***
@@ -44,7 +44,7 @@
 . // and change name of .do file to match below
 . 
 . cd $source/00_CPS_ASEC/
-/Users/mollymking/Documents/SocResearch/Dissertation/data/data_sorc/00_CPS_ASEC
+/Users/mmking/Documents/SocResearch/dissertation/data/data_sorc/00_CPS_ASEC
 
 . // this is code provided by IPUMS - ACS to import data:
 . do $redi/cps_00015.do // larger data set includes variables for later regressi
@@ -950,27 +950,18 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
   (0 bytes saved)
 
 . 
-. 
-. // RENAME to avoid confusion with ACS
-. rename hhincome hhincome_asec
-
-. rename race race_asec
-
-. rename hispan hispan_asec
-
-. rename educ educ_asec
-
-. rename sex sex_asec
-
-. rename marst marst_asec
-
-. rename migrate1  migrate1_asec
-
-. rename diffmob diffmob_asec
-
-. rename ownershp ownershp_asec
-
-. 
+. /*
+> // RENAME to avoid confusion with ACS
+> rename hhincome hhincome_asec
+> rename race race_asec
+> rename hispan hispan_asec
+> rename educ educ_asec
+> rename sex sex_asec
+> rename marst marst_asec
+> rename migrate1  migrate1_asec
+> rename diffmob diffmob_asec
+> rename ownershp ownershp_asec
+> */
 . // SAVE ALL YEARS
 . 
 . label data "CPS ASEC data - Household Income - 2016, 2017, 2019"
@@ -979,7 +970,7 @@ file ~/Documents/SocResearch/Dissertation/data/data_extr/redi01_ASEC-extr.dta sa
 > 17, 2019 \ redi01_ASEC.do
 
 . datasignature set, reset
-  207786:26(25444):1175710109:781505746       (data signature reset)
+  207786:26(66367):1175710109:781505746       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome_all.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
@@ -999,18 +990,30 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome_al
 >  redi01_ASEC.do
 
 . datasignature set, reset
-  139441:26(25444):4164444312:2333080517       (data signature reset)
+  139441:26(66367):4164444312:2333080517       (data signature reset)
 
 . save $deriv/redi01_ASEC-hhincome.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ASEC-hhincome.dt
 > a saved
 
 . 
+. 
+. // CLEAN VERSION FOR DEBUGGING ADO PROGRAM
+. use $deriv/redi01_ASEC-hhincome_all.dta, replace
+(CPS ASEC data - Household Income - 2016, 2017, 2019)
+
+. keep year hhincome pernum asecwth
+
+. save $redi/redi_package/cps_reference.dta, replace
+file ~/Documents/SocResearch/redi/redi_code//redi_package/cps_reference.dta save
+> d
+
+. 
 . ***--------------------------***
 . log close redi01_ASEC_import
       name:  redi01_ASEC_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AS
-> EC_import.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi01_ASEC_imp
+> ort.log
   log type:  text
- closed on:  27 Oct 2021, 14:31:21
+ closed on:  25 Feb 2022, 12:39:19
 --------------------------------------------------------------------------------

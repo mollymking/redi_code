@@ -64,6 +64,12 @@ notes acs_hinc_shp: ACS Household Income Sharp Categories from  hhincome \ $S_DA
 
 save $deriv/redi02_ACS_bins.dta, replace
 
+* version for troubleshooting ado program
+drop repwt* cluster strata perwt hhwt   pernum  adjust // for debugging, simplify
+drop migrate1* labforce hispan* marst_acs race* sex_acs diffmob_acs  owner* countyfip statefip cbserial serial sample gq educ*
+
+save $deriv/redi02_ACS_bins_clean.dta, replace
+
 ***--------------------------***
 
 log close redi02_ACS_bins

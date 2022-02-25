@@ -60,7 +60,7 @@ keep if pernum == 1
 svyset [pweight=asecwth]
 compress
 
-
+/*
 // RENAME to avoid confusion with ACS
 rename hhincome hhincome_asec
 rename race race_asec
@@ -71,7 +71,7 @@ rename marst marst_asec
 rename migrate1  migrate1_asec
 rename diffmob diffmob_asec
 rename ownershp ownershp_asec
-
+*/
 // SAVE ALL YEARS
 
 label data "CPS ASEC data - Household Income - 2016, 2017, 2019"
@@ -88,6 +88,12 @@ label data "CPS ASEC data - Household Income - 2016-2017"
 notes: redi01_ASEC-hhincome.dta \ CPS ASEC Data - Household Income 2016-2017 \ redi01_ASEC.do
 datasignature set, reset
 save $deriv/redi01_ASEC-hhincome.dta, replace
+
+
+// CLEAN VERSION FOR DEBUGGING ADO PROGRAM
+use $deriv/redi01_ASEC-hhincome_all.dta, replace
+keep year hhincome pernum asecwth
+save $redi/redi_package/cps_reference.dta, replace
 
 ***--------------------------***
 log close redi01_ASEC_import

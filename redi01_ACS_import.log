@@ -1,9 +1,8 @@
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------
       name:  redi01_ACS_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AC
-> S_import.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi01_ACS_import.log
   log type:  text
- opened on:  27 Oct 2021, 14:44:27
+ opened on:  25 Feb 2022, 10:05:08
 
 . 
 . //      project:        REDI Methodology Paper
@@ -17,7 +16,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-27 Oct 2021  14:44:27
+25 Feb 2022  10:05:08
 
 . 
 . ***--------------------------***
@@ -43,7 +42,7 @@
 . // and change name of .do file to match below
 . 
 . cd $source/80_ACS/
-/Users/mollymking/Documents/SocResearch/Dissertation/data/data_sorc/80_ACS
+/Users/mmking/Documents/SocResearch/dissertation/data/data_sorc/80_ACS
 
 . do $redi/usa_00011.do // this is code provided by IPUMS - ACS to import data
 
@@ -2265,6 +2264,8 @@ end of do-file
   9586080:190(41250):2970176134:1486287731       (data signature set)
 
 . save $deriv/redi01_ACS_all.dta, replace
+(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
+> 01_ACS_all.dta not found)
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta save
 > d
 
@@ -2281,6 +2282,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta save
 
 . 
 . save $deriv/redi01_ACS.dta, replace
+(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
+> 01_ACS.dta not found)
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS.dta saved
 
 . 
@@ -2288,8 +2291,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS.dta saved
 . 
 . log close  redi01_ACS_import
       name:  redi01_ACS_import
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi01_AC
-> S_import.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi01_ACS_impo
+> rt.log
   log type:  text
- closed on:  27 Oct 2021, 15:01:45
+ closed on:  25 Feb 2022, 10:10:47
 --------------------------------------------------------------------------------
