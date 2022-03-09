@@ -69,6 +69,7 @@ else if "`cpstype'" == "household" & `"`using'"' == ""  {
 }
 else if "`cpstype'" == "respondent" & `"`using'"' == "" {
 	use `reference_dataset', clear  // dataset placed in cwd by researcher			
+	keep if pernum == 1 // keeps only one person per household
 	svyset [pweight=asecwt]
 	compress
 	tempfile ref_data
