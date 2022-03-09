@@ -11,7 +11,7 @@
 
 {p 8 17 2}
 {cmd: redi}
-{help varlist: inc_var(string)}
+{help varlist: incvar(string)}
 {help varlist: year(string)}
 {cmd:,}
 Generate({newvar})
@@ -21,11 +21,11 @@ Generate({newvar})
 ]
 
 {p 4 4 2}
-where {it:inc_var(string)} is
+where {it:incvar(string)} is
 
 {p 8 17 2}
 the name of the categorical income variable in the original research dataset, and
-{it:inc_var} may be either a string variable (with the categories as text) or a numeric variable
+{it:incvar} may be either a string variable (with the categories as text) or a numeric variable
 (with the categories storied as value labels);
 
 {p 4 4 2}
@@ -35,7 +35,7 @@ the name of the categorical income variable in the original research dataset, an
 the name of the year variable in the original research dataset; and
 
 {p 4 4 2}
-{it:Generate(string)} specifies
+{it:Generate(newvar)} specifies
 
 {p 8 17 2}
 a name for the new continuous income variable calculated using the {cmd:redi} method.
@@ -49,13 +49,14 @@ from binned incomes, using a real-world reference dataset (in this case, the CPS
 
 {p 4 4 2}
 The Random Empirical Distribution Imputation ({cmd:redi}) method imputes
-discrete observations using binned income data, while also enabling the
-calculation of summary statistics. {cmd:redi} achieves this through random
+discrete observations using binned income data. A researcher may wish to combine
+or compare income data across years or surveys, stymied by incompatible categories.
+{cmd:redi} converts categorical to continuous incomes this through random
 cold-deck imputation from a real world reference dataset. The {cmd:redi} method
 reconciles bins between datasets or across years and handles top incomes.
 {cmd:redi} has other advantages of computing an income distribution that is
-nonparametric, bin consistent, area- and variance-preserving, continuous, and
-computationally fast. For a complete discussion of the method's features and
+nonparametric, bin consistent, area- and variance-preserving, and continuous.
+ For a complete discussion of the method's features and
 limitations, see the "REDI for Binned Data" paper, listed under the references.
 If you find this method useful for your research, please consider citing this reference.
 
@@ -98,14 +99,15 @@ including technical documentation and details about analysis using survey weight
 {p 4 4 2}
 Without specifying an inflation year, the {cmd:redi} command produces the
 continuous income variable {newvar} calculated in the dollar value corresponding to the year of the
-original research dataset. With the inflation option, the {cmd:redi} command
-produces both this same continuous income variable {newvar} calculated using the {cmd:redi}
-method, and another new variable adjusted for inflation using the specified inflation dataset and year.
+original research dataset.
 
 {p 4 4 2}
+With the inflation option, the {cmd:redi} command
+produces both this same continuous income variable {newvar} calculated using the {cmd:redi}
+method, and another new variable adjusted for inflation using the specified inflation dataset and year.
 In the process of producing the continuous value, the {cmd:redi} command will also
-generate a lower-bound variable ({it:inc_var}_lb) and an upper-bound variable
-({it:inc_var}_ub) for the continuous income variable drawn from the reference dataset.
+generate a lower-bound variable ({it:incvar}_lb) and an upper-bound variable
+({it:incvar}_ub) for the continuous income variable drawn from the reference dataset.
 These can be used to verify the new continuous variable or dropped at the researcher's
 convenience.
 
@@ -121,7 +123,7 @@ Consumers from 1978, using current methods that incorporate these improvements
 over the entire time span. Using the {opt inflation_year} option for
 automatically downloads this dataset for use in inflation adjustment. The year
 specified indicates the year that should be used for inflation-adjusted dollars.
-Using this option produces a variable named ({newvar})_inf({it:inflationyear})
+Using this option produces a variable named ({newvar})_inf({it:int})
 
 
 

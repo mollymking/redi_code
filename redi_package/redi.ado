@@ -3,7 +3,7 @@
 ***-----------------------------***
 
 /*
-redi inc_var year [using], ///
+redi incvar year [using], ///
 	gen(newvarname) ///
 	inflation(integer) CPStype(household|family|respondent) ///
 	ref(namelist)
