@@ -107,9 +107,8 @@ else if _rc == 0 { // if rc, expression true --> inflationyear empty/missing
 
 	keep if year == `inflation_year' // now keep only CPI data from year inflating to
 	local avg_`inflation_year' = cpi_avg
-	di `avg_`inflation_year''	
+	di "CPI average for inflation year is " `avg_`inflation_year''	
 
-	use `temp_cpi', clear
 	gen conv_factor_`inflation_year' = .
 	*divide year inflating from / year inflating to
 	replace conv_factor_`inflation_year' = cpi_avg / `avg_`inflation_year''
@@ -363,8 +362,12 @@ di "INFLATE: Inflation year is " `inflation_year'
 	*original income variable, adjusted for inflation
 	gen `new_inc_var'_inf`inflation_year' = `new_inc_var' / conv_factor
 	format `new_inc_var'_inf`inflation_year' %6.0fc
-	label var `new_inc_var'_inf`inflation_year' "REDI continuous inflation-adjusted `inc_var' income, `inflation_year' dollars"
-	//drop `inc_var_name'
+	label var `new_inc_var'_inf`inflation_year' ///
+		"REDI continuous inflation-adjusted `inc_var' income, `inflation_year' dollars"
+
+	// drop inflation data to clean up
+	drop if cpi_avg != . & `new_inc_var'_inf`inflation_year' == .
+
 }
 
 ***-----------------------------***
