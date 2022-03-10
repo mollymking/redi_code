@@ -169,7 +169,7 @@ foreach y of local years { // loop through all years
 	foreach inc_level of local `inc_cat_var'_levels {
 
 		use `working_regex', clear
-
+	
 		// Keep data if income variable is equal to current income level (of loop)
 		keep if `inc_cat_var' == `inc_level'  
 		di "The current inc_level is: " `inc_level'
@@ -179,7 +179,7 @@ foreach y of local years { // loop through all years
 			di "The inc_level " `inc_level' " is at the lowest end of the " ///
 			   "original Research dataset income range"
 			destring inc_decoded, ///
-				ignore("Less than LESS THAN Under,$ ") generate(`inc_cat_var'_ub) 
+				ignore("Less than LESS THAN Under,$ Lt") generate(`inc_cat_var'_ub) 
 			gen `inc_cat_var'_lb = -100000
 			di "Lower bound of -100,000 created for inc_level " `inc_level'
 		}
@@ -202,7 +202,7 @@ foreach y of local years { // loop through all years
 			gen `inc_cat_var'_ub = .
 			di "Lower and upper bound of . created for inc_level " `inc_level'
 		}
-
+		
 		// for labels with 2 numbers in them
 		else if regexm(inc_decoded, "[0-9]+$") == 1 {
 		// since those at lowest and highest ranges have already been matched 
