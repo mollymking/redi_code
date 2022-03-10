@@ -146,7 +146,14 @@ else {
 	* Decode converts labels to string variables for Research dataset
 	decode `inc_cat_var', gen(inc_decoded) // action for numeric variable
 }
-				
+
+replace inc_decoded = "." if  inc_decoded == "Refused"
+replace inc_decoded = "." if  inc_decoded == "Don't know" 
+replace inc_decoded = "." if  inc_decoded == "Not applicable"		
+replace inc_decoded = "." if  inc_decoded == "No answer" 
+di in red "inc decoded just had refused replaced, in theory"
+		
+
 tempfile working_regex
 save `working_regex', replace
 *use frames instead
@@ -189,8 +196,8 @@ foreach y of local years { // loop through all years
 
 		// if `inc_cat_var' is missing, 
 		// keep it missing for lower_bound and upper_bound
-		else if regexm(inc_decoded, "[.][a-z]") == 1 {
-			di "The inc_level " `inc_level' " is all missing"
+		else if regexm(inc_decoded, "[.][a-z]*") == 1 {
+			di "The inc_level " `inc_level' " is all missing / Refused / Don't know / etc."
 			gen `inc_cat_var'_lb = .
 			gen `inc_cat_var'_ub = .
 			di "Lower and upper bound of . created for inc_level " `inc_level'
