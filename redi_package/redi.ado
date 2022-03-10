@@ -253,7 +253,7 @@ foreach y of local years { // loop through all years
 		di "Saved tempfile with upper and lower bounds of research data income levels"
 		
 		// #3B) Keep reference/CPS-ASEC data if within income bounds and for given year
-		use `reference_dataset', clear
+		use `ref_data', clear
 		di "Reference data open - Income type set as `cpstype' income" 
 		
 		keep if `ref_year' == `y' & ///
