@@ -149,7 +149,6 @@ replace inc_decoded = "." if  inc_decoded == "Refused"
 replace inc_decoded = "." if  inc_decoded == "Don't know" 
 replace inc_decoded = "." if  inc_decoded == "Not applicable"		
 replace inc_decoded = "." if  inc_decoded == "No answer" 
-di in red "inc decoded just had refused replaced, in theory"
 		
 
 tempfile working_regex
@@ -207,7 +206,7 @@ foreach y of local years { // loop through all years
 		// (using text), this leaves those with ranges
 			di "The inc_level " `inc_level' " has a lower and an upper level"
 			split inc_decoded, ///
-				parse("-" "to" "-" "to under" "to less than" "UP TO" "but less than") ///
+				parse("-" "to" "-" "to under" "to less than" "UP TO" "TO" "but less than") ///
 				ignore(" ,$") destring
 			gen `inc_cat_var'_lb = inc_decoded1
 			gen `inc_cat_var'_ub = inc_decoded2
