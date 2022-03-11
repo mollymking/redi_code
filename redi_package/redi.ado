@@ -106,10 +106,11 @@ else if _rc == 0 { // if rc, expression true --> inflationyear empty/missing
 	local avg_`inflation_year' = cpi_avg
 	di "CPI average for inflation year is " `avg_`inflation_year''	
 
-	gen conv_factor_`inflation_year' = .
+	use `temp_cpi', clear
+	gen inflation_factor = .
 	*divide year inflating from / year inflating to
-	replace conv_factor_`inflation_year' = cpi_avg / `avg_`inflation_year''
-	label var conv_factor_`inflation_year' "Conversion factor - to convert to $`inf_year, divide by conv_factor"
+	replace inflation_factor = cpi_avg / `avg_`inflation_year''
+	label var inflation_factor "Conversion factor - to convert to $`inf_year, divide by inflation_factor"
 	save `temp_cpi', replace
 }
 
@@ -360,17 +361,17 @@ label var `new_inc_var' "REDI continuous `inc_cat_var' income"
 if "`inflate'" == "yes" { // if inflation year is not empty	
 di "INFLATE: Inflation year is " `inflation_year'
 	merge m:1 year using `temp_cpi'
-	drop _merge	
 	
 	* INFLATION-ADJUSTED INCOME = divide continuous income variable by conversion factor
 	*original income variable, adjusted for inflation
-	gen `new_inc_var'_inf`inflation_year' = `new_inc_var' / conv_factor
+	gen `new_inc_var'_inf`inflation_year' = `new_inc_var' / inflation_factor
 	format `new_inc_var'_inf`inflation_year' %6.0fc
 	label var `new_inc_var'_inf`inflation_year' ///
 		"REDI continuous inflation-adjusted `inc_var' income, `inflation_year' dollars"
 
 	// drop inflation data to clean up
-	drop if cpi_avg != . & `new_inc_var'_inf`inflation_year' == .
+	drop if _merge == 2
+	drop cpi_avg  inflation_factor _merge
 
 }
 
