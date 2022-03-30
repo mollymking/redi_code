@@ -1,4 +1,4 @@
-*! 1.1 Molly M. King 27 January 2022
+*! 1.1 Molly M. King 30 March 2022
 
 ***-----------------------------***
 
@@ -121,10 +121,7 @@ else if _rc == 0 { // if rc, expression true --> inflationyear empty/missing
 
 // #1 Create local for levels of income = e.g., levelsof year, local(years)
 use `research_data', clear
-levelsof `inc_cat_var', local("`inc_cat_var'_levels")
-
-// sort for later join & create variable recording original observation order within the identifier
-sort `research_year' `inc_cat_var'
+levelsof `inc_cat_var', local("`inc_cat_var'_levels") //missing
 
 // #2 create numeric variables indicating edges of income categories //
 // Note: for more detail on if-command and Stata regular expressions used to create this, see:
@@ -141,20 +138,12 @@ if !_rc {
 	gen inc_decoded = `inc_cat_var' // action for string variable
 }
 else {
-	* Decode converts labels to string variables for Research dataset
+	* Decode converts labels to string variables for research dataset
 	decode `inc_cat_var', gen(inc_decoded) // action for numeric variable
 }
 
-replace inc_decoded = "." if  inc_decoded == "Refused"
-replace inc_decoded = "." if  inc_decoded == "Don't know" 
-replace inc_decoded = "." if  inc_decoded == "Not applicable"		
-replace inc_decoded = "." if  inc_decoded == "No answer" 
-		
-
 tempfile working_regex
 save `working_regex', replace
-*use frames instead
-
 
 // Levels of research year variable to loop through years in dataset
 levelsof `research_year', local(years)
@@ -191,15 +180,6 @@ foreach y of local years { // loop through all years
 			di "Upper bound of 999999 created for inc_level " `inc_level'
 		}
 
-		// if `inc_cat_var' is missing, 
-		// keep it missing for lower_bound and upper_bound
-		else if regexm(inc_decoded, "[.][a-z]*") == 1 {
-			di "The inc_level " `inc_level' " is all missing / Refused / Don't know / etc."
-			gen `inc_cat_var'_lb = .
-			gen `inc_cat_var'_ub = .
-			di "Lower and upper bound of . created for inc_level " `inc_level'
-		}
-		
 		// for labels with 2 numbers in them
 		else if regexm(inc_decoded, "[0-9]+$") == 1 {
 		// since those at lowest and highest ranges have already been matched 
@@ -309,7 +289,7 @@ foreach y of local years { // loop through all years
 				
 	*di "Moved outside loop of `research_year' income level " ///
 	*   `inc_level' " ($`lower_bound'-`upper_bound')."
-		
+	
 	// append all income levels across all years
 	tokenize ``inc_cat_var'_levels'
 	local first `1'
@@ -344,15 +324,16 @@ foreach ytemp in `*' {
 
 di "Appended all years "
 
-// CLEAN UP
-drop obs_no id inc_decoded
-drop _merge
-
 ***-----------------------------***
 // PROGRAM TO RENAME FINAL VARIABLES
 gen `new_inc_var' = `ref_income_var'
 format `new_inc_var' %6.0fc
 label var `new_inc_var' "REDI continuous `inc_cat_var' income"
+
+// CLEAN UP
+drop obs_no id inc_decoded category_n `inc_cat_var'_n
+drop _merge
+capture drop hhincome ftotval inctot
 
 ***-----------------------------***
 
@@ -373,6 +354,7 @@ di "INFLATE: Inflation year is " `inflation_year'
 	drop cpi_avg  inflation_factor _merge
 
 }
+
 
 ***-----------------------------***
 
