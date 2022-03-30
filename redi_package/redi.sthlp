@@ -49,7 +49,7 @@ from binned incomes, using a real-world reference dataset (in this case, the CPS
 
 {p 4 4 2}
 The Random Empirical Distribution Imputation ({cmd:redi}) method imputes
-discrete observations using binned income data. A researcher may wish to combine
+discrete observations using binned income data. The user may wish to combine
 or compare income data across years or surveys, stymied by incompatible categories.
 {cmd:redi} converts categorical to continuous incomes this through random
 cold-deck imputation from a real world reference dataset. The {cmd:redi} method
@@ -125,6 +125,17 @@ automatically downloads this dataset for use in inflation adjustment. The year
 specified indicates the year that should be used for inflation-adjusted dollars.
 Using this option produces a variable named ({newvar})_inf({it:int})
 
+
+{p 4 4 2}
+{it:Missing Values}
+
+{p 4 4 2}
+Note that the command handles missing values in the {it:incvar} variable input by
+translating all missing values for the {it:incvar} variable to the code 98.
+The user will want to verify that none of the existing codes for {it:incvar} are
+meaningfully assigned 98 prior to using the {cmd:redi} command. At the end of the
+program, 98 values for {it:incvar} are automatically decoded back to missing values.
+Unfortunately, these may not miss the exact missing code from the original research data.
 
 
 {title:Examples}
