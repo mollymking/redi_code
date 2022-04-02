@@ -11,8 +11,8 @@
 
 {p 8 17 2}
 {cmd: redi}
-{help varlist: incvar(string)}
-{help varlist: year(string)}
+{help varname: incvar}
+{help varname: year}
 {cmd:,}
 Generate({newvar})
 [
@@ -21,7 +21,7 @@ Generate({newvar})
 ]
 
 {p 4 4 2}
-where {it:incvar(string)} is
+where {it:incvar} is
 
 {p 8 17 2}
 the name of the categorical income variable in the original research dataset, and
@@ -29,7 +29,7 @@ the name of the categorical income variable in the original research dataset, an
 (with the categories storied as value labels);
 
 {p 4 4 2}
-{it:year(string)} is
+{it:year} is
 
 {p 8 17 2}
 the name of the year variable in the original research dataset; and
@@ -135,23 +135,23 @@ translating all missing values for the {it:incvar} variable to the code 98.
 The user will want to verify that none of the existing codes for {it:incvar} are
 meaningfully assigned 98 prior to using the {cmd:redi} command. At the end of the
 program, 98 values for {it:incvar} are automatically decoded back to missing values.
-Unfortunately, these may not miss the exact missing code from the original research data.
+Unfortunately, these may not be the exact missing code from the original research data.
 
 
 {title:Examples}
 
 {p 4 4 2}
-// Calculate a new continuous income variable named household_cont from categorical
-household income variable inchousehold and year variable yr.
-The household income type needs to be specified as an option.{p_end}
+// Calculate a new continuous income variable named finc_continuous from categorical
+household income variable {it:incfamily} and year variable {it:year}.
+The family income type needs to be specified as an option.{p_end}
 {p 8 17 2}
-{help cmd: redi} {help var: inchousehold} {help var: yr}, gen(household_cont) cps(household)
+{help cmd: redi} {help var: incfamily} {help var: yr}, generate(finc_continuous) cpstype(family)
 
 {p 4 4 2}
 // Inflate the resulting continuous household income values to 2020 dollars using the R-CPI-U-RS. This example will produce not only household_cont but also household_cont_inf2020,
-a version of the continuous variable inflated to 2020 dollars. {p_end}
+a version of the continuous variable inflated to 2020 dollars. Here we see the shorthand versions of the program options. {p_end}
 {p 8 17 2}
-{help cmd: redi} {help var: inchousehold} {help var: yr}, g(household_cont) cps(household) {help options: inf(2020)}
+{help cmd: redi} {help var: incfamily} {help var: yr}, g(finc_continuous) cps(family) {help options: inf(2020)}
 
 
 {title:Author}
