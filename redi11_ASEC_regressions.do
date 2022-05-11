@@ -3,7 +3,7 @@ log using $redi/redi11_ASEC_regressions.log, name(redi11_ASEC_regressions) repla
 
 // 	project:	REDI Methods Paper
 
-//  task:     	Regression of original continuous CPS ASEC variables
+//  task:     	Regression of continuous CPS ASEC variables
 //  data:     	CPS ASEC from IPUMS, available: https://cps.ipums.org/
 
 //  github:   	redi
@@ -25,7 +25,73 @@ set seed 1
 
 local conv_year = 2017 // this is set in ki11_bidee00_CPI-U-RS.do
 
-use $deriv/redi05_ASEC_bins-hinc_shp.dta, clear
+do $redi/cps_00015.do // larger data set includes variables for later regression
+
+keep if pernum == 1
+svyset [pweight=asecwth]
+compress
+
+// RENAME to avoid confusion with ACS
+rename hhincome asec_hinc_cont
+rename race race_asec
+rename hispan hispan_asec
+rename educ educ_asec
+rename sex sex_asec
+rename marst marst_asec
+rename migrate1  migrate1_asec
+rename diffmob diffmob_asec
+rename ownershp ownershp_asec
+
+***--------------------------***
+// # CREATE SHARP CATEGORY BOUNDS - HOUSEHOLD
+***--------------------------***
+
+label define  cat_inc	 				///
+	1	"Less than $15000"	 			///
+	2	"15000 to less than 25000" 		///
+	3	"25000 to less than 35000" 		///
+	4	"35000 to less than 50000" 		///
+	5	"50000 to less than 75000" 		///
+	6	"75000 to less than 100000" 	///
+	7	"100000 to less than 150000" 	///
+	8	"150000 to less than 200000" 	///
+	9	"200000 or more" 				//
+
+*arbitrary categories invented to demonstrate flexibility of method
+gen 	asec_hinc_shp = .
+replace asec_hinc_shp = 1 if asec_hinc_cont	<= 15000
+replace asec_hinc_shp = 2 if asec_hinc_cont  > 15000 	& asec_hinc_cont <= 25000
+replace asec_hinc_shp = 3 if asec_hinc_cont  > 25000 	& asec_hinc_cont <= 35000
+replace asec_hinc_shp = 4 if asec_hinc_cont  > 35000 	& asec_hinc_cont <= 50000	
+replace asec_hinc_shp = 5 if asec_hinc_cont  > 50000 	& asec_hinc_cont <= 75000	
+replace asec_hinc_shp = 6 if asec_hinc_cont  > 75000 	& asec_hinc_cont <= 100000
+replace asec_hinc_shp = 7 if asec_hinc_cont  > 100000 	& asec_hinc_cont <= 150000 
+replace asec_hinc_shp = 8 if asec_hinc_cont  > 150000 	& asec_hinc_cont <= 200000
+replace asec_hinc_shp = 9 if asec_hinc_cont  > 200000 	& asec_hinc_cont != 9999999 
+replace asec_hinc_shp = . if asec_hinc_cont == 9999999 
+replace asec_hinc_shp = . if asec_hinc_cont == .
+
+label values asec_hinc_shp cat_inc
+
+tab asec_hinc_shp, m
+tab asec_hinc_shp, m nolab
+
+* SAVE SHARP INCOME VARIABLE
+label var asec_hinc_shp "household Income (ASEC) sharp categories based on asec_hinc_cont"
+notes asec_hinc_shp: ASEC household Income Sharp Categories from asec_hinc_cont \  mmk $S_DATE
+
+***--------------------------***
+// # COUNT NUMBER OF CASES IN EACH BIN
+***--------------------------***
+
+* COUNT BY SHARP BINS
+gen id = _n
+egen asec_hinc_shp_n = count(id), by(asec_hinc_shp year)
+label var asec_hinc_shp_n "Count of cases of household Income (ASEC) sharp within year (count of asec_hinc_shp by year)"
+
+label data "CPS ASEC data - Household Income - 2016, 2017, 2019"
+notes: redi01_ASEC-hhincome_all.dta \ CPS ASEC Data - Household Income 2016-2017, 2019 \ redi01_ASEC.do
+datasignature set, reset
 save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
 
 ***--------------------------***
@@ -40,7 +106,7 @@ drop _merge
 svyset [iweight=asecwth]
 
 *original income variable, adjusted for inflation
-gen asec_hinc_shp_`conv_year' = hhincome_asec / conv_factor
+gen asec_hinc_shp_`conv_year' = asec_hinc_cont / conv_factor
 format asec_hinc_shp_`conv_year' %6.0fc
 label var asec_hinc_shp_`conv_year' "Inflation-adjusted household income (ASEC), from shp categories, `conv_year' dollars"
 
@@ -53,6 +119,8 @@ gen asec_lnhinc_shp_`conv_year' = ln(asec_hinc_shp_`conv_year')
 label var asec_hinc_shp_`conv_year' "Inflation-adjusted natural log household income (ASEC), from shp categories, `conv_year' dollars"
 
 
+***--------------------------***	
+// SAVE 
 ***--------------------------***	
 		
 save $deriv/redi11_ASEC_regressions-hinc_shp.dta, replace
