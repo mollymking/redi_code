@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
       name:  redi06_ASEC_descriptives
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi06_AS
-> EC_descriptives.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi06_ASEC_desc
+> riptives.log
   log type:  text
- opened on:   9 Sep 2021, 11:01:23
+ opened on:  11 May 2022, 14:29:58
 
 . 
 . //      project:        REDI Methods Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
- 9 Sep 2021  11:01:23
+11 May 2022  14:29:58
 
 . 
 . ***--------------------------***
@@ -40,7 +40,7 @@
 
 . 
 . use $deriv/redi05_ASEC_bins-hinc.dta, clear
-(Household Income - CPS ASEC data)
+(CPS ASEC data - Household Income - 2016-2017)
 
 . save $deriv/redi06_ASEC_descriptives-hinc.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi06_ASEC_descriptive
@@ -83,14 +83,14 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi06_ASEC_descriptive
 . 
 . 
 . *original income variable, adjusted for inflation
-. local inflated_reference_var "asec_hinc_shp_`conv_year'"
+. local inflated_reference_var "asec_hinc_cont_`conv_year'"
 
-. gen asec_hinc_shp_`conv_year' = hhincome / conv_factor
+. gen asec_hinc_cont_`conv_year' = asec_hinc_cont / conv_factor
 
-. format asec_hinc_shp_`conv_year' %6.0fc
+. format asec_hinc_cont_`conv_year' %6.0fc
 
-. label var asec_hinc_shp_`conv_year' "Inflation-adjusted household income (ASEC
-> ), from shp categories, `conv_year' dollars"
+. label var asec_hinc_cont_`conv_year' "Inflation-adjusted household income (ASE
+> C), `conv_year' dollars"
 
 .                 
 .         
@@ -98,59 +98,60 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi06_ASEC_descriptive
 . // GRAND MEAN 
 . ***--------------------------***                
 .                 
-. capture drop asec_hinc_shp_`conv_year'_mean
+. capture drop asec_hinc_cont_`conv_year'_mean
 
-. gen asec_hinc_shp_`conv_year'_mean = .
+. gen asec_hinc_cont_`conv_year'_mean = .
 (139,441 missing values generated)
 
-. label var asec_hinc_shp_`conv_year'_mean "household (ASEC) shp grand mean"
+. label var asec_hinc_cont_`conv_year'_mean "ASEC household grand mean"
 
 . 
 . levelsof year, local(years)
 2016 2017
 
 . foreach y of local years { // loop through all years
-  2. 
-.         di in red "Calculate grand mean for hinc shp for year `y'"
-  3.         svy: mean asec_hinc_shp_`conv_year' if year == `y' // 
+  2.  
+.         di in red "Calculate grand mean for ASEC household income for year `y'
+> "
+  3.         svy: mean asec_hinc_cont_`conv_year' if year == `y' // 
   4.         cap matrix X = r(table) 
   5.                 cap loc mf = X[1,1]
   6.                 di `mf'
-  7.         replace asec_hinc_shp_`conv_year'_mean = `mf' if year == `y'
+  7.         replace asec_hinc_cont_`conv_year'_mean = `mf' if year == `y'
   8. 
 . } // end loop through years
-Calculate grand mean for hinc shp for year 2016
+Calculate grand mean for ASEC household income for year 2016
 (running mean on estimation sample)
 
 Survey: Mean estimation
 
-Number of strata =       1            Number of obs   =       69,484
-Number of PSUs   =  69,484            Population size =  126,067,560
-                                      Design df       =       69,483
+Number of strata =       1             Number of obs   =       69,484
+Number of PSUs   =  69,484             Population size =  126,067,560
+                                       Design df       =       69,483
 
---------------------------------------------------------------------
-                   |             Linearized
-                   |       Mean   Std. Err.     [95% Conf. Interval]
--------------------+------------------------------------------------
-asec_hinc_shp_2017 |   80822.03   403.8489      80030.49    81613.57
---------------------------------------------------------------------
+---------------------------------------------------------------------
+                    |             Linearized
+                    |       Mean   Std. Err.     [95% Conf. Interval]
+--------------------+------------------------------------------------
+asec_hinc_cont_2017 |   80822.03   403.8489      80030.49    81613.57
+---------------------------------------------------------------------
 80822.029
 (69,484 real changes made)
-Calculate grand mean for hinc shp for year 2017
+Calculate grand mean for ASEC household income for year 2017
 (running mean on estimation sample)
 
 Survey: Mean estimation
 
-Number of strata =       1            Number of obs   =       69,957
-Number of PSUs   =  69,957            Population size =  126,519,332
-                                      Design df       =       69,956
+Number of strata =       1             Number of obs   =       69,957
+Number of PSUs   =  69,957             Population size =  126,519,332
+                                       Design df       =       69,956
 
---------------------------------------------------------------------
-                   |             Linearized
-                   |       Mean   Std. Err.     [95% Conf. Interval]
--------------------+------------------------------------------------
-asec_hinc_shp_2017 |   82957.25   419.9373      82134.17    83780.33
---------------------------------------------------------------------
+---------------------------------------------------------------------
+                    |             Linearized
+                    |       Mean   Std. Err.     [95% Conf. Interval]
+--------------------+------------------------------------------------
+asec_hinc_cont_2017 |   82957.25   419.9373      82134.17    83780.33
+---------------------------------------------------------------------
 82957.25
 (69,957 real changes made)
 
@@ -168,18 +169,18 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi06_ASEC_descriptive
 . 
 . foreach y of local years { // loop through all years
   2. 
-.         di in red "Below is the median hinc for `y':"
+.         di in red "Below is the median for ASEC household income for `y':"
   3. 
-.         _pctile  asec_hinc_shp_`conv_year' [pweight=asecwth] if year == `y', p
-> (50)
+.         _pctile  asec_hinc_cont_`conv_year' [pweight=asecwth] if year == `y', 
+> p(50)
   4.         return list
   5. 
 . } // end loop through years
-Below is the median hinc for 2016:
+Below is the median for ASEC household income for 2016:
 
 scalars:
                  r(r1) =  57229.83984375
-Below is the median hinc for 2017:
+Below is the median for ASEC household income for 2017:
 
 scalars:
                  r(r1) =  58849
@@ -198,22 +199,22 @@ scalars:
 .         use $deriv/redi06_ASEC_descriptives-hinc.dta, clear
   3.         keep if year == `y'
   4.         
-.         di in red "Below is the gini hinc for `y':"
+.         di in red "Below is the gini for ASEC household income for `y':"
   5.         
-.         fastgini asec_hinc_shp_`conv_year', nocheck
+.         fastgini asec_hinc_cont_`conv_year', nocheck
   6.         local gini  r(gini) 
   7.         di `gini'
   8.         
 . } // end loop through years
-(Household Income - CPS ASEC data)
+(CPS ASEC data - Household Income - 2016-2017)
 (69,957 observations deleted)
-Below is the gini hinc for 2016:
+Below is the gini for ASEC household income for 2016:
 
 Gini coefficient = 0.4775483
 .47754829
-(Household Income - CPS ASEC data)
+(CPS ASEC data - Household Income - 2016-2017)
 (69,484 observations deleted)
-Below is the gini hinc for 2017:
+Below is the gini for ASEC household income for 2017:
 
 Gini coefficient = 0.4807589
 .48075887
@@ -225,8 +226,8 @@ Gini coefficient = 0.4807589
 . 
 . log close redi06_ASEC_descriptives
       name:  redi06_ASEC_descriptives
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi06_AS
-> EC_descriptives.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi06_ASEC_desc
+> riptives.log
   log type:  text
- closed on:   9 Sep 2021, 11:01:26
+ closed on:  11 May 2022, 14:29:59
 --------------------------------------------------------------------------------

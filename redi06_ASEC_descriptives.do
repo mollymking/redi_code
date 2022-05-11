@@ -40,29 +40,29 @@ save $deriv/redi06_ASEC_descriptives-hinc.dta, replace
 
 
 *original income variable, adjusted for inflation
-local inflated_reference_var "asec_hinc_shp_`conv_year'"
-gen asec_hinc_shp_`conv_year' = hhincome_asec / conv_factor
-format asec_hinc_shp_`conv_year' %6.0fc
-label var asec_hinc_shp_`conv_year' "Inflation-adjusted household income (ASEC), from shp categories, `conv_year' dollars"
+local inflated_reference_var "asec_hinc_cont_`conv_year'"
+gen asec_hinc_cont_`conv_year' = asec_hinc_cont / conv_factor
+format asec_hinc_cont_`conv_year' %6.0fc
+label var asec_hinc_cont_`conv_year' "Inflation-adjusted household income (ASEC), `conv_year' dollars"
 		
 	
 ***--------------------------***		
 // GRAND MEAN 
 ***--------------------------***		
 		
-capture drop asec_hinc_shp_`conv_year'_mean
-gen asec_hinc_shp_`conv_year'_mean = .
-label var asec_hinc_shp_`conv_year'_mean "household (ASEC) shp grand mean"
+capture drop asec_hinc_cont_`conv_year'_mean
+gen asec_hinc_cont_`conv_year'_mean = .
+label var asec_hinc_cont_`conv_year'_mean "ASEC household grand mean"
 
 levelsof year, local(years)
 foreach y of local years { // loop through all years
-
-	di in red "Calculate grand mean for hinc shp for year `y'"
-	svy: mean asec_hinc_shp_`conv_year' if year == `y' // 
+ 
+	di in red "Calculate grand mean for ASEC household income for year `y'"
+	svy: mean asec_hinc_cont_`conv_year' if year == `y' // 
 	cap matrix X = r(table) 
 		cap loc mf = X[1,1]
 		di `mf'
-	replace asec_hinc_shp_`conv_year'_mean = `mf' if year == `y'
+	replace asec_hinc_cont_`conv_year'_mean = `mf' if year == `y'
 
 } // end loop through years
 
@@ -76,9 +76,9 @@ save $deriv/redi06_ASEC_descriptives-hinc.dta, replace
 
 foreach y of local years { // loop through all years
 
-	di in red "Below is the median hinc for `y':"
+	di in red "Below is the median for ASEC household income for `y':"
 
-	_pctile  asec_hinc_shp_`conv_year' [pweight=asecwth] if year == `y', p(50)
+	_pctile  asec_hinc_cont_`conv_year' [pweight=asecwth] if year == `y', p(50)
 	return list
 
 } // end loop through years
@@ -96,9 +96,9 @@ foreach y of local years { // loop through all years
 	use $deriv/redi06_ASEC_descriptives-hinc.dta, clear
 	keep if year == `y'
 	
-	di in red "Below is the gini hinc for `y':"
+	di in red "Below is the gini for ASEC household income for `y':"
 	
-	fastgini asec_hinc_shp_`conv_year', nocheck
+	fastgini asec_hinc_cont_`conv_year', nocheck
 	local gini  r(gini) 
 	di `gini'
 	

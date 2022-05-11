@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
       name:  redi05_ASEC_bins
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi05_AS
-> EC_bins.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi05_ASEC_bins
+> .log
   log type:  text
- opened on:   2 Nov 2021, 13:22:43
+ opened on:  11 May 2022, 14:29:16
 
 . 
 . //      project:        REDI Methods Paper
@@ -17,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
- 2 Nov 2021  13:22:43
+11 May 2022  14:29:16
 
 . 
 . ***--------------------------***
@@ -62,45 +62,45 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc.d
 . gen     asec_hinc_shp = .
 (139,441 missing values generated)
 
-. replace asec_hinc_shp = 1 if hhincome_asec      <= 15000
+. replace asec_hinc_shp = 1 if asec_hinc_cont     <= 15000
 (16,385 real changes made)
 
-. replace asec_hinc_shp = 2 if hhincome_asec  > 15000     & hhincome_asec <= 250
-> 00
+. replace asec_hinc_shp = 2 if asec_hinc_cont  > 15000    & asec_hinc_cont <= 25
+> 000
 (13,798 real changes made)
 
-. replace asec_hinc_shp = 3 if hhincome_asec  > 25000     & hhincome_asec <= 350
-> 00
+. replace asec_hinc_shp = 3 if asec_hinc_cont  > 25000    & asec_hinc_cont <= 35
+> 000
 (13,242 real changes made)
 
-. replace asec_hinc_shp = 4 if hhincome_asec  > 35000     & hhincome_asec <= 500
-> 00        
+. replace asec_hinc_shp = 4 if asec_hinc_cont  > 35000    & asec_hinc_cont <= 50
+> 000       
 (17,636 real changes made)
 
-. replace asec_hinc_shp = 5 if hhincome_asec  > 50000     & hhincome_asec <= 750
-> 00        
+. replace asec_hinc_shp = 5 if asec_hinc_cont  > 50000    & asec_hinc_cont <= 75
+> 000       
 (23,224 real changes made)
 
-. replace asec_hinc_shp = 6 if hhincome_asec  > 75000     & hhincome_asec <= 100
-> 000
+. replace asec_hinc_shp = 6 if asec_hinc_cont  > 75000    & asec_hinc_cont <= 10
+> 0000
 (17,115 real changes made)
 
-. replace asec_hinc_shp = 7 if hhincome_asec  > 100000    & hhincome_asec <= 150
-> 000 
+. replace asec_hinc_shp = 7 if asec_hinc_cont  > 100000   & asec_hinc_cont <= 15
+> 0000 
 (20,138 real changes made)
 
-. replace asec_hinc_shp = 8 if hhincome_asec  > 150000    & hhincome_asec <= 200
-> 000
+. replace asec_hinc_shp = 8 if asec_hinc_cont  > 150000   & asec_hinc_cont <= 20
+> 0000
 (8,951 real changes made)
 
-. replace asec_hinc_shp = 9 if hhincome_asec  > 200000    & hhincome_asec != 999
-> 9999 
+. replace asec_hinc_shp = 9 if asec_hinc_cont  > 200000   & asec_hinc_cont != 99
+> 99999 
 (8,952 real changes made)
 
-. replace asec_hinc_shp = . if hhincome_asec == 9999999 
+. replace asec_hinc_shp = . if asec_hinc_cont == 9999999 
 (0 real changes made)
 
-. replace asec_hinc_shp = . if hhincome_asec == .
+. replace asec_hinc_shp = . if asec_hinc_cont == .
 (0 real changes made)
 
 . 
@@ -142,11 +142,11 @@ asec_hinc_s |
 
 . 
 . * SAVE SHARP INCOME VARIABLE
-. label var asec_hinc_shp "household Income (ASEC) sharp categories based on hhi
-> ncome_asec"
+. label var asec_hinc_shp "household Income (ASEC) sharp categories based on ase
+> c_hinc_cont"
 
-. notes asec_hinc_shp: ASEC household Income Sharp Categories from hhincome_asec
->  \  mmk $S_DATE
+. notes asec_hinc_shp: ASEC household Income Sharp Categories from asec_hinc_con
+> t \  mmk $S_DATE
 
 . 
 . save $deriv/redi05_ASEC_bins-hinc.dta, replace
@@ -159,11 +159,6 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc.d
 . ***--------------------------***
 . 
 . * COUNT BY SHARP BINS
-. 
-. use $deriv/redi05_ASEC_bins-hinc.dta, clear
-(CPS ASEC data - Household Income - 2016-2017)
-
-. 
 . gen id = _n
 
 . egen asec_hinc_shp_n = count(id), by(asec_hinc_shp year)
@@ -171,12 +166,6 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc.d
 . label var asec_hinc_shp_n "Count of cases of household Income (ASEC) sharp wit
 > hin year (count of asec_hinc_shp by year)"
 note: label truncated to 80 characters
-
-. 
-. save $deriv/redi05_ASEC_bins-hinc_shp.dta, replace  // for use in redi10_ASEC_
-> regressions
-file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc_s
-> hp.dta saved
 
 . 
 . duplicates drop year asec_hinc_shp asec_hinc_shp_n, force
@@ -201,8 +190,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi05_ASEC_bins-hinc_s
 . 
 . log close redi05_ASEC_bins
       name:  redi05_ASEC_bins
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi05_AS
-> EC_bins.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi05_ASEC_bins
+> .log
   log type:  text
- closed on:   2 Nov 2021, 13:22:45
+ closed on:  11 May 2022, 14:29:16
 --------------------------------------------------------------------------------
