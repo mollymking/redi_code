@@ -33,7 +33,7 @@ set more off
 
 cd $source/00_CPS_ASEC/
 // this is code provided by IPUMS - ACS to import data:
-do $redi/cps_00015.do // larger data set includes variables for later regression
+do $redi/cps_00010.do // original dataset used for tables 4 and 5 in paper
 
 
 // SAVE
@@ -45,7 +45,7 @@ save $extr/redi01_ASEC-extr.dta, replace
 
 
 // CLEAN VERSION FOR DEBUGGING ADO PROGRAM
-keep year hhincome ftotval inctot pernum asecwth
+keep year hhincome  pernum asecwth
 save $redi/redi_package/cps_reference.dta, replace
 
 ***--------------------------***
@@ -67,15 +67,8 @@ svyset [pweight=asecwth]
 compress
 
 // RENAME to avoid confusion with ACS
-rename hhincome hhincome_asec
-rename race race_asec
-rename hispan hispan_asec
-rename educ educ_asec
-rename sex sex_asec
-rename marst marst_asec
-rename migrate1  migrate1_asec
-rename diffmob diffmob_asec
-rename ownershp ownershp_asec
+rename hhincome asec_hinc_cont
+
 
 // SAVE ALL YEARS
 

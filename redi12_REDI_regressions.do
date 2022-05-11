@@ -34,7 +34,7 @@ local y = year
 // # CREATE NATURAL LOG INCOME VARIABLES
 ***--------------------------***
 
-gen redi_dV_lnhinc_shp_`conv_year' = ln(redi_dV_hinc_shp_`conv_year')
+gen redi_dV_lnhinc_shp_`conv_year' = ln(redi_hinc_cont_inf`conv_year')
 label var redi_dV_lnhinc_shp_`conv_year' "Inflation-adjusted natural log household income (ACS), from shp categories, `conv_year' dollars"
 
 ***--------------------------***
@@ -221,7 +221,7 @@ save $deriv/redi12_REDI_regressions-hinc_shp.dta, replace
 
 di in red "Predict original ACS continuous income as a function of gender of householder, " ///
 		  "race/ethnicity, education"		
-svy: reg acs_hinc_shp_`conv_year' /// 
+svy: reg acs_hinc_cont_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
@@ -229,7 +229,7 @@ svy: reg acs_hinc_shp_`conv_year' ///
 
 di in red "Predict original ACS continuous income as a function of gender of householder, " ///
 		  "race/ethnicity, education, married, disability"		
-svy: reg acs_hinc_shp_`conv_year' /// 
+svy: reg acs_hinc_cont_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
@@ -238,7 +238,7 @@ svy: reg acs_hinc_shp_`conv_year' ///
 	
 di in red "Predict original ACS continuous income as a function of gender of householder, " ///
 		  "race/ethnicity, education, married, disability, labor force"		
-svy: reg acs_hinc_shp_`conv_year' /// 
+svy: reg acs_hinc_cont_`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
@@ -249,7 +249,7 @@ svy: reg acs_hinc_shp_`conv_year' ///
 ***--------------------------***	
 
 di in red "Predict REDI-created income as a function of education, race/ethnicity, gender of householder"	
-svy: reg redi_dV_hinc_shp_`conv_year' /// 
+svy: reg redi_hinc_cont_inf`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad // lessHS comparison category
@@ -257,7 +257,7 @@ svy: reg redi_dV_hinc_shp_`conv_year' ///
 
 di in red "Predict REDI-created income as a function of gender of householder, " ///
 		  "race/ethnicity, education, marital status, disability"	
-svy: reg redi_dV_hinc_shp_`conv_year' /// 
+svy: reg redi_hinc_cont_inf`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
@@ -265,7 +265,7 @@ svy: reg redi_dV_hinc_shp_`conv_year' ///
 	
 di in red "Predict REDI-created income as a function of gender of householder, " ///
 		  "race/ethnicity, education, marital status, disability, labor"	
-svy: reg redi_dV_hinc_shp_`conv_year' /// 
+svy: reg redi_hinc_cont_inf`conv_year' /// 
 	dB_fem /// men comparison
 	dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
 	dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison category
@@ -331,9 +331,9 @@ svy: logistic migrate ///
 
 
 *inflation-adjusted
-table dB_fem, 	c(mean redi_dV_hinc_shp_2017   	mean acs_hinc_shp_2017)
-table dG_race, 	c(mean redi_dV_hinc_shp_2017   	mean acs_hinc_shp_2017)
-table dG_edu, 	c(mean redi_dV_hinc_shp_2017   	mean acs_hinc_shp_2017)
+table dB_fem, 	c(mean redi_hinc_cont_inf2017   	mean acs_hinc_cont_2017)
+table dG_race, 	c(mean redi_hinc_cont_inf2017   	mean acs_hinc_cont_2017)
+table dG_edu, 	c(mean redi_hinc_cont_inf2017   	mean acs_hinc_cont_2017)
 
 
  
