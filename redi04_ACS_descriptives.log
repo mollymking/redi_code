@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
       name:  redi04_ACS_descriptives
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
-> S_descriptives.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi04_ACS_descr
+> iptives.log
   log type:  text
- opened on:  27 Oct 2021, 23:54:05
+ opened on:  13 May 2022, 11:34:37
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-27 Oct 2021  23:54:05
+13 May 2022  11:34:37
 
 . 
 . ***--------------------------***
@@ -36,12 +36,17 @@
 . set seed 1
 
 . 
-. use $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+. local p "longform" // alt:  "rediado"
+
+. 
+. use $deriv/redi03_ACS_convert-`p'.dta, clear
 (ACS data converted to continuous REDI-calculated values)
 
-. save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+. save $deriv/redi04_ACS_descriptives-`p'.dta, replace
+(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
+> 04_ACS_descriptives-longform.dta not found)
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
-> -hinc_shp.dta saved
+> -longform.dta saved
 
 . 
 . *inflation done in redi03b_inflate_dollars.doi
@@ -62,30 +67,30 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
          SU 1: <observations>
         FPC 1: <zero>
 
-. save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+. save $deriv/redi04_ACS_descriptives-`p'.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
-> -hinc_shp.dta saved
+> -longform.dta saved
 
 .         
 . ***--------------------------***                
 . // GRAND MEAN 
 . ***--------------------------***                
 . 
-. capture drop acs_hinc_shp_`conv_year'_mean
+. capture drop acs_hinc_cont_`conv_year'_mean
 
-. gen acs_hinc_shp_`conv_year'_mean = .
+. gen acs_hinc_cont_`conv_year'_mean = .
 (6,047,887 missing values generated)
 
-. label var acs_hinc_shp_`conv_year'_mean "household (ACS) shp grand mean"
+. label var acs_hinc_cont_`conv_year'_mean "household (ACS) shp grand mean"
 
 . 
 . local y = year
 
-. di in red "Calculate grand mean for hinc shp for year `y'" 
-Calculate grand mean for hinc shp for year 2016
+. di in red "Calculate grand mean for ACS household income for year `y'" 
+Calculate grand mean for ACS household income for year 2016
 
-. svy: mean acs_hinc_shp_`conv_year' if year == 2016 // this is original variabl
-> e: hhincome_asec
+. svy: mean acs_hinc_cont_`conv_year' if year == 2016 // this is original variab
+> le: hhincome_asec
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -93,17 +98,17 @@ BRR replications (80)
 ..................................................    50
 ..............................
 
-Survey: Mean estimation              Number of obs   =    3,008,406
-                                     Population size =  315,047,636
-                                     Replications    =           80
-                                     Design df       =           79
+Survey: Mean estimation               Number of obs   =    3,008,406
+                                      Population size =  315,047,636
+                                      Replications    =           80
+                                      Design df       =           79
 
--------------------------------------------------------------------
-                  |                BRR *
-                  |       Mean   Std. Err.     [95% Conf. Interval]
-------------------+------------------------------------------------
-acs_hinc_shp_2017 |   93825.27   121.8422      93582.75    94067.79
--------------------------------------------------------------------
+--------------------------------------------------------------------
+                   |                BRR *
+                   |       Mean   Std. Err.     [95% Conf. Interval]
+-------------------+------------------------------------------------
+acs_hinc_cont_2017 |   93825.27   121.8422      93582.75    94067.79
+--------------------------------------------------------------------
 
 . cap matrix X = r(table) 
 
@@ -112,17 +117,17 @@ acs_hinc_shp_2017 |   93825.27   121.8422      93582.75    94067.79
 .         di `mf'
 93825.271
 
-. replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2016
+. replace acs_hinc_cont_`conv_year'_mean = `mf' if year == 2016
 (3,008,406 real changes made)
 
 . 
 . local y = year
 
-. di in red "Calculate grand mean for hinc shp for year `y'"
-Calculate grand mean for hinc shp for year 2016
+. di in red "Calculate grand mean for ACS household income for year `y'"
+Calculate grand mean for ACS household income for year 2016
 
-. svy: mean acs_hinc_shp_`conv_year' if year == 2017 // this is original variabl
-> e: hhincome_asec
+. svy: mean acs_hinc_cont_`conv_year' if year == 2017 // this is original variab
+> le: hhincome_asec
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -130,17 +135,17 @@ BRR replications (80)
 ..................................................    50
 ..............................
 
-Survey: Mean estimation              Number of obs   =    3,039,481
-                                     Population size =  317,631,941
-                                     Replications    =           80
-                                     Design df       =           79
+Survey: Mean estimation               Number of obs   =    3,039,481
+                                      Population size =  317,631,941
+                                      Replications    =           80
+                                      Design df       =           79
 
--------------------------------------------------------------------
-                  |                BRR *
-                  |       Mean   Std. Err.     [95% Conf. Interval]
-------------------+------------------------------------------------
-acs_hinc_shp_2017 |   95442.48   122.0628      95199.52    95685.44
--------------------------------------------------------------------
+--------------------------------------------------------------------
+                   |                BRR *
+                   |       Mean   Std. Err.     [95% Conf. Interval]
+-------------------+------------------------------------------------
+acs_hinc_cont_2017 |   95442.48   122.0628      95199.52    95685.44
+--------------------------------------------------------------------
 
 . cap matrix X = r(table) 
 
@@ -149,13 +154,13 @@ acs_hinc_shp_2017 |   95442.48   122.0628      95199.52    95685.44
 .         di `mf'
 95442.482
 
-. replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2017
+. replace acs_hinc_cont_`conv_year'_mean = `mf' if year == 2017
 (3,039,481 real changes made)
 
 . 
-. save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+. save $deriv/redi04_ACS_descriptives-`p'.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
-> -hinc_shp.dta saved
+> -longform.dta saved
 
 .         
 . ***--------------------------***                
@@ -169,19 +174,19 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi04_ACS_descriptives
 
 . foreach y of local years { // loop through all years
   2. 
-.         di in red "Below is the median hinc for `y':"
+.         di in red "Below is the median ACS household income for `y':"
   3. 
-.         _pctile  acs_hinc_shp_`conv_year' [pweight=perwt] if year == `y', p(50
-> )
+.         _pctile  acs_hinc_cont_`conv_year' [pweight=perwt] if year == `y', p(5
+> 0)
   4.         return list
   5. 
 .         
 . } // end loop through years
-Below is the median hinc for 2016:
+Below is the median ACS household income for 2016:
 
 scalars:
                  r(r1) =  69687.1015625
-Below is the median hinc for 2017:
+Below is the median ACS household income for 2017:
 
 scalars:
                  r(r1) =  71000
@@ -198,25 +203,25 @@ scalars:
 . 
 . foreach y of local years { // loop through all years
   2. 
-.         use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
+.         use $deriv/redi04_ACS_descriptives-`p'.dta, clear
   3.         keep if year == `y'
   4.         
-.         di in red "Below is the gini hinc for `y':"
+.         di in red "Below is the gini of ACS household income for `y':"
   5.         
-.         fastgini acs_hinc_shp_`conv_year' [pweight=perwt], nocheck
+.         fastgini acs_hinc_cont_`conv_year' [pweight=perwt], nocheck
   6.         local gini  r(gini) 
   7.         di `gini'
   8.         
 . } // end loop through years
 (ACS data converted to continuous REDI-calculated values)
 (3,039,481 observations deleted)
-Below is the gini hinc for 2016:
+Below is the gini of ACS household income for 2016:
 
 Gini coefficient = 0.4549146
 .45491462
 (ACS data converted to continuous REDI-calculated values)
 (3,008,406 observations deleted)
-Below is the gini hinc for 2017:
+Below is the gini of ACS household income for 2017:
 
 Gini coefficient = 0.4536296
 .45362956
@@ -227,8 +232,8 @@ Gini coefficient = 0.4536296
 . 
 . log close redi04_ACS_descriptives
       name:  redi04_ACS_descriptives
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi04_AC
-> S_descriptives.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi04_ACS_descr
+> iptives.log
   log type:  text
- closed on:  28 Oct 2021, 00:15:06
+ closed on:  13 May 2022, 11:42:28
 --------------------------------------------------------------------------------

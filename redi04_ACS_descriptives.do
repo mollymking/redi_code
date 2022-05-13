@@ -23,8 +23,10 @@ clear all
 set more off
 set seed 1
 
-use $deriv/redi03_ACS_convert-hinc_shp.dta, clear
-save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+local p "longform" // alt:  "rediado"
+
+use $deriv/redi03_ACS_convert-`p'.dta, clear
+save $deriv/redi04_ACS_descriptives-`p'.dta, replace
 
 *inflation done in redi03b_inflate_dollars.doi
 local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
@@ -32,7 +34,7 @@ local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
 // SURVEY WEIGHTS
 *need to redo survey-set
 svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
-save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+save $deriv/redi04_ACS_descriptives-`p'.dta, replace
 	
 ***--------------------------***		
 // GRAND MEAN 
@@ -58,7 +60,7 @@ cap matrix X = r(table)
 	di `mf'
 replace acs_hinc_cont_`conv_year'_mean = `mf' if year == 2017
 
-save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
+save $deriv/redi04_ACS_descriptives-`p'.dta, replace
 	
 ***--------------------------***		
 // MEDIAN
@@ -88,7 +90,7 @@ foreach y of local years { // loop through all years
 
 foreach y of local years { // loop through all years
 
-	use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
+	use $deriv/redi04_ACS_descriptives-`p'.dta, clear
 	keep if year == `y'
 	
 	di in red "Below is the gini of ACS household income for `y':"
