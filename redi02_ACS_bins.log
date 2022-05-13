@@ -1,9 +1,9 @@
 --------------------------------------------------------------------------------
       name:  redi02_ACS_bins
-       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi02_ACS_bins
-> .log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi02_ACS_bins.
+> log
   log type:  text
- opened on:  25 Feb 2022, 12:33:32
+ opened on:  11 May 2022, 14:39:14
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-25 Feb 2022  12:33:32
+11 May 2022  14:39:14
 
 . 
 . ***--------------------------***
@@ -62,44 +62,45 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
 . gen     acs_hinc_shp = .
 (6,346,527 missing values generated)
 
-. replace acs_hinc_shp = 1 if hhincome_acs                                      
+. replace acs_hinc_shp = 1 if acs_hinc_cont                                     
 >              <= 15000
 (455,406 real changes made)
 
-. replace acs_hinc_shp = 2 if hhincome_acs  > 15000       & hhincome_acs <= 2500
-> 0
+. replace acs_hinc_shp = 2 if acs_hinc_cont  > 15000      & acs_hinc_cont <= 250
+> 00
 (437,744 real changes made)
 
-. replace acs_hinc_shp = 3 if hhincome_acs  > 25000       & hhincome_acs <= 3500
-> 0
+. replace acs_hinc_shp = 3 if acs_hinc_cont  > 25000      & acs_hinc_cont <= 350
+> 00
 (473,921 real changes made)
 
-. replace acs_hinc_shp = 4 if hhincome_acs  > 35000       & hhincome_acs <= 5000
-> 0 
+. replace acs_hinc_shp = 4 if acs_hinc_cont  > 35000      & acs_hinc_cont <= 500
+> 00        
 (729,516 real changes made)
 
-. replace acs_hinc_shp = 5 if hhincome_acs  > 50000       & hhincome_acs <= 7500
-> 0 
+. replace acs_hinc_shp = 5 if acs_hinc_cont  > 50000      & acs_hinc_cont <= 750
+> 00        
 (1,071,130 real changes made)
 
-. replace acs_hinc_shp = 6 if hhincome_acs  > 75000       & hhincome_acs <= 1000
-> 00
+. replace acs_hinc_shp = 6 if acs_hinc_cont  > 75000      & acs_hinc_cont <= 100
+> 000
 (861,900 real changes made)
 
-. replace acs_hinc_shp = 7 if hhincome_acs  > 100000 & hhincome_acs <= 150000 
+. replace acs_hinc_shp = 7 if acs_hinc_cont  > 100000 & acs_hinc_cont <= 150000 
 (1,023,582 real changes made)
 
-. replace acs_hinc_shp = 8 if hhincome_acs  > 150000 & hhincome_acs <= 200000
+. replace acs_hinc_shp = 8 if acs_hinc_cont  > 150000 & acs_hinc_cont <= 200000
 (457,207 real changes made)
 
-. replace acs_hinc_shp = 9 if hhincome_acs  > 200000 & hhincome_acs != 9999999 
+. replace acs_hinc_shp = 9 if acs_hinc_cont  > 200000 & acs_hinc_cont != 9999999
+>  
 (537,481 real changes made)
 
-. replace acs_hinc_shp = . if hhincome_acs == 9999999 // dataset of new incomes 
-> will now be smaller as a result
+. replace acs_hinc_shp = . if acs_hinc_cont == 9999999 // dataset of new incomes
+>  will now be smaller as a result
 (0 real changes made)
 
-. replace acs_hinc_shp = . if hhincome_acs == .
+. replace acs_hinc_shp = . if acs_hinc_cont == .
 (0 real changes made)
 
 . 
@@ -129,8 +130,6 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
 
 . 
 . save $deriv/redi02_ACS_bins_clean.dta, replace
-(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
-> 02_ACS_bins_clean.dta not found)
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.d
 > ta saved
 
@@ -139,8 +138,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.d
 . 
 . log close redi02_ACS_bins
       name:  redi02_ACS_bins
-       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi02_ACS_bins
-> .log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi02_ACS_bins.
+> log
   log type:  text
- closed on:  25 Feb 2022, 12:33:37
+ closed on:  11 May 2022, 14:39:19
 --------------------------------------------------------------------------------

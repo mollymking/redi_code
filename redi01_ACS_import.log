@@ -1,8 +1,9 @@
-------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
       name:  redi01_ACS_import
-       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi01_ACS_import.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi01_ACS_impor
+> t.log
   log type:  text
- opened on:  25 Feb 2022, 10:05:08
+ opened on:  11 May 2022, 14:32:56
 
 . 
 . //      project:        REDI Methodology Paper
@@ -16,7 +17,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-25 Feb 2022  10:05:08
+11 May 2022  14:32:56
 
 . 
 . ***--------------------------***
@@ -2065,7 +2066,7 @@ end of do-file
 . ***--------------------------***
 . 
 . // RENAME to avoid confusion with CPS ASEC
-. rename hhincome hhincome_acs
+. rename hhincome acs_hinc_cont
 
 . rename race race_acs
 
@@ -2261,11 +2262,9 @@ end of do-file
 . label data "Imported original ACS data, 2016, 2017, 2019"
 
 . datasignature set, reset
-  9586080:190(41250):2970176134:1486287731       (data signature set)
+  9586080:190(31735):2970176134:1486287731       (data signature set)
 
 . save $deriv/redi01_ACS_all.dta, replace
-(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
-> 01_ACS_all.dta not found)
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta save
 > d
 
@@ -2278,12 +2277,10 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS_all.dta save
 . label data "Imported original ACS data, 2016-2017"
 
 . datasignature set, reset
-  6346527:190(41250):867391705:3151051987       (data signature reset)
+  6346527:190(31735):867391705:3151051987       (data signature reset)
 
 . 
 . save $deriv/redi01_ACS.dta, replace
-(note: file /Users/mmking/Documents/SocResearch/Dissertation/data/data_derv/redi
-> 01_ACS.dta not found)
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS.dta saved
 
 . 
@@ -2291,8 +2288,8 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi01_ACS.dta saved
 . 
 . log close  redi01_ACS_import
       name:  redi01_ACS_import
-       log:  /Users/mmking/Documents/SocResearch/redi/redi_code//redi01_ACS_impo
-> rt.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi01_ACS_impor
+> t.log
   log type:  text
- closed on:  25 Feb 2022, 10:10:47
+ closed on:  11 May 2022, 14:38:23
 --------------------------------------------------------------------------------

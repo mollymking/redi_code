@@ -43,17 +43,17 @@ label define cat_inc	 				///
 
 *arbitrary categories invented to demonstrate flexibility of method
 gen 	acs_hinc_shp = .
-replace acs_hinc_shp = 1 if hhincome_acs			 		  	   <= 15000
-replace acs_hinc_shp = 2 if hhincome_acs  > 15000 	& hhincome_acs <= 25000
-replace acs_hinc_shp = 3 if hhincome_acs  > 25000 	& hhincome_acs <= 35000
-replace acs_hinc_shp = 4 if hhincome_acs  > 35000 	& hhincome_acs <= 50000	
-replace acs_hinc_shp = 5 if hhincome_acs  > 50000 	& hhincome_acs <= 75000	
-replace acs_hinc_shp = 6 if hhincome_acs  > 75000 	& hhincome_acs <= 100000
-replace acs_hinc_shp = 7 if hhincome_acs  > 100000 & hhincome_acs <= 150000 
-replace acs_hinc_shp = 8 if hhincome_acs  > 150000 & hhincome_acs <= 200000
-replace acs_hinc_shp = 9 if hhincome_acs  > 200000 & hhincome_acs != 9999999 
-replace acs_hinc_shp = . if hhincome_acs == 9999999 // dataset of new incomes will now be smaller as a result
-replace acs_hinc_shp = . if hhincome_acs == .
+replace acs_hinc_shp = 1 if acs_hinc_cont			 		  	   <= 15000
+replace acs_hinc_shp = 2 if acs_hinc_cont  > 15000 	& acs_hinc_cont <= 25000
+replace acs_hinc_shp = 3 if acs_hinc_cont  > 25000 	& acs_hinc_cont <= 35000
+replace acs_hinc_shp = 4 if acs_hinc_cont  > 35000 	& acs_hinc_cont <= 50000	
+replace acs_hinc_shp = 5 if acs_hinc_cont  > 50000 	& acs_hinc_cont <= 75000	
+replace acs_hinc_shp = 6 if acs_hinc_cont  > 75000 	& acs_hinc_cont <= 100000
+replace acs_hinc_shp = 7 if acs_hinc_cont  > 100000 & acs_hinc_cont <= 150000 
+replace acs_hinc_shp = 8 if acs_hinc_cont  > 150000 & acs_hinc_cont <= 200000
+replace acs_hinc_shp = 9 if acs_hinc_cont  > 200000 & acs_hinc_cont != 9999999 
+replace acs_hinc_shp = . if acs_hinc_cont == 9999999 // dataset of new incomes will now be smaller as a result
+replace acs_hinc_shp = . if acs_hinc_cont == .
 
 label values acs_hinc_shp cat_inc
 label var acs_hinc_shp "Household Income (ACS) sharp categories based on hhincome"

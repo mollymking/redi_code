@@ -41,7 +41,7 @@ svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
 ***--------------------------***
 
 // RENAME to avoid confusion with CPS ASEC
-rename hhincome hhincome_acs
+rename hhincome acs_hinc_cont
 rename race race_acs
 rename hispan hispan_acs
 rename educ educ_acs
