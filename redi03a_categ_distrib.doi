@@ -123,14 +123,14 @@
 				
 				use $deriv/redi01_ASEC-hhincome.dta, clear // use ASEC household dataset
 				*use $temp/redi14_cps_state_ca.dta, clear // $temp/redi14_cps_state_wy.dta
-				di "Calculating household income using hhincome ASEC variable."
+				di "Calculating household income using asec_hinc_cont ASEC variable."
 
 			// #3B) Takes a random draw of number of incomes w/in that income boundary and year from the CPS-ASEC
 			// Keep ASEC data if within income bounds and for given year
 
 				keep if year == `y' & ///
-					hhincome_asec >= `lower_bound' & ///
-					hhincome_asec <= `upper_bound'
+					asec_hinc_cont >= `lower_bound' & ///
+					asec_hinc_cont <= `upper_bound'
 				gen obs_no = _n
 				save "$temp/redi03_ASEC-hhincome_year_inc`inc_level'.dta", replace
 				di "Keep income between $`lower_bound' and $`upper_bound' for `y' year."
