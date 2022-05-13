@@ -38,25 +38,25 @@ save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
 // GRAND MEAN 
 ***--------------------------***		
 
-capture drop acs_hinc_shp_`conv_year'_mean
-gen acs_hinc_shp_`conv_year'_mean = .
-label var acs_hinc_shp_`conv_year'_mean "household (ACS) shp grand mean"
+capture drop acs_hinc_cont_`conv_year'_mean
+gen acs_hinc_cont_`conv_year'_mean = .
+label var acs_hinc_cont_`conv_year'_mean "household (ACS) shp grand mean"
 
 local y = year
-di in red "Calculate grand mean for hinc shp for year `y'" 
-svy: mean acs_hinc_shp_`conv_year' if year == 2016 // this is original variable: hhincome_asec
+di in red "Calculate grand mean for ACS household income for year `y'" 
+svy: mean acs_hinc_cont_`conv_year' if year == 2016 // this is original variable: hhincome_asec
 cap matrix X = r(table) 
 	cap loc mf = X[1,1]
 	di `mf'
-replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2016
+replace acs_hinc_cont_`conv_year'_mean = `mf' if year == 2016
 
 local y = year
-di in red "Calculate grand mean for hinc shp for year `y'"
-svy: mean acs_hinc_shp_`conv_year' if year == 2017 // this is original variable: hhincome_asec
+di in red "Calculate grand mean for ACS household income for year `y'"
+svy: mean acs_hinc_cont_`conv_year' if year == 2017 // this is original variable: hhincome_asec
 cap matrix X = r(table) 
 	cap loc mf = X[1,1]
 	di `mf'
-replace acs_hinc_shp_`conv_year'_mean = `mf' if year == 2017
+replace acs_hinc_cont_`conv_year'_mean = `mf' if year == 2017
 
 save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
 	
@@ -69,9 +69,9 @@ save $deriv/redi04_ACS_descriptives-hinc_shp.dta, replace
 levelsof year, local(years)
 foreach y of local years { // loop through all years
 
-	di in red "Below is the median hinc for `y':"
+	di in red "Below is the median ACS household income for `y':"
 
-	_pctile  acs_hinc_shp_`conv_year' [pweight=perwt] if year == `y', p(50)
+	_pctile  acs_hinc_cont_`conv_year' [pweight=perwt] if year == `y', p(50)
 	return list
 
 	
@@ -91,9 +91,9 @@ foreach y of local years { // loop through all years
 	use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
 	keep if year == `y'
 	
-	di in red "Below is the gini hinc for `y':"
+	di in red "Below is the gini of ACS household income for `y':"
 	
-	fastgini acs_hinc_shp_`conv_year' [pweight=perwt], nocheck
+	fastgini acs_hinc_cont_`conv_year' [pweight=perwt], nocheck
 	local gini  r(gini) 
 	di `gini'
 	

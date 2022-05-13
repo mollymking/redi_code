@@ -27,23 +27,19 @@ drop _merge
 
 *divide continuous income variable by conversion factor
 
-gen redi_dV_hinc_shp_`conv_year' = hhincome_asec / conv_factor
-format redi_dV_hinc_shp_`conv_year' %6.0fc
-label var redi_dV_hinc_shp_`conv_year' "REDI continuous inflation-adjusted household income (ACS), from shp categories, `conv_year' dollars"
-
 gen acs_hinc_shp_`conv_year'ub = acs_hinc_shp_ub / conv_factor
 format acs_hinc_shp_`conv_year'ub %6.0fc
-label var acs_hinc_shp_`conv_year'ub "Inflation-adjusted Upper Bound for redi_dV_hinc_shp_`conv_year', from shp categories, `conv_year' dollars"
+label var acs_hinc_shp_`conv_year'ub "Inflation-adjusted Upper Bound for acs_hinc_shp_ub, from ACS shp categories, `conv_year' dollars"
 
 gen acs_hinc_shp_`conv_year'lb = acs_hinc_shp_lb / conv_factor
 format acs_hinc_shp_`conv_year'lb %6.0fc
-label var acs_hinc_shp_`conv_year'lb "Inflation-adjusted Lower Bound for redi_dV_hinc_shp_`conv_year', from shp categories, `conv_year' dollars"
+label var acs_hinc_shp_`conv_year'lb "Inflation-adjusted Lower Bound for acs_hinc_shp_lb, from ACS shp categories, `conv_year' dollars"
 
 *original income variable, adjusted for inflation
-local inflated_research_var "acs_hinc_shp_`conv_year'"
-gen acs_hinc_shp_`conv_year' = hhincome_acs / conv_factor
-format acs_hinc_shp_`conv_year' %6.0fc
-label var acs_hinc_shp_`conv_year' "REDI continuous inflation-adjusted household income (ACS), from shp categories, `conv_year' dollars"
+local inflated_research_var "acs_hinc_cont_`conv_year'"
+gen acs_hinc_cont_`conv_year' = acs_hinc_cont / conv_factor
+format acs_hinc_cont_`conv_year' %6.0fc
+label var acs_hinc_cont_`conv_year' "ACS continuous inflation-adjusted household income, `conv_year' dollars"
 		
 
 di in red "End of redi03b_inflate_dollars.doi for household and shp variables" 
