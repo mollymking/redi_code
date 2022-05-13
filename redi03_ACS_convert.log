@@ -262,8 +262,8 @@ Create local variable years to loop through within that income bracket - values:
 > n year
 . 
 .                                 keep if year == `y' & ///
->                                         hhincome_asec >= `lower_bound' & ///
->                                         hhincome_asec <= `upper_bound'
+>                                         asec_hinc_cont >= `lower_bound' & ///
+>                                         asec_hinc_cont <= `upper_bound'
  47.                                 gen obs_no = _n
  48.                                 save "$deriv/redi01_ASEC-hhincome_year_inc`
 > inc_level'.dta", replace

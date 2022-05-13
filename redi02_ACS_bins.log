@@ -3,7 +3,7 @@
        log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi02_ACS_bins.
 > log
   log type:  text
- opened on:  11 May 2022, 14:39:14
+ opened on:  13 May 2022, 10:49:18
 
 . 
 . //      project:        REDI Methodology Paper
@@ -18,7 +18,7 @@
 . //  author:     Molly King
 . 
 . display "$S_DATE  $S_TIME"
-11 May 2022  14:39:14
+13 May 2022  10:49:18
 
 . 
 . ***--------------------------***
@@ -116,6 +116,11 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
 . *tab acs_hinc_shp, m
 . *tab acs_hinc_shp, m nolab
 . 
+. *Replace missing values
+. replace acs_hinc_cont = . if  acs_hinc_cont == 9999999 // N/A code
+(298,640 real changes made, 298,640 to missing)
+
+. 
 . save $deriv/redi02_ACS_bins.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
 > ed
@@ -141,5 +146,5 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.d
        log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi02_ACS_bins.
 > log
   log type:  text
- closed on:  11 May 2022, 14:39:19
+ closed on:  13 May 2022, 10:49:24
 --------------------------------------------------------------------------------

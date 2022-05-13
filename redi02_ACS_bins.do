@@ -62,6 +62,9 @@ notes acs_hinc_shp: ACS Household Income Sharp Categories from  hhincome \ $S_DA
 *tab acs_hinc_shp, m
 *tab acs_hinc_shp, m nolab
 
+*Replace missing values
+replace acs_hinc_cont = . if  acs_hinc_cont == 9999999 // N/A code
+
 save $deriv/redi02_ACS_bins.dta, replace
 
 * version for troubleshooting ado program
