@@ -41,13 +41,12 @@
 . local conv_year = 2017 // this is set in redi01_CPI-U-RS.do
 
 . 
-. use $deriv/redi04_ACS_descriptives-hinc_shp.dta, clear
+. use $deriv/redi03_ACS_convert-hinc_shp.dta, clear
 (ACS data converted to continuous REDI-calculated values)
 
 . 
-. // # SET WEIGHTS
-. 
-. *need to redo survey-set, after merges for conversion
+. // SURVEY WEIGHTS
+. *need to redo survey-set
 . svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
 
       pweight: perwt
@@ -60,9 +59,10 @@
          SU 1: <observations>
         FPC 1: <zero>
 
-. save $deriv/redi07_REDI_descriptives-hinc_shp.dta, replace
-file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_REDI_descriptive
-> s-hinc_shp.dta saved
+. 
+. save $deriv/redi07_redi_descriptives.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_redi_descriptive
+> s.dta saved
 
 . 
 . 
@@ -77,28 +77,28 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_REDI_descriptive
 
 . foreach y of local years { // loop through all years
   2. 
-.         use $deriv/redi07_REDI_descriptives-hinc_shp.dta, clear
-  3.         
-.         di in red "Below is the median hinc shp for `y':"
-  4. 
+.         use $deriv/redi07_REDI_descriptives.dta, clear
+  3.         keep if redi_hinc_cont_inf`conv_year' != .
+  4.         
+.         di in red "Calculate REDI median household income for `y':"
+  5. 
 .         *https://www.stata.com/statalist/archive/2011-05/msg00148.html
-.         *_pctile  redi_dV_hinc_shp_`conv_year' [pweight=perwt] if year == `y',
->  p(50)
+.         *_pctile  redi_hinc_cont_inf`conv_year' [pweight=perwt] if year == `y'
+> , p(50)
 .         *return list
 .         
 .         *https://www.stata.com/statalist/archive/2011-05/msg00148.html
 .         *epctile varname [if] [in] [weight] , percentiles(numlist) [options]
-.          epctile redi_dV_hinc_shp_`conv_year', percentiles(50) svy subpop(if y
-> ear == `y')
-  5.          return list
-  6.          matrix list r(table)
-  7.          cap matrix M = r(table)
-  8.          
-.          cap scalar med`y' = M[1,1]
+.          epctile redi_hinc_cont_inf`conv_year', percentiles(50) svy subpop(if 
+> year == `y')
+  6.          return list
+  7.          matrix list r(table)
+  8.          cap matrix M = r(table)
   9.          
 . } // end loop through years
 (ACS data converted to continuous REDI-calculated values)
-Below is the median hinc shp for 2016:
+(0 observations deleted)
+Calculate REDI median household income for 2016:
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -123,7 +123,7 @@ Survey: Mean estimation         Number of obs   =    3,008,406
 Percentile estimation
 ------------------------------------------------------------------------------
              |                BRR *
-redi_dV~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+redi_hi~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
          p50 |   68736.08   151.4375   453.89   0.000     68439.27    69032.89
 ------------------------------------------------------------------------------
@@ -148,7 +148,8 @@ pvalue          0
   crit   1.959964
  eform          0
 (ACS data converted to continuous REDI-calculated values)
-Below is the median hinc shp for 2017:
+(0 observations deleted)
+Calculate REDI median household income for 2017:
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -173,7 +174,7 @@ Survey: Mean estimation         Number of obs   =    3,039,481
 Percentile estimation
 ------------------------------------------------------------------------------
              |                BRR *
-redi_dV~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+redi_hi~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
          p50 |      70200         93   754.84   0.000     70017.72    70382.28
 ------------------------------------------------------------------------------
@@ -199,17 +200,17 @@ pvalue          0
  eform          0
 
 . 
-. capture drop    redi_dV_hinc_shp_`conv_year'_median
+. capture drop    redi_hinc_cont_inf`conv_year'_median
 
-. gen                     redi_dV_hinc_shp_`conv_year'_median = .
+. gen                     redi_hinc_cont_inf`conv_year'_median = .
 (6,047,887 missing values generated)
 
-. replace                 redi_dV_hinc_shp_`conv_year'_median = med2016 if year 
-> == 2016
+. replace                 redi_hinc_cont_inf`conv_year'_median = med2016 if year
+>  == 2016
 (3,008,406 real changes made)
 
-. replace                 redi_dV_hinc_shp_`conv_year'_median = med2017 if year 
-> == 2017
+. replace                 redi_hinc_cont_inf`conv_year'_median = med2017 if year
+>  == 2017
 (3,039,481 real changes made)
 
 . 
@@ -217,20 +218,28 @@ pvalue          0
 . // GRAND MEAN 
 . ***--------------------------***
 . 
-. capture drop redi_dV_hinc_shp_`conv_year'_mean
+. use $deriv/redi07_REDI_descriptives.dta, clear
+(ACS data converted to continuous REDI-calculated values)
 
-. gen redi_dV_hinc_shp_`conv_year'_mean = .
+. 
+. keep if redi_hinc_cont_inf`conv_year' != .
+(0 observations deleted)
+
+. 
+. capture drop redi_hinc_cont_inf`conv_year'_mean
+
+. gen redi_hinc_cont_inf`conv_year'_mean = .
 (6,047,887 missing values generated)
 
-. label var redi_dV_hinc_shp_`conv_year'_mean "REDI hinc shp `conv_year' grand m
-> ean"
+. label var redi_hinc_cont_inf`conv_year'_mean "REDI household income `conv_year
+> ' grand mean"
 
 . 
 . * convert 2016 values to 2017 dollars
-. di in red "Below are the means hinc shp for both years:"
-Below are the means hinc shp for both years:
+. di in red "Calculate grand means for REDI household income for both years" 
+Calculate grand means for REDI household income for both years
 
-. svy: mean redi_dV_hinc_shp_`conv_year', over(year)
+. svy: mean redi_hinc_cont_inf`conv_year', over(year)
 (running mean on estimation sample)
 
 BRR replications (80)
@@ -258,38 +267,42 @@ c.redi_dV_hinc_shp_2017@year |
 . *year 2016  REDI 
 . cap scalar mn16 = X[1,1]                
 
-. di in blue "The inflation-adjusted 2016 REDI mean in 2017 dollars is:"
-The inflation-adjusted 2016 REDI mean in 2017 dollars is:
+. di in blue "The inflation-adjusted 2016 REDI grand mean of household income in
+>  2017 dollars is:"
+The inflation-adjusted 2016 REDI grand mean of household income in 2017 dollars 
+> is:
 
 . di mn16 
 90113.291
 
-. replace redi_dV_hinc_shp_`conv_year'_mean = mn16 if year == 2016
+. replace redi_hinc_cont_inf`conv_year'_mean = mn16 if year == 2016
 (3,008,406 real changes made)
 
 . 
 . *year 2017  REDI 
 . cap scalar mn17 = X[1,2]
 
-. di in blue "The inflation-adjusted 2017 REDI mean in 2017 dollars is:"
-The inflation-adjusted 2017 REDI mean in 2017 dollars is:
+. di in blue "The inflation-adjusted 2017 REDI grand mean of household income in
+>  2017 dollars is:"
+The inflation-adjusted 2017 REDI grand mean of household income in 2017 dollars 
+> is:
 
 . di mn17
 91821.168
 
-. replace redi_dV_hinc_shp_`conv_year'_mean = mn17 if year == 2017
+. replace redi_hinc_cont_inf`conv_year'_mean = mn17 if year == 2017
 (3,039,481 real changes made)
 
 . 
 . *calculate standard deviation 
 . *the -by()- option defines groups within which SD is calculated. 
-. egen redi_dV_hinc_shp_`conv_year'_sd = sd(redi_dV_hinc_shp_`conv_year'), by(ye
-> ar)
+. egen redi_hinc_cont_inf`conv_year'_sd = sd(redi_hinc_cont_inf`conv_year'), by(
+> year)
 
 . 
-. save  $deriv/redi07_REDI_descriptives-hinc_shp.dta, replace
+. save $deriv/redi07_REDI_descriptives.dta, replace
 file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_REDI_descriptive
-> s-hinc_shp.dta saved
+> s.dta saved
 
 . 
 . ***--------------------------***
@@ -302,15 +315,16 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_REDI_descriptive
 . 
 . foreach y of local years { // loop through all years
   2. 
-.         use $deriv/redi07_REDI_descriptives-hinc_shp.dta, clear
+.         use $deriv/redi07_REDI_descriptives.dta, clear
   3.         keep if year == `y'     
   4. 
-.         replace redi_dV_hinc_shp_`conv_year'  = 1 if  redi_dV_hinc_shp_`conv_y
-> ear'  <= 0
+.         replace redi_hinc_cont_inf`conv_year'  = 1 if  redi_hinc_cont_inf`conv
+> _year'  <= 0
   5. 
-.         di in red "Below is the gini hinc shp for `y':"
+.         di in red "Below is the gini for REDI-calculated household income for 
+> `y':"
   6.         
-.         fastgini  redi_dV_hinc_shp_`conv_year' [pweight=perwt]
+.         fastgini  redi_hinc_cont_inf`conv_year' [pweight=perwt]
   7.         
 .         local gini = r(gini) 
   8.         di `gini'
@@ -319,14 +333,14 @@ file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_REDI_descriptive
 (ACS data converted to continuous REDI-calculated values)
 (3,039,481 observations deleted)
 (28,505 real changes made)
-Below is the gini hinc shp for 2016:
+Below is the gini for REDI-calculated household income for 2016:
 
 Gini coefficient = 0.4417894
 .44178939
 (ACS data converted to continuous REDI-calculated values)
 (3,008,406 observations deleted)
 (27,982 real changes made)
-Below is the gini hinc shp for 2017:
+Below is the gini for REDI-calculated household income for 2017:
 
 Gini coefficient = 0.4411404
 .44114037
@@ -336,8 +350,8 @@ Gini coefficient = 0.4411404
 . 
 . log close 
       name:  <unnamed>
-       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi07_RE
-> DI_descriptives.log
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi07_REDI_desc
+> riptives.log
   log type:  text
  closed on:  11 Sep 2021, 19:07:37
 --------------------------------------------------------------------------------
