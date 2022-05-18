@@ -162,7 +162,7 @@ foreach y of local years { // loop through all years
 		di "The current inc_level is: " `inc_level'
 
 		// if `inc_cat_var' is missing, 
-		if `inc_cat_var' == 98 {
+		if `inc_cat_var' == 98 | `inc_cat_var' == . {
 			di "The inc_level " `inc_level' " is missing (recoded as 98)"
 			// keep it missing for lower_bound and upper_bound
 			gen `inc_cat_var'_lb = .
@@ -233,7 +233,7 @@ foreach y of local years { // loop through all years
 		capture drop inc_decoded1 inc_decoded2
 
 		// For nonmissing categories:
-		if `inc_cat_var' != 98 {
+		if `inc_cat_var' != 98 & `inc_cat_var' != . {
 			
 			// Now, still within the single-income-level loop in research dataset:
 			// summarize: count of how many individuals in that income level during year
