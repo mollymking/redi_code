@@ -281,7 +281,8 @@ foreach y of local years { // loop through all years
 			clear
 			set obs `sample_size'
 			gen obs_no = runiformint(1, `N')
-			merge m:1 obs_no using `ref_`y'_`inc_level'', keep(match) nogenerate 
+			merge m:1 obs_no using `ref_`y'_`inc_level'', ///
+				keep(match) nogenerate 
 			save `ref_`y'_`inc_level'', replace
 			di "Completed random draw of `N' incomes from ASEC between $" ///
 				" `lower_bound' and $`upper_bound' (inc level `inc_level' )"
@@ -289,7 +290,7 @@ foreach y of local years { // loop through all years
 			// Merge Research and random sample of reference (ASEC) data within incomebin, year
 			gen id = _n
 			merge 1:1 id using `premerge_`inc_level'_`y'', ///
-				update replace keep(match)
+				keep(match)
 			di "Merged ASEC values with original Research dataset for inc_level " ///
 			   `inc_level' " ($`lower_bound'-`upper_bound') and year `y'."
 					
