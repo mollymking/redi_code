@@ -267,7 +267,7 @@ foreach y of local years { // loop through all years
 			tempfile ref_`y'_`inc_level'
 			save `ref_`y'_`inc_level'', replace
 		
-			di "Ref to keep income between $`lower_bound' and $`upper_bound' for `y' year."
+			di "Keep income between $`lower_bound' and $`upper_bound' for `y' year for ASEC."
 			
 			// Take random draw of number of incomes w/in income boundary, year
 			// Sample, with replacement, such that ASEC income has an equal probability 
@@ -280,10 +280,11 @@ foreach y of local years { // loop through all years
 			local N = r(N)
 			clear
 			set obs `sample_size'
-			di "number of observations is " `obs' " observations"
 			gen obs_no = runiformint(1, `N')
 			merge m:1 obs_no using `ref_`y'_`inc_level'', keep(match) nogenerate 
 			save `ref_`y'_`inc_level'', replace
+			di "Completed random draw of `N' incomes from ASEC between $" ///
+				" `lower_bound' and $`upper_bound' (inc level `inc_level' )"
 				
 			// Merge Research and random sample of reference (ASEC) data within incomebin, year
 			gen id = _n
