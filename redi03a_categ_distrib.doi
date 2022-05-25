@@ -13,9 +13,11 @@
 
 	cd $temp
 	
+	mvencode acs_hinc_shp, mv(98) // encoded missing "." as 98
+	
 	//Create local for levels of income = e.g., levelsof year, local(years)
 	levelsof acs_hinc_shp, local("acs_hinc_shp_levels")
-
+	
 	// sort for later join & create variable recording the original observation order within the identifier
 	*bysort year acs_hinc_shp: gen year_inc_id = _n
 	bysort year acs_hinc_shp: gen id = _n
@@ -50,10 +52,31 @@
 
 			// Keep the data if the income variable is equal to the current income level (of the loop)
 			keep if acs_hinc_shp == `inc_level'  
+			
 			di "The current inc_level is: " `inc_level'
 
+				// if acs_hinc_shp is missing (now coded as 98)
+				if acs_hinc_shp == 98 {
+					di "The inc_level " `inc_level' " is all missing"
+					// keep it missing for lower_bound and upper_bound
+					gen acs_hinc_shp_lb = .
+					gen acs_hinc_shp_ub = .
+					// Label new upper and lower income bound variables
+					label variable acs_hinc_shp_lb "acs_hinc_shp Lower Bound"
+					label variable acs_hinc_shp_ub "acs_hinc_shp Upper Bound"
+					di "Lower and upper bound of . created for inc_level " `inc_level'
+					
+					// complete the creation of the dataset will need later
+					gen obs_no = .
+					gen category_n = .
+					tempfile temp_`inc_level'_`y'
+					save `temp_`inc_level'_`y'', replace
+					di "Saved REDI data (with continuous data) for the missing inc_level " ///
+						"for year `y' in file"
+				}
+			
 			// text at beginning of the string:
-				if regexm(inc_decoded, "^[a-z/A-Z]+") == 1 {
+				else if regexm(inc_decoded, "^[a-z/A-Z]+") == 1 {
 					di "The inc_level " `inc_level' " is at the lowest end of the original ACS income range"
 					// for lower-bound values, will match if text at beginning of line
 					destring inc_decoded, ///
@@ -70,15 +93,6 @@
 						ignore("and over or over,$ or more OR MORE") generate(acs_hinc_shp_lb)
 					gen acs_hinc_shp_ub = 999999  // my topcode for asec purposes
 					di "Upper bound of 999999 created for inc_level " `inc_level'
-				}
-
-			// if acs_hinc_shp is missing, keep it missing for lower_bound and upper_bound
-				else if regexm(inc_decoded, "[.][a-z]") == 1 {
-					di "The inc_level " `inc_level' " is all missing"
-				 // for missing values (a bit excessive, since already missing, but good to be sure)
-					gen acs_hinc_shp_lb = .
-					gen acs_hinc_shp_ub = .
-					di "Lower and upper bound of . created for inc_level " `inc_level'
 				}
 
 			// for labels with 2 numbers in them
@@ -109,9 +123,10 @@
 
 		// drop variables used in creating lower and upper bounds
 			capture drop inc_decoded1 inc_decoded2
-
-		// #3A Now, still within the single-income-level loop in ACS dataset:
-
+	
+		// For nonmissing categories:
+		if acs_hinc_shp != 98 {
+			// #3A Now, still within the single-income-level loop in ACS dataset:
 			// summarize so can get count of how many individuals in that income level during year
 				quietly summarize if year == `y' & acs_hinc_shp == `inc_level'
 				local sample_size = r(N) // count how many rows there are in survey dataset
@@ -157,13 +172,6 @@
 				di in red "Completed random draw of `N' incomes from ASEC between $" ///
 					"`lower_bound' and $`upper_bound' (inc level `inc_level' )"
 													
-			// #3D) Add new columns for lower_bound and upper_bound of income bin
-				gen acs_hinc_shp_lb = `lower_bound'
-				gen acs_hinc_shp_ub = `upper_bound'
-			// Label new upper and lower income bound variables
-				label variable acs_hinc_shp_lb "acs_hinc_shp Lower Bound"
-				label variable acs_hinc_shp_ub "acs_hinc_shp Upper Bound"
-
 				save "$temp/redi03_ASEC-hhincome_year_inc`inc_level'.dta", replace
 				
 
@@ -187,6 +195,8 @@
 				save `temp_`inc_level'_`y'', replace
 				di "Saved REDI data (with ASEC continuous data) for inc_level "  ///
 					`inc_level' " ($`lower_bound'-`upper_bound') and year `y' in file"
+		
+		}	// close conditional for nonmissing categories
 		
 		}  //  close loop through all values of income categories (`inc_level')
 				
