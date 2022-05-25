@@ -305,7 +305,8 @@ foreach y of local years { // loop through all years
 			save `temp_`inc_level'_`y'', replace
 			di "Saved REDI data (with continuous data) for inc_level " ///
 			   `inc_level' " ($`lower_bound'-`upper_bound') and year `y' in file"
-		}
+		
+		} 	// close conditional for nonmissing categories
 			
 	}	/// Close loop through all values of income categories (`inc_level')
 	
