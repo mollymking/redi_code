@@ -1,0 +1,26 @@
+{
+    "id": "C73DB5E1",
+    "path": "~/Documents/SocResearch/Dissertation/redi/binsmooth/cdf_interpolation.R",
+    "project_path": "cdf_interpolation.R",
+    "type": "r_source",
+    "hash": "3859812819",
+    "contents": "",
+    "dirty": false,
+    "created": 1557961591793.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "cursorPosition": "46,0",
+        "scrollLine": "36",
+        "tempName": "Untitled1",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1637619283,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1637619283140,
+    "read_only": false,
+    "read_only_alternatives": []
+}
