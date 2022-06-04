@@ -1,0 +1,150 @@
+--------------------------------------------------------------------------------
+      name:  redi02_ACS_bins
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi02_ACS_bins.
+> log
+  log type:  text
+ opened on:  13 May 2022, 10:49:18
+
+. 
+. //      project:        REDI Methodology Paper
+. 
+. //  task:       Create artificial data bins
+. //  data:               ACS
+. //                              available: https://usa.ipums.org/
+. 
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+13 May 2022  10:49:18
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. 
+. use $deriv/redi01_ACS.dta, clear
+(Imported original ACS data, 2016-2017)
+
+. save $deriv/redi02_ACS_bins.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
+> ed
+
+. 
+. ***--------------------------***
+. // # CREATE SHARP CATEGORY BOUNDS 
+. ***--------------------------***
+. 
+. label define cat_inc                                    ///
+>         1       "Less than $15000"                              ///
+>         2       "15000 to less than 25000"              ///
+>         3       "25000 to less than 35000"              ///
+>         4       "35000 to less than 50000"              ///
+>         5       "50000 to less than 75000"              ///
+>         6       "75000 to less than 100000"     ///
+>         7       "100000 to less than 150000"    ///
+>         8       "150000 to less than 200000"    ///
+>         9       "200000 or more"                                //
+
+. 
+. *arbitrary categories invented to demonstrate flexibility of method
+. gen     acs_hinc_shp = .
+(6,346,527 missing values generated)
+
+. replace acs_hinc_shp = 1 if acs_hinc_cont                                     
+>              <= 15000
+(455,406 real changes made)
+
+. replace acs_hinc_shp = 2 if acs_hinc_cont  > 15000      & acs_hinc_cont <= 250
+> 00
+(437,744 real changes made)
+
+. replace acs_hinc_shp = 3 if acs_hinc_cont  > 25000      & acs_hinc_cont <= 350
+> 00
+(473,921 real changes made)
+
+. replace acs_hinc_shp = 4 if acs_hinc_cont  > 35000      & acs_hinc_cont <= 500
+> 00        
+(729,516 real changes made)
+
+. replace acs_hinc_shp = 5 if acs_hinc_cont  > 50000      & acs_hinc_cont <= 750
+> 00        
+(1,071,130 real changes made)
+
+. replace acs_hinc_shp = 6 if acs_hinc_cont  > 75000      & acs_hinc_cont <= 100
+> 000
+(861,900 real changes made)
+
+. replace acs_hinc_shp = 7 if acs_hinc_cont  > 100000 & acs_hinc_cont <= 150000 
+(1,023,582 real changes made)
+
+. replace acs_hinc_shp = 8 if acs_hinc_cont  > 150000 & acs_hinc_cont <= 200000
+(457,207 real changes made)
+
+. replace acs_hinc_shp = 9 if acs_hinc_cont  > 200000 & acs_hinc_cont != 9999999
+>  
+(537,481 real changes made)
+
+. replace acs_hinc_shp = . if acs_hinc_cont == 9999999 // dataset of new incomes
+>  will now be smaller as a result
+(0 real changes made)
+
+. replace acs_hinc_shp = . if acs_hinc_cont == .
+(0 real changes made)
+
+. 
+. label values acs_hinc_shp cat_inc
+
+. label var acs_hinc_shp "Household Income (ACS) sharp categories based on hhinc
+> ome"
+
+. notes acs_hinc_shp: ACS Household Income Sharp Categories from  hhincome \ $S_
+> DATE
+
+. 
+. *tab acs_hinc_shp, m
+. *tab acs_hinc_shp, m nolab
+. 
+. *Replace missing values
+. replace acs_hinc_cont = . if  acs_hinc_cont == 9999999 // N/A code
+(298,640 real changes made, 298,640 to missing)
+
+. 
+. save $deriv/redi02_ACS_bins.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins.dta sav
+> ed
+
+. 
+. * version for troubleshooting ado program
+. drop repwt* cluster strata perwt hhwt   pernum  adjust // for debugging, simpl
+> ify
+
+. drop migrate1* labforce hispan* marst_acs race* sex_acs diffmob_acs  owner* co
+> untyfip statefip cbserial serial sample gq educ*
+
+. 
+. save $deriv/redi02_ACS_bins_clean.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi02_ACS_bins_clean.d
+> ta saved
+
+. 
+. ***--------------------------***
+. 
+. log close redi02_ACS_bins
+      name:  redi02_ACS_bins
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi02_ACS_bins.
+> log
+  log type:  text
+ closed on:  13 May 2022, 10:49:24
+--------------------------------------------------------------------------------
