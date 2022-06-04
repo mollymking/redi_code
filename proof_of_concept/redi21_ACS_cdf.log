@@ -1,0 +1,124 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  redi21_ACS_cdf
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi21_ACS_cdf.log
+  log type:  text
+ opened on:  29 Aug 2020, 00:58:32
+
+. 
+. //      project:        REDI Methodology Paper
+. 
+. //  task:       CDF method of describing ACS
+. //  data:               ACS, available: https://usa.ipums.org/
+. 
+. //  github:             redi
+. //  OSF:                https://osf.io/qmhe8/
+. 
+. //  author:     Molly King
+. 
+. display "$S_DATE  $S_TIME"
+29 Aug 2020  00:58:32
+
+. 
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+. 
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. 
+. *one-time install:
+. *ssc install distplot
+. 
+. local conv_year "2017"
+
+. 
+. ***--------------------------***
+. // # PREP FOR CDF INTERPOLATION IN R
+. ***--------------------------***
+. 
+. use  $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. drop repwt*
+
+. keep if year == 2016
+(3,039,481 observations deleted)
+
+. save $deriv/redi21_ACS_cdf-hinc_shp-2016.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi21_ACS_cdf-hinc_shp
+> -2016.dta saved
+
+. 
+. use  $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. drop repwt*
+
+. keep if year == 2017
+(3,008,406 observations deleted)
+
+. save $deriv/redi21_ACS_cdf-hinc_shp-2017.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi21_ACS_cdf-hinc_shp
+> -2017.dta saved
+
+. 
+.         
+. ***--------------------------***
+. // # GET NUMBERS FOR CDF INTERPOLATION IN R
+. ***--------------------------***
+. 
+. use  $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. drop repwt*
+
+. keep if year == 2016
+(3,039,481 observations deleted)
+
+. duplicates drop acs_hinc_shp, force
+
+Duplicates in terms of acs_hinc_shp
+
+(3,008,397 observations deleted)
+
+. keep acs_hinc_shp_2017ub acs_hinc_shp_n
+
+. 
+. use  $deriv/redi03_ACS_convert-hinc_shp.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. drop repwt*
+
+. keep if year == 2017
+(3,008,406 observations deleted)
+
+. duplicates drop acs_hinc_shp, force     
+
+Duplicates in terms of acs_hinc_shp
+
+(3,039,472 observations deleted)
+
+. keep acs_hinc_shp_2017ub acs_hinc_shp_n
+
+. 
+. 
+. *The rest of this method is carried out in R -
+.         * see  binsmooth.Rproj
+.         * and  cdf_interpolation.R
+.         * in the binsmooth folder
+. 
+. ***--------------------------***
+. 
+. log close redi21_ACS_cdf
+      name:  redi21_ACS_cdf
+       log:  /Users/mollymking/Documents/SocResearch/Dissertation/redi/redi21_AC
+> S_cdf.log
+  log type:  text
+ closed on:  29 Aug 2020, 00:59:13
+--------------------------------------------------------------------------------
