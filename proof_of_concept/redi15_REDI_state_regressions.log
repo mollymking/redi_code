@@ -1,0 +1,734 @@
+--------------------------------------------------------------------------------
+      name:  redi15_REDI_state_regressions
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi15_REDI_stat
+> e_regressions.log
+  log type:  text
+ opened on:  31 May 2022, 22:13:29
+
+.
+. //      project:        REDI Methods Paper
+.
+. //  task:       Example of REDI regressed on data from a single state in 2019
+. //  data:       CPS ASEC from IPUMS, available: https://cps.ipums.org/
+. //                              ACS from IPUMS, available: https://usa.ipums.o
+> rg/
+.
+. //  github:     redi
+. //  OSF:                https://osf.io/qmhe8/
+.
+. //  author:     Molly King
+.
+. display "$S_DATE  $S_TIME"
+31 May 2022  22:13:29
+
+.
+. ***--------------------------***
+. // # PROGRAM SETUP
+. ***--------------------------***
+.
+. version 16 // keeps program consistent for future replications
+
+. set linesize 80
+
+. clear all
+
+. set more off
+
+. set seed 1
+
+.
+. ***--------------------------***
+. // #  REGRESSION: Income as IV: Predict Migration on 2019  Wyoming  DATA
+. ***--------------------------***
+.
+. use $deriv/redi14_REDI_Wy2019.dta, clear
+(Wyoming 2019 ACS data converted to continuous REDI-calculated values)
+
+. // acs weights
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+.
+. // REDI Income as IV (redi_hinc_ln)
+. di in red "WYOMING: " ///
+>                   "Predict migration as function of ln(REDI-created income), "
+>  ///
+>                   "gender, race/ethnicity, education, marriage, disability"
+WYOMING: Predict migration as function of ln(REDI-created income), gender, race/
+> ethnicity, education, marriage, disability
+
+. svy: logistic migrate ///
+>         redi_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability   // labor ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                     Number of obs     =      4,694
+                                                Population size   =    452,157
+                                                Replications      =         80
+                                                Design df         =         79
+                                                F(  12,     68)   =       7.70
+                                                Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+redi_hinc_ln |   .8450524   .0347439    -4.09   0.000     .7786505    .9171169
+      dB_fem |   1.067915   .0937474     0.75   0.456     .8967081    1.271809
+   dB_rblack |   4.355784   2.244541     2.86   0.005     1.561775    12.14826
+   dB_rasian |   3.259775   1.957158     1.97   0.053     .9866881     10.7695
+    dB_rhisp |    2.07163   .4352425     3.47   0.001     1.363628     3.14723
+   dB_rother |   1.186124   .2975676     0.68   0.498     .7198872    1.954321
+   dB_edu_HS |   2.268176   .5769029     3.22   0.002     1.367127    3.763089
+ dB_edu_sCol |    2.43931   .7018028     3.10   0.003     1.375823    4.324855
+  dB_edu_col |   1.915272   .5600268     2.22   0.029     1.070206    3.427629
+ dB_edu_grad |   2.335075   .7397656     2.68   0.009     1.242913    4.386934
+     married |    .454768   .0718204    -4.99   0.000     .3321014    .6227434
+  disability |   .7622719   .2306364    -0.90   0.372     .4174078    1.392064
+       _cons |   .7107924    .347683    -0.70   0.487     .2684741    1.881842
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. // Original ACS Continuous Income as IV (acs_hinc_ln)
+. di in red "WYOMING: " ///
+>                   "Predict migration as function of ln(ACS HH income), " ///
+>                   "gender, race/ethnicity, education, marriage, disability"
+WYOMING: Predict migration as function of ln(ACS HH income), gender, race/ethnic
+> ity, education, marriage, disability
+
+. svy: logistic migrate ///
+>         acs_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability //  labor  ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                     Number of obs     =      4,694
+                                                Population size   =    452,157
+                                                Replications      =         80
+                                                Design df         =         79
+                                                F(  12,     68)   =       6.22
+                                                Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+ acs_hinc_ln |   .8635405   .0427233    -2.97   0.004      .782555    .9529071
+      dB_fem |   1.067883   .0921237     0.76   0.449     .8993948    1.267935
+   dB_rblack |   4.268025   2.189998     2.83   0.006     1.536976    11.85187
+   dB_rasian |   3.244325   1.937636     1.97   0.052     .9882035    10.65129
+    dB_rhisp |   1.980012   .4182206     3.23   0.002     1.300407    3.014785
+   dB_rother |   1.178007   .2968271     0.65   0.517     .7133963    1.945202
+   dB_edu_HS |   2.255861   .5713512     3.21   0.002      1.36261    3.734676
+ dB_edu_sCol |   2.430471   .6951972     3.10   0.003     1.375406     4.29487
+  dB_edu_col |   1.962335   .5615201     2.36   0.021     1.110233    3.468424
+ dB_edu_grad |   2.247788   .7128132     2.55   0.013     1.195709    4.225567
+     married |   .4482975   .0684726    -5.25   0.000     .3307746    .6075759
+  disability |   .7756058   .2324905    -0.85   0.399     .4270922    1.408512
+       _cons |   .5737564   .3406683    -0.94   0.352     .1759806     1.87064
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. // Artificial ACS categorical Income as IV (acs_hinc_ln)
+. di in red "WYOMING: " ///
+>                   "Predict migration as function of ACS HH income category, "
+> ///
+>                   "gender, race/ethnicity, education, marriage, disability"
+WYOMING: Predict migration as function of ACS HH income category, gender, race/e
+> thnicity, education, marriage, disability
+
+. fvset base 1 acs_hinc
+
+. svy: logistic migrate ///
+>         i.acs_hinc ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability //  labor  ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                     Number of obs     =      4,694
+                                                Population size   =    452,157
+                                                Replications      =         80
+                                                Design df         =         79
+                                                F(  19,     61)   =       3.69
+                                                Prob > F          =     0.0001
+
+-------------------------------------------------------------------------------
+              |                BRR *
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+     acs_hinc |
+15000 to l..  |   .8156415   .2713891    -0.61   0.542     .4206035    1.581706
+25000 to l..  |   1.297266   .3843589     0.88   0.382     .7192984     2.33964
+35000 to l..  |   .8338917   .2111729    -0.72   0.475      .503733    1.380444
+50000 to l..  |   .5111725   .1337018    -2.57   0.012     .3037141    .8603399
+75000 to l..  |   .3650237   .1176133    -3.13   0.002      .192217    .6931868
+100000 to ..  |   .4195809   .1193517    -3.05   0.003     .2381888    .7391115
+150000 to ..  |   .3125431   .1044641    -3.48   0.001     .1606867    .6079111
+200000 or ..  |   .4748709   .1672412    -2.11   0.038     .2355779    .9572308
+              |
+       dB_fem |   1.024625   .0887348     0.28   0.780     .8623872    1.217384
+    dB_rblack |   3.836006   2.156219     2.39   0.019     1.253074    11.74308
+    dB_rasian |   2.956735   1.919145     1.67   0.099     .8123146    10.76219
+     dB_rhisp |   2.057348   .4547104     3.26   0.002     1.325106    3.194219
+    dB_rother |   1.229464   .2883597     0.88   0.381     .7708482    1.960933
+    dB_edu_HS |   2.130565   .5435816     2.96   0.004      1.28217    3.540333
+  dB_edu_sCol |   2.261716   .6616868     2.79   0.007      1.26339    4.048916
+   dB_edu_col |   1.947047   .5767535     2.25   0.027     1.079722    3.511082
+  dB_edu_grad |   2.304576   .7510408     2.56   0.012     1.204695    4.408642
+      married |    .508104   .0802696    -4.29   0.000     .3710131    .6958505
+   disability |   .7118981   .2250018    -1.08   0.286     .3794926    1.335464
+        _cons |   .2024151   .0603152    -5.36   0.000     .1118558    .3662918
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+.
+.
+. ***------------
+. // In both models, significance disappears when add home ownership:
+. // REDI Income as IV (redi_hinc_ln)
+. di in red "WYOMING: " ///
+>                   "Predict migration as function of ln(REDI-created income), "
+>  ///
+>                   "add home ownership"
+WYOMING: Predict migration as function of ln(REDI-created income), add home owne
+> rship
+
+. svy: logistic migrate ///
+>         redi_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability ownhouse //
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                     Number of obs     =      4,694
+                                                Population size   =    452,157
+                                                Replications      =         80
+                                                Design df         =         79
+                                                F(  13,     67)   =      13.81
+                                                Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+redi_hinc_ln |    .917348    .043915    -1.80   0.075     .8339728    1.009059
+      dB_fem |   1.092238   .0978114     0.99   0.328     .9139142    1.305357
+   dB_rblack |   2.870019   1.635633     1.85   0.068     .9230743     8.92345
+   dB_rasian |   2.746087   1.876171     1.48   0.143     .7048782    10.69829
+    dB_rhisp |   1.714599   .3657568     2.53   0.013       1.1214    2.621588
+   dB_rother |   1.156638   .2871636     0.59   0.559     .7056332    1.895903
+   dB_edu_HS |    1.94565   .5622778     2.30   0.024     1.094581    3.458451
+ dB_edu_sCol |   2.151356   .6942163     2.37   0.020     1.131795    4.089376
+  dB_edu_col |   1.845029   .6072171     1.86   0.066      .958312    3.552216
+ dB_edu_grad |    2.10718   .7557954     2.08   0.041     1.031922    4.302851
+     married |   .6174607   .1074721    -2.77   0.007     .4366656    .8731113
+  disability |   .7290179   .2010641    -1.15   0.255     .4210406     1.26227
+    ownhouse |   .2296899   .0359131    -9.41   0.000     .1682605    .3135461
+       _cons |   .7206776   .3916307    -0.60   0.548     .2443353     2.12567
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+.
+. // Original ACS Contnuous Income as IV (acs_hinc_ln)
+. di in red "WYOMING: " ///
+>                   "Predict migration as function of ln(ACS HH income), " ///
+>                   "add home ownership"
+WYOMING: Predict migration as function of ln(ACS HH income), add home ownership
+
+. svy: logistic migrate ///
+>         acs_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability ownhouse //
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                     Number of obs     =      4,694
+                                                Population size   =    452,157
+                                                Replications      =         80
+                                                Design df         =         79
+                                                F(  13,     67)   =      13.79
+                                                Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+ acs_hinc_ln |   .9415949   .0538024    -1.05   0.295     .8403693    1.055013
+      dB_fem |    1.10063   .0991875     1.06   0.291     .9198961    1.316872
+   dB_rblack |   2.856194   1.627302     1.84   0.069      .918918    8.877664
+   dB_rasian |   2.735534   1.865354     1.48   0.144     .7040144    10.62925
+    dB_rhisp |     1.6879   .3564116     2.48   0.015       1.1087    2.569683
+   dB_rother |   1.124895   .2866776     0.46   0.645     .6773463    1.868158
+   dB_edu_HS |   1.951373   .5612736     2.32   0.023     1.100781    3.459232
+ dB_edu_sCol |   2.158942    .691347     2.40   0.019     1.141367    4.083727
+  dB_edu_col |   1.861774   .6087661     1.90   0.061     .9711142    3.569304
+ dB_edu_grad |   2.076299   .7419169     2.04   0.044     1.019534    4.228417
+     married |   .6077125   .1043204    -2.90   0.005     .4318246    .8552418
+  disability |    .725446   .1993933    -1.17   0.246     .4197667    1.253725
+    ownhouse |   .2260492   .0366903    -9.16   0.000     .1636419    .3122563
+       _cons |   .5525365   .3570026    -0.92   0.361     .1526974    1.999357
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+.
+. // Artificial ACS categorical Income as IV (acs_hinc_ln)
+. di in red "WYOMING: " ///
+>                   "Predict migration as function of ACS HH income category, "
+> ///
+>                   "add home ownership"
+WYOMING: Predict migration as function of ACS HH income category, add home owner
+> ship
+
+. svy: logistic migrate ///
+>         i.acs_hinc ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability  ownhouse //  labor  ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                     Number of obs     =      4,694
+                                                Population size   =    452,157
+                                                Replications      =         80
+                                                Design df         =         79
+                                                F(  20,     60)   =       9.25
+                                                Prob > F          =     0.0000
+
+-------------------------------------------------------------------------------
+              |                BRR *
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+     acs_hinc |
+15000 to l..  |   .8635408   .2970461    -0.43   0.671     .4354386    1.712533
+25000 to l..  |   1.732434   .5480432     1.74   0.086     .9229897    3.251747
+35000 to l..  |   1.185715   .3087184     0.65   0.515     .7061714    1.990904
+50000 to l..  |   .7789933   .2171462    -0.90   0.373     .4472688    1.356747
+75000 to l..  |   .6227757   .2094831    -1.41   0.163     .3188302    1.216477
+100000 to l.. |   .7605474    .237457    -0.88   0.383     .4085373    1.415862
+150000 to l.. |   .7158015   .2708356    -0.88   0.380     .3370672    1.520088
+200000 or ..  |   1.019217   .3393067     0.06   0.955      .525395    1.977184
+              |
+       dB_fem |   1.066921   .0975939     0.71   0.481     .8893232    1.279985
+    dB_rblack |    2.74532   1.745624     1.59   0.116     .7743439    9.733119
+    dB_rasian |   2.590258   1.839708     1.34   0.184     .6300589     10.6489
+     dB_rhisp |    1.72995    .378913     2.50   0.014      1.11865    2.675305
+    dB_rother |   1.159335   .2913774     0.59   0.558     .7029878    1.911923
+    dB_edu_HS |    1.94429    .562407     2.30   0.024     1.093231    3.457882
+  dB_edu_sCol |   2.130735   .6879911     2.34   0.022     1.120497    4.051801
+   dB_edu_col |   1.865688   .6222916     1.87   0.065     .9605245    3.623844
+  dB_edu_grad |   2.104413   .7649992     2.05   0.044     1.020676    4.338844
+      married |   .6446319   .1120907    -2.53   0.014     .4560368     .911221
+   disability |   .7236832   .2074586    -1.13   0.263     .4090145    1.280437
+     ownhouse |   .2329996   .0380795    -8.91   0.000     .1682977    .3225763
+        _cons |   .3168763   .1063244    -3.43   0.001     .1624935    .6179362
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. ***--------------------------***
+. // #  REGRESSION: Income as IV: Predict Migration on 2019  California  DATA
+. ***--------------------------***
+.
+. use $deriv/redi14_REDI_Ca2019.dta, clear
+(California 2019 ACS data converted to continuous REDI-calculated values)
+
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+.
+.
+. // REDI Income as IV (redi_hinc_ln)
+. di in red "CALIFORNIA: " ///
+>                   "Predict migration as function of ln(REDI-created income), "
+>  ///
+>                   "gender, race/ethnicity, education, marriage, disability"
+CALIFORNIA: Predict migration as function of ln(REDI-created income), gender, ra
+> ce/ethnicity, education, marriage, disability
+
+. svy: logistic migrate ///
+>         redi_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                    Number of obs     =     302,150
+                                               Population size   =  31,307,314
+                                               Replications      =          80
+                                               Design df         =          79
+                                               F(  12,     68)   =      117.48
+                                               Prob > F          =      0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+redi_hinc_ln |   .9458222   .0050006   -10.54   0.000      .935921    .9558281
+      dB_fem |   .9365507   .0128134    -4.79   0.000     .9113905    .9624056
+   dB_rblack |    1.04867   .0487836     1.02   0.310     .9559288    1.150409
+   dB_rasian |   1.055851   .0234214     2.45   0.016     1.010247    1.103515
+    dB_rhisp |   .8504288   .0195587    -7.04   0.000     .8123758    .8902643
+   dB_rother |   1.275043   .0571769     5.42   0.000     1.166167    1.394085
+   dB_edu_HS |   1.375488   .0455516     9.63   0.000     1.287744    1.469212
+ dB_edu_sCol |   1.480384   .0428904    13.54   0.000     1.397427    1.568265
+  dB_edu_col |   2.026337   .0683301    20.94   0.000     1.894794    2.167013
+ dB_edu_grad |   2.068828   .0785703    19.14   0.000     1.918203    2.231281
+     married |   .6040277   .0121028   -25.16   0.000     .5804118    .6286045
+  disability |   .6788788   .0252533   -10.41   0.000     .6304291     .731052
+       _cons |   .2096977   .0150144   -21.82   0.000     .1818442    .2418176
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. // Original ACS Contnuous Income as IV (acs_hinc_ln)
+. di in red "CALIFORNIA: " ///
+>                   "Predict migration as function of ln(ACS HH income), " ///
+>                   "gender, race/ethnicity, education, marriage, disability"
+CALIFORNIA: Predict migration as function of ln(ACS HH income), gender, race/eth
+> nicity, education, marriage, disability
+
+. svy: logistic migrate ///
+>         acs_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                    Number of obs     =     302,150
+                                               Population size   =  31,307,314
+                                               Replications      =          80
+                                               Design df         =          79
+                                               F(  12,     68)   =      120.98
+                                               Prob > F          =      0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+ acs_hinc_ln |   .9368348   .0054951   -11.12   0.000     .9259607    .9478367
+      dB_fem |   .9369998   .0128294    -4.75   0.000     .9118084    .9628873
+   dB_rblack |   1.044921   .0487701     0.94   0.349     .9522192    1.146647
+   dB_rasian |   1.050248   .0233386     2.21   0.030     1.004806    1.097745
+    dB_rhisp |    .850753     .01943    -7.08   0.000     .8129445      .89032
+   dB_rother |   1.275898   .0572507     5.43   0.000     1.166884    1.395097
+   dB_edu_HS |   1.375132   .0457051     9.58   0.000     1.287102    1.469182
+ dB_edu_sCol |   1.478536   .0430937    13.42   0.000     1.395201    1.566849
+  dB_edu_col |    2.03395   .0692733    20.85   0.000     1.900635    2.176616
+ dB_edu_grad |   2.084415   .0800331    19.13   0.000     1.931048    2.249962
+     married |   .6073822   .0120961   -25.04   0.000     .5837764    .6319426
+  disability |   .6798401   .0249417   -10.52   0.000     .6319642    .7313428
+       _cons |   .2329548   .0169289   -20.05   0.000     .2015823    .2692098
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. // Artificial ACS categorical Income as IV (acs_hinc_ln)
+. di in red "CALIFORNIA: " ///
+>                   "Predict migration as function of ACS HH income category, "
+> ///
+>                   "gender, race/ethnicity, education, marriage, disability"
+CALIFORNIA: Predict migration as function of ACS HH income category, gender, rac
+> e/ethnicity, education, marriage, disability
+
+. fvset base 1 acs_hinc
+
+. svy: logistic migrate ///
+>         i.acs_hinc ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability //  labor  ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                    Number of obs     =     302,150
+                                               Population size   =  31,307,314
+                                               Replications      =          80
+                                               Design df         =          79
+                                               F(  19,     61)   =       86.01
+                                               Prob > F          =      0.0000
+
+-------------------------------------------------------------------------------
+              |                BRR *
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+     acs_hinc |
+15000 to l..  |   .8488902   .0456647    -3.05   0.003     .7626939    .9448281
+25000 to l..  |   .7561957   .0470003    -4.50   0.000     .6681994    .8557804
+35000 to l..  |   .8496371   .0379762    -3.65   0.000     .7773123    .9286914
+50000 to l..  |   .7472799   .0350085    -6.22   0.000     .6807476    .8203148
+75000 to l..  |   .7009359   .0319658    -7.79   0.000     .6401119    .7675395
+100000 to ..  |   .6731798   .0343055    -7.77   0.000     .6082454    .7450465
+150000 to ..  |   .6148361   .0290882   -10.28   0.000       .55958    .6755485
+200000 or ..  |   .6711577    .027045    -9.90   0.000     .6194283    .7272071
+              |
+       dB_fem |   .9322253   .0128641    -5.09   0.000     .9069685    .9581855
+    dB_rblack |   1.036941   .0485129     0.78   0.440     .9447381    1.138142
+    dB_rasian |   1.057971   .0235499     2.53   0.013     1.012119      1.1059
+     dB_rhisp |   .8502226    .019908    -6.93   0.000     .8115059    .8907864
+    dB_rother |   1.279752   .0573761     5.50   0.000     1.170495    1.399207
+    dB_edu_HS |   1.386862   .0461958     9.82   0.000     1.297893    1.481929
+  dB_edu_sCol |   1.501907   .0432948    14.11   0.000     1.418156    1.590603
+   dB_edu_col |   2.084941   .0694646    22.05   0.000      1.95116    2.227894
+  dB_edu_grad |    2.13285   .0797009    20.27   0.000     1.979965    2.297539
+      married |   .6129849    .012167   -24.66   0.000     .5892393    .6376875
+   disability |   .6623069    .024461   -11.16   0.000     .6153651    .7128296
+        _cons |    .151899   .0071843   -39.85   0.000     .1382516    .1668937
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+.
+. ***------------
+. // In both models, significance disappears when add home ownership:
+. // REDI Income as IV (redi_hinc_ln)
+. di in red "CALIFORNIA: " ///
+>                   "Predict migration as function of ln(REDI-created income), "
+>  ///
+>                   "add home ownership"
+CALIFORNIA: Predict migration as function of ln(REDI-created income), add home o
+> wnership
+
+. svy: logistic migrate ///
+>         redi_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                    Number of obs     =     302,150
+                                               Population size   =  31,307,314
+                                               Replications      =          80
+                                               Design df         =          79
+                                               F(  13,     67)   =      228.13
+                                               Prob > F          =      0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+redi_hinc_ln |   1.012025   .0063172     1.91   0.059     .9995284    1.024677
+      dB_fem |    .948903   .0131924    -3.77   0.000     .9230041    .9755286
+   dB_rblack |   .8781499   .0421504    -2.71   0.008     .7981348    .9661868
+   dB_rasian |   1.023436   .0226835     1.05   0.299     .9792675    1.069597
+    dB_rhisp |   .7337025   .0178423   -12.73   0.000     .6990341    .7700903
+   dB_rother |    1.16053    .053205     3.25   0.002     1.059316    1.271414
+   dB_edu_HS |     1.4287   .0476448    10.70   0.000     1.336944    1.526753
+ dB_edu_sCol |   1.556963   .0449943    15.32   0.000     1.469931    1.649148
+  dB_edu_col |   2.103462   .0701435    22.30   0.000     1.968378    2.247817
+ dB_edu_grad |   2.226747    .085109    20.94   0.000     2.063625    2.402763
+     married |   .7097223   .0138784   -17.53   0.000     .6826287    .7378912
+  disability |   .7136737   .0267934    -8.99   0.000     .6622867    .7690479
+    ownhouse |   .3205451   .0077891   -46.82   0.000     .3054103      .33643
+       _cons |   .1613556   .0131465   -22.39   0.000     .1371998    .1897642
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. // Original ACS Contnuous Income as IV (acs_hinc_ln)
+. di in red "CALIFORNIA: " ///
+>                   "Predict migration as function of ln(ACS HH income), " ///
+>                   "add home ownership"
+CALIFORNIA: Predict migration as function of ln(ACS HH income), add home ownersh
+> ip
+
+. svy: logistic migrate ///
+>         acs_hinc_ln ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability ownhouse
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                    Number of obs     =     302,150
+                                               Population size   =  31,307,314
+                                               Replications      =          80
+                                               Design df         =          79
+                                               F(  13,     67)   =      226.89
+                                               Prob > F          =      0.0000
+
+------------------------------------------------------------------------------
+             |                BRR *
+     migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+ acs_hinc_ln |   1.001878   .0074817     0.25   0.802     .9870967    1.016882
+      dB_fem |   .9476824   .0131068    -3.89   0.000     .9219498    .9741333
+   dB_rblack |   .8751409   .0420044    -2.78   0.007     .7954028    .9628727
+   dB_rasian |   1.023029   .0227061     1.03   0.308     .9788174    1.069237
+    dB_rhisp |   .7339024   .0177706   -12.78   0.000     .6993696    .7701402
+   dB_rother |   1.159872   .0532752     3.23   0.002     1.058533    1.270912
+   dB_edu_HS |   1.431019   .0479587    10.69   0.000     1.338674    1.529734
+ dB_edu_sCol |   1.560721   .0453896    15.31   0.000      1.47294    1.653732
+  dB_edu_col |    2.11696   .0719826    22.06   0.000     1.978423    2.265198
+ dB_edu_grad |    2.24416   .0874209    20.75   0.000     2.076728    2.425091
+     married |   .7116784   .0137926   -17.55   0.000     .6847478    .7396683
+  disability |   .7082635   .0261679    -9.34   0.000     .6580467    .7623125
+    ownhouse |   .3223763   .0079627   -45.83   0.000     .3069102    .3386218
+       _cons |   .1794594   .0155872   -19.78   0.000     .1509677    .2133283
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. // Artificial ACS categorical Income as IV (acs_hinc_ln)
+. di in red "CALIFORNIA: " ///
+>                   "Predict migration as function of ACS HH income category, "
+> ///
+>                    "add home ownership"
+CALIFORNIA: Predict migration as function of ACS HH income category, add home ow
+> nership
+
+. svy: logistic migrate ///
+>         i.acs_hinc ///
+>         dB_fem /// men comparison
+>         dB_rblack dB_rasian dB_rhisp dB_rother /// white comparison category
+>         dB_edu_HS dB_edu_sCol dB_edu_col dB_edu_grad /// lessHS comparison cat
+> egory
+>         married disability ownhouse      //  labor
+(running logistic on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5
+..................................................    50
+..............................
+
+Survey: Logistic regression                    Number of obs     =     302,150
+                                               Population size   =  31,307,314
+                                               Replications      =          80
+                                               Design df         =          79
+                                               F(  20,     60)   =      155.77
+                                               Prob > F          =      0.0000
+
+-------------------------------------------------------------------------------
+              |                BRR *
+      migrate | Odds Ratio   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+     acs_hinc |
+15000 to l..  |   .8706044   .0475565    -2.54   0.013     .7809101    .9706009
+25000 to l..  |   .8038191   .0512296    -3.43   0.001      .708052    .9125392
+35000 to l..  |   .9438112   .0414947    -1.32   0.192     .8647289    1.030126
+50000 to l..  |   .8890944    .041048    -2.55   0.013     .8110321    .9746703
+75000 to l..  |   .8921543   .0401655    -2.53   0.013     .8156843    .9757933
+100000 to ..  |   .9476325   .0471918    -1.08   0.283     .8582049    1.046379
+150000 to ..  |   .9361407   .0452726    -1.36   0.176     .8502291    1.030733
+200000 or ..  |   1.119829   .0469183     2.70   0.008     1.030228    1.217222
+              |
+       dB_fem |   .9522996   .0133383    -3.49   0.001     .9261171    .9792223
+    dB_rblack |   .8830703   .0427252    -2.57   0.012     .8019945    .9723423
+    dB_rasian |   1.015603   .0226405     0.69   0.489     .9715238    1.061683
+     dB_rhisp |   .7463961   .0183766   -11.88   0.000     .7107001    .7838849
+    dB_rother |    1.15741   .0531921     3.18   0.002     1.056232     1.26828
+    dB_edu_HS |   1.434405   .0482595    10.72   0.000     1.341493    1.533753
+  dB_edu_sCol |   1.557041    .044914    15.35   0.000      1.47016    1.649056
+   dB_edu_col |   2.059001   .0676845    21.97   0.000     1.928591    2.198229
+  dB_edu_grad |   2.141925   .0801835    20.35   0.000     1.988125    2.307623
+      married |   .7069823   .0137334   -17.85   0.000     .6801685    .7348532
+   disability |   .7139159    .026807    -8.97   0.000     .6625032    .7693184
+     ownhouse |   .3129324   .0077767   -46.75   0.000     .2978298    .3288008
+        _cons |   .1980513   .0095973   -33.41   0.000     .1798408    .2181058
+-------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+.
+. ***--------------------------***
+.
+. capture log close redi15_REDI_state_regressions
