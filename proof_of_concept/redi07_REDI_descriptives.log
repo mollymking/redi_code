@@ -1,0 +1,331 @@
+--------------------------------------------------------------------------------
+      name:  redi07_REDI_descriptives
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi07_REDI_desc
+> riptives.log
+  log type:  text
+ opened on:  31 May 2022, 19:57:43
+
+. 
+. display "$S_DATE  $S_TIME"
+31 May 2022  19:57:43
+
+. 
+. use $deriv/redi03_ACS_convert-`p'.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. 
+. // SURVEY WEIGHTS
+. *need to redo survey-set
+. set seed 1
+
+. svyset[pweight=perwt], vce(brr) brrweight(repwtp1-repwtp80) fay(.5)mse
+
+      pweight: perwt
+          VCE: brr
+          MSE: on
+    brrweight: repwtp1 .. repwtp80
+          fay: .5
+  Single unit: missing
+     Strata 1: <one>
+         SU 1: <observations>
+        FPC 1: <zero>
+
+. 
+. save $deriv/redi07_redi_descriptives-`p'.dta, replace
+file ~/Documents/SocResearch/Dissertation/data/data_derv/redi07_redi_descriptive
+> s-rediado.dta saved
+
+. 
+. 
+. ***--------------------------***                
+. // MEDIAN
+. ***--------------------------***
+. 
+. //Levels of year variable to loop through years
+. 
+. levelsof year, local(years)
+2016 2017
+
+. foreach y of local years { // loop through all years
+  2. 
+.         use $deriv/redi07_REDI_descriptives-`p'.dta, clear
+  3.         keep if redi_hinc_cont_inf2017 != .
+  4.         
+.         di in red "Calculate REDI median household income for `y':"
+  5. 
+.         *https://www.stata.com/statalist/archive/2011-05/msg00148.html
+.         *_pctile  redi_hinc_cont_inf`conv_year' [pweight=perwt] if year == `y'
+> , p(50)
+.         *return list
+.         
+.         *https://www.stata.com/statalist/archive/2011-05/msg00148.html
+.         *epctile varname [if] [in] [weight] , percentiles(numlist) [options]
+.          set seed 1
+  6.          epctile redi_hinc_cont_inf`conv_year', percentiles(50) svy subpop(
+> if year == `y')
+  7.          return list
+  8.          matrix list r(table)
+  9.          cap matrix M = r(table)
+ 10.          
+.          cap scalar med`y' = M[1,1]
+ 11.          
+. } // end loop through years
+(ACS data converted to continuous REDI-calculated values)
+(597,280 observations deleted)
+Calculate REDI median household income for 2016:
+(running mean on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Mean estimation         Number of obs   =    3,008,406
+                                Population size =  315,047,636
+                                Subpop. no. obs =    3,008,406
+                                Subpop. size    =  315,047,636
+                                Replications    =           80
+                                Design df       =           79
+
+--------------------------------------------------------------
+             |                BRR *
+             |       Mean   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+    __000006 |  -4.45e-06   .0007261     -.0014498    .0014409
+--------------------------------------------------------------
+
+Percentile estimation
+------------------------------------------------------------------------------
+             |                BRR *
+redi_hi~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         p50 |   68822.91   163.1855   421.75   0.000     68503.07    69142.74
+------------------------------------------------------------------------------
+
+
+
+scalars:
+              r(level) =  95
+
+matrices:
+              r(table) :  9 x 1
+
+r(table)[9,1]
+              p50
+     b  68822.906
+    se  163.18555
+     z  421.74633
+pvalue          0
+    ll  68503.068
+    ul  69142.744
+    df          .
+  crit   1.959964
+ eform          0
+(ACS data converted to continuous REDI-calculated values)
+(597,280 observations deleted)
+Calculate REDI median household income for 2017:
+(running mean on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Mean estimation         Number of obs   =    3,039,481
+                                Population size =  317,631,941
+                                Subpop. no. obs =    3,039,481
+                                Subpop. size    =  317,631,941
+                                Replications    =           80
+                                Design df       =           79
+
+--------------------------------------------------------------
+             |                BRR *
+             |       Mean   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+    __000006 |  -5.00e-06   .0006821     -.0013626    .0013526
+--------------------------------------------------------------
+
+Percentile estimation
+------------------------------------------------------------------------------
+             |                BRR *
+redi_hi~2017 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         p50 |      70186      93.75   748.65   0.000     70002.25    70369.75
+------------------------------------------------------------------------------
+
+
+
+scalars:
+              r(level) =  95
+
+matrices:
+              r(table) :  9 x 1
+
+r(table)[9,1]
+              p50
+     b      70186
+    se      93.75
+     z  748.65067
+pvalue          0
+    ll  70002.253
+    ul  70369.747
+    df          .
+  crit   1.959964
+ eform          0
+
+. 
+. capture drop    redi_hinc_cont_inf`conv_year'_median
+
+. gen                     redi_hinc_cont_inf`conv_year'_median = .
+(6,047,887 missing values generated)
+
+. replace                 redi_hinc_cont_inf`conv_year'_median = med2016 if year
+>  == 2016
+(3,008,406 real changes made)
+
+. replace                 redi_hinc_cont_inf`conv_year'_median = med2017 if year
+>  == 2017
+(3,039,481 real changes made)
+
+. 
+. ***--------------------------***                
+. // GRAND MEAN 
+. ***--------------------------***
+. 
+. use $deriv/redi07_REDI_descriptives-`p'.dta, clear
+(ACS data converted to continuous REDI-calculated values)
+
+. 
+. keep if redi_hinc_cont_inf`conv_year' != .
+(597,280 observations deleted)
+
+. 
+. capture drop redi_hinc_cont_inf`conv_year'_mean
+
+. gen redi_hinc_cont_inf`conv_year'_mean = .
+(6,047,887 missing values generated)
+
+. label var redi_hinc_cont_inf`conv_year'_mean "REDI household income `conv_year
+> ' grand mean"
+
+. 
+. * convert 2016 values to 2017 dollars
+. di in red "Calculate grand means for REDI household income for both years" 
+Calculate grand means for REDI household income for both years
+
+. set seed 1
+
+. svy: mean redi_hinc_cont_inf`conv_year', over(year)
+(running mean on estimation sample)
+
+BRR replications (80)
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..............................
+
+Survey: Mean estimation                          Number of obs   =    6,047,887
+                                                 Population size =  632,679,577
+                                                 Replications    =           80
+                                                 Design df       =           79
+
+-------------------------------------------------------------------------------
+                              |                BRR *
+                              |       Mean   Std. Err.     [95% Conf. Interval]
+------------------------------+------------------------------------------------
+c.redi_hinc_cont_inf2017@year |
+                        2016  |   90062.92   111.6556      89840.67    90285.16
+                        2017  |   91820.68   114.8103      91592.16    92049.21
+-------------------------------------------------------------------------------
+
+. cap matrix X = r(table) 
+
+. 
+. *year 2016  REDI 
+. cap scalar mn16 = X[1,1]                
+
+. di in blue "The inflation-adjusted 2016 REDI grand mean of household income in
+>  2017 dollars is:"
+The inflation-adjusted 2016 REDI grand mean of household income in 2017 dollars 
+> is:
+
+. di mn16 
+90062.917
+
+. replace redi_hinc_cont_inf`conv_year'_mean = mn16 if year == 2016
+(3,008,406 real changes made)
+
+. 
+. *year 2017  REDI 
+. cap scalar mn17 = X[1,2]
+
+. di in blue "The inflation-adjusted 2017 REDI grand mean of household income in
+>  2017 dollars is:"
+The inflation-adjusted 2017 REDI grand mean of household income in 2017 dollars 
+> is:
+
+. di mn17
+91820.682
+
+. replace redi_hinc_cont_inf`conv_year'_mean = mn17 if year == 2017
+(3,039,481 real changes made)
+
+. 
+. *calculate standard deviation 
+. *the -by()- option defines groups within which SD is calculated. 
+. set seed 1
+
+. egen redi_hinc_cont_inf`conv_year'_sd = sd(redi_hinc_cont_inf`conv_year'), by(
+> year)
+
+. 
+. 
+. ***--------------------------***
+. // # GINI COEFFICIENT 
+. ***--------------------------***
+. 
+. *use -fastgini- because allows pweights
+. *https://www.stata.com/statalist/archive/2008-10/msg01179.html
+. *fastgini varname [if] [in] [weight] [, bin(#) jk Level(#) nocheck]
+. 
+. foreach y of local years { // loop through all years
+  2. 
+.         use $deriv/redi07_REDI_descriptives-`p'.dta, clear
+  3.         keep if year == `y'     
+  4. 
+.         replace redi_hinc_cont_inf`conv_year'  = 1 if  redi_hinc_cont_inf`conv
+> _year'  <= 0
+  5. 
+.         di in red "Below is the gini for REDI-calculated household income for 
+> `y':"
+  6.         set seed 1
+  7.         fastgini  redi_hinc_cont_inf`conv_year' [pweight=perwt]
+  8.         
+.         local gini = r(gini) 
+  9.         di `gini'
+ 10.         
+. } // end loop through years
+(ACS data converted to continuous REDI-calculated values)
+(3,340,599 observations deleted)
+(28,505 real changes made)
+Below is the gini for REDI-calculated household income for 2016:
+
+Gini coefficient = 0.4415190
+.44151901
+(ACS data converted to continuous REDI-calculated values)
+(3,304,568 observations deleted)
+(27,982 real changes made)
+Below is the gini for REDI-calculated household income for 2017:
+
+Gini coefficient = 0.4412009
+.44120086
+
+. 
+. ***--------------------------***
+. 
+. log close redi07_REDI_descriptives
+      name:  redi07_REDI_descriptives
+       log:  /Users/mmking/Documents/SocResearch/redi/redi_code/redi07_REDI_desc
+> riptives.log
+  log type:  text
+ closed on:  31 May 2022, 20:19:43
+--------------------------------------------------------------------------------
