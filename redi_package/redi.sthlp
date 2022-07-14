@@ -51,7 +51,7 @@ from binned incomes, using a real-world reference dataset (in this case, the CPS
 The Random Empirical Distribution Imputation ({cmd:redi}) method imputes
 discrete observations using binned income data. The user may wish to combine
 or compare income data across years or surveys, stymied by incompatible categories.
-{cmd:redi} converts categorical to continuous incomes this through random
+{cmd:redi} converts categorical to continuous incomes through random
 cold-deck imputation from a real world reference dataset. The {cmd:redi} method
 reconciles bins between datasets or across years and handles top incomes.
 {cmd:redi} has other advantages of computing an income distribution that is
